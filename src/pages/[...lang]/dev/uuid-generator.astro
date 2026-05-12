@@ -1,0 +1,111 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = (langParam || 'en') as any;
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import { Copy, RefreshCw } from 'lucide-react';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.uuid-generator.title')}
+	description={t('tool.uuid-generator.desc')}
+	category="dev"
+>
+	<div class="space-y-8">
+		<div class="flex flex-wrap gap-6 items-end">
+			<div>
+				<label class="tool-label">{t('ui.quantity')}</label>
+				<input type="number" id="quantity" value="5" min="1" max="100" class="tool-input w-32" />
+			</div>
+			<button id="generate-btn" class="tool-button-primary flex items-center gap-2">
+				<RefreshCw size={18} id="refresh-icon" />
+				{t('ui.generate_uuids')}
+			</button>
+		</div>
+
+		<div>
+			<label class="tool-label">{t('ui.generated_uuids')}</label>
+			<textarea 
+				id="uuid-output" 
+			 class="tool-input min-h-[300px] font-mono text-base tracking-tight leading-relaxed bg-zinc-50" 
+				readonly
+			></textarea>
+		</div>
+
+		<div class="flex flex-wrap gap-4 pt-4 border-t border-zinc-100">
+			<button id="copy-btn" class="tool-button-secondary flex items-center gap-2" data-copied={t('ui.copied')}>
+				<Copy size={18} />
+				{t('ui.copy_all')}
+			</button>
+			<button id="clear-btn" class="tool-button-secondary">{t('ui.clear')}</button>
+		</div>
+	</div>
+
+	<div slot="guide">
+		<h3>{t('guide.uuid-generator.h1')}</h3>
+		<p>{t('guide.uuid-generator.p1')}</p>
+		
+		<ul>
+			<li><strong>{t('guide.uuid-generator.f1_t')}:</strong> {t('guide.uuid-generator.f1_d')}</li>
+			<li><strong>{t('badge.browser_only')}:</strong> {t('footer.privacy.desc')}</li>
+		</ul>
+	</div>
+</ToolLayout>
+
+<script>
+	const quantityInput = document.getElementById('quantity') as HTMLInputElement;
+	const uuidOutput = document.getElementById('uuid-output') as HTMLTextAreaElement;
+	const generateBtn = document.getElementById('generate-btn');
+	const refreshIcon = document.getElementById('refresh-icon');
+	const copyBtn = document.getElementById('copy-btn');
+	const clearBtn = document.getElementById('clear-btn');
+
+	function generateUUID() {
+		// Crypto-safe UUID v4
+		return (([1e7] as any)+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, (c: any) =>
+			(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+		);
+	}
+
+	function generateBatch() {
+		const qty = Math.min(Math.max(parseInt(quantityInput.value) || 1, 1), 100);
+		let uuids = [];
+		for (let i = 0; i < qty; i++) {
+			uuids.push(generateUUID());
+		}
+		uuidOutput.value = uuids.join('\n');
+		
+		refreshIcon?.classList.add('animate-spin');
+		setTimeout(() => refreshIcon?.classList.remove('animate-spin'), 500);
+	}
+
+	generateBtn?.addEventListener('click', generateBatch);
+
+	copyBtn?.addEventListener('click', () => {
+		uuidOutput.select();
+		navigator.clipboard.writeText(uuidOutput.value);
+		const originalText = copyBtn.innerHTML;
+		const copiedMsg = copyBtn.getAttribute('data-copied') || '...';
+		copyBtn.innerHTML = copiedMsg;
+		setTimeout(() => {
+			copyBtn.innerHTML = originalText;
+		}, 2000);
+	});
+
+	clearBtn?.addEventListener('click', () => {
+		uuidOutput.value = '';
+	});
+
+	// Initial batch
+	generateBatch();
+</script>

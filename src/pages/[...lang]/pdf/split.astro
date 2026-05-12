@@ -1,0 +1,37 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = langParam || 'en';
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import PdfSplit from '../../../components/tools/PdfSplit';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.split.title')}
+	description={t('tool.split.desc')}
+	category="pdf"
+	toolId="split"
+>
+	<PdfSplit client:only="react" lang={lang as any} />
+
+	<div slot="guide">
+		<h3>{t('guide.split.h1')}</h3>
+		<p>{t('guide.split.p1')}</p>
+		
+		<ul>
+			<li><strong>{t('guide.split.f1_t')}</strong> {t('guide.split.f1_d')}</li>
+			<li><strong>{t('guide.split.f2_t')}</strong> {t('guide.split.f2_d')}</li>
+			<li><strong>{t('guide.split.f3_t')}</strong> {t('guide.split.f3_d')}</li>
+		</ul>
+	</div>
+</ToolLayout>

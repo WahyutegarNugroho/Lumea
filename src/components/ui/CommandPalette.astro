@@ -1,0 +1,198 @@
+---
+import { Search, X, CornerDownLeft } from 'lucide-react';
+import { useTranslations, translations, type Locale } from '../../lib/i18n';
+const lang = (Astro.currentLocale || 'en') as Locale;
+const t = useTranslations(lang);
+---
+
+<div id="command-palette" class="fixed inset-0 z-[100] hidden overflow-y-auto p-4 sm:p-6 md:p-20" role="dialog" aria-modal="true">
+	<!-- Backdrop -->
+	<div id="palette-backdrop" class="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity"></div>
+
+	<!-- Palette Panel -->
+	<div 
+	 class="relative mx-auto max-w-2xl transform divide-y divide-zinc-100 overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all"
+		data-translations={JSON.stringify(translations[lang])}
+		data-lang={lang}
+	>
+		<div class="relative">
+			<Search className="pointer-events-none absolute left-4 top-4 h-6 w-6 text-zinc-400" />
+			<input 
+				id="palette-input"
+				type="text" 
+			 class="h-14 w-full border-0 bg-transparent pl-12 pr-4 text-zinc-900 placeholder:text-zinc-400 focus:ring-0 sm:text-sm" 
+				placeholder={t('search.placeholder')}
+				autocomplete="off"
+			>
+			<button id="palette-close" class="absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 transition-colors">
+				<X size={20} />
+			</button>
+		</div>
+
+		<!-- Results -->
+		<div id="palette-results" class="max-h-96 overflow-y-auto p-2">
+			<!-- Injected via JS -->
+			<div id="empty-state" class="py-14 px-6 text-center sm:px-14">
+				<Search className="mx-auto h-10 w-10 text-zinc-300" />
+				<p class="mt-4 text-sm text-zinc-500">{t('search.placeholder')}</p>
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<div class="flex items-center justify-between bg-zinc-50 px-4 py-3 text-xs text-zinc-500">
+			<div class="flex gap-4">
+				<span class="flex items-center gap-1.5"><kbd class="bg-white border border-zinc-200 px-1.5 py-0.5 rounded shadow-sm text-zinc-900">↑↓</kbd> {t('search.nav')}</span>
+				<span class="flex items-center gap-1.5"><kbd class="bg-white border border-zinc-200 px-1.5 py-0.5 rounded shadow-sm text-zinc-900"><CornerDownLeft size={10} /></kbd> {t('search.select')}</span>
+			</div>
+			<div class="flex items-center gap-1.5">
+				<kbd class="bg-white border border-zinc-200 px-1.5 py-0.5 rounded shadow-sm text-zinc-900">ESC</kbd> {t('search.close')}
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	import { ALL_TOOLS } from '../../lib/tools';
+
+	let isOpen = false;
+	let selectedIndex = -1;
+	let filteredTools: any[] = [];
+
+	const palette = document.getElementById('command-palette');
+	const backdrop = document.getElementById('palette-backdrop');
+	const input = document.getElementById('palette-input') as HTMLInputElement;
+	const results = document.getElementById('palette-results');
+	const trigger = document.getElementById('search-trigger');
+	const closeBtn = document.getElementById('palette-close');
+	const emptyState = document.getElementById('empty-state');
+	const panel = document.querySelector('[data-translations]') as HTMLElement;
+	const tData = JSON.parse(panel?.dataset.translations || '{}');
+
+	function togglePalette(open: boolean) {
+		isOpen = open;
+		if (palette) {
+			palette.classList.toggle('hidden', !open);
+			if (open) {
+				input?.focus();
+				renderResults('');
+			}
+		}
+	}
+
+	function renderResults(query: string) {
+		if (!results) return;
+
+		filteredTools = query 
+			? ALL_TOOLS.filter(tool => {
+				const localizedTitle = (tData[`tool.${tool.id}.title`] || tool.title).toLowerCase();
+				const localizedDesc = (tData[`tool.${tool.id}.desc`] || tool.description).toLowerCase();
+				const q = query.toLowerCase();
+				return localizedTitle.includes(q) || localizedDesc.includes(q) || tool.id.includes(q);
+			})
+			: ALL_TOOLS.slice(0, 5); // Show top 5 when empty
+
+		selectedIndex = filteredTools.length > 0 ? 0 : -1;
+		
+		if (filteredTools.length === 0) {
+			results.innerHTML = '';
+			results.appendChild(emptyState!);
+			emptyState?.classList.remove('hidden');
+		} else {
+			emptyState?.classList.add('hidden');
+			results.innerHTML = filteredTools.map((tool, index) => {
+				const currentLang = panel?.dataset.lang || 'en';
+				const href = currentLang === 'en' ? tool.href : `/${currentLang}${tool.href}`;
+				return `
+					<a href="${href}" class="tool-result flex items-center gap-4 px-4 py-3 rounded-xl transition-colors ${index === 0 ? 'bg-zinc-100' : 'hover:bg-zinc-50'}" data-index="${index}">
+						<div class="w-10 h-10 bg-white border border-zinc-200 rounded-lg flex items-center justify-center text-zinc-900">
+							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tool"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+						</div>
+						<div class="flex-1 min-w-0">
+							<div class="text-sm font-bold text-zinc-900">${tData['tool.' + tool.id + '.title'] || tool.title}</div>
+							<div class="text-xs text-zinc-500 truncate">${tData['tool.' + tool.id + '.desc'] || tool.description}</div>
+						</div>
+						<div class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 bg-zinc-100 px-2 py-1 rounded">${tData['cat.' + tool.category] || tool.category}</div>
+					</a>
+				`;
+			}).join('');
+
+			// Add click listeners to record recent tools
+			const toolLinks = results.querySelectorAll('.tool-result');
+			toolLinks.forEach(link => {
+				link.addEventListener('click', () => {
+					const index = parseInt(link.getAttribute('data-index') || '0');
+					const tool = filteredTools[index];
+					recordRecentTool(tool.id);
+				});
+			});
+		}
+	}
+
+	function recordRecentTool(toolId: string) {
+		const recent = JSON.parse(localStorage.getItem('recent_tools') || '[]');
+		const newRecent = [toolId, ...recent.filter((id: string) => id !== toolId)].slice(0, 6);
+		localStorage.setItem('recent_tools', JSON.stringify(newRecent));
+	}
+
+	function updateSelection(newIndex: number) {
+		const resultElements = results?.querySelectorAll('.tool-result');
+		if (!resultElements) return;
+
+		resultElements.forEach((el, i) => {
+			el.classList.toggle('bg-zinc-100', i === newIndex);
+		});
+		selectedIndex = newIndex;
+		
+		// Scroll into view if needed
+		const selectedEl = resultElements[newIndex] as HTMLElement;
+		if (selectedEl) {
+			selectedEl.scrollIntoView({ block: 'nearest' });
+		}
+	}
+
+	// Keyboard Events
+	window.addEventListener('keydown', (e) => {
+		if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+			e.preventDefault();
+			togglePalette(true);
+		}
+		
+		if (!isOpen) return;
+
+		if (e.key === 'Escape') {
+			togglePalette(false);
+		}
+
+		if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			updateSelection((selectedIndex + 1) % filteredTools.length);
+		}
+
+		if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			updateSelection((selectedIndex - 1 + filteredTools.length) % filteredTools.length);
+		}
+
+		if (e.key === 'Enter' && selectedIndex !== -1) {
+			const tool = filteredTools[selectedIndex];
+			const currentLang = panel?.dataset.lang || 'en';
+			const href = currentLang === 'en' ? tool.href : `/${currentLang}${tool.href}`;
+			recordRecentTool(tool.id);
+			window.location.href = href;
+		}
+	});
+
+	// UI Events
+	input?.addEventListener('input', (e) => renderResults((e.target as HTMLInputElement).value));
+	trigger?.addEventListener('click', () => togglePalette(true));
+	backdrop?.addEventListener('click', () => togglePalette(false));
+	closeBtn?.addEventListener('click', () => togglePalette(false));
+
+	// Handle Astro View Transitions
+	document.addEventListener('astro:page-load', () => {
+		togglePalette(false);
+		// Re-attach trigger if needed
+		const newTrigger = document.getElementById('search-trigger');
+		newTrigger?.addEventListener('click', () => togglePalette(true));
+	});
+</script>

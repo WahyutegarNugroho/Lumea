@@ -1,0 +1,35 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = langParam || 'en';
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import FormatConverter from '../../../components/tools/FormatConverter';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.converter.title')}
+	description={t('tool.converter.desc')}
+	category="image"
+	toolId="converter"
+>
+	<FormatConverter client:only="react" lang={lang as any} />
+
+	<div slot="guide">
+		<h3>{t('guide.converter.h1')}</h3>
+		<ul>
+			<li><strong>{t('guide.converter.f1_t')}:</strong> {t('guide.converter.f1_d')}</li>
+			<li><strong>{t('guide.converter.f2_t')}:</strong> {t('guide.converter.f2_d')}</li>
+			<li><strong>{t('guide.converter.f3_t')}:</strong> {t('guide.converter.f3_d')}</li>
+		</ul>
+	</div>
+</ToolLayout>

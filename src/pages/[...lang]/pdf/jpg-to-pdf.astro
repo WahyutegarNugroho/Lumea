@@ -1,0 +1,37 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = langParam || 'en';
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import JpgToPdf from '../../../components/tools/JpgToPdf';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.jpg-to-pdf.title')}
+	description={t('tool.jpg-to-pdf.desc')}
+	category="pdf"
+	toolId="jpg-to-pdf"
+>
+	<JpgToPdf client:only="react" lang={lang as any} />
+
+	<div slot="guide">
+		<h3>{t('guide.jpg-to-pdf.h1')}</h3>
+		<p>{t('guide.jpg-to-pdf.p1')}</p>
+		
+		<ul>
+			<li><strong>{t('guide.jpg-to-pdf.f1_t')}</strong> {t('guide.jpg-to-pdf.f1_d')}</li>
+			<li><strong>{t('guide.jpg-to-pdf.f2_t')}</strong> {t('guide.jpg-to-pdf.f2_d')}</li>
+			<li><strong>{t('badge.browser_only')}</strong> {t('footer.privacy.desc')}</li>
+		</ul>
+	</div>
+</ToolLayout>

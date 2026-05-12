@@ -1,0 +1,58 @@
+---
+import { ArrowRight } from 'lucide-react';
+import { useTranslations, type Locale, getLocalizedPath } from '../../lib/i18n';
+
+interface Props {
+	title: string;
+	description: string;
+	href: string;
+	icon: any; // Lucide icon
+	color: 'blue' | 'purple' | 'emerald' | 'orange' | 'rose' | 'amber';
+	isExternal?: boolean;
+}
+
+const { title, description, href, icon: Icon, color, isExternal = false } = Astro.props;
+
+const lang = (Astro.currentLocale || 'en') as Locale;
+const t = useTranslations(lang);
+
+const iconContainerClasses = {
+	blue: 'bg-blue-100 text-blue-600',
+	purple: 'bg-purple-100 text-purple-600',
+	emerald: 'bg-emerald-100 text-emerald-600',
+	orange: 'bg-orange-100 text-orange-600',
+	rose: 'bg-rose-100 text-rose-600',
+	amber: 'bg-amber-100 text-amber-600',
+};
+---
+
+<a href={getLocalizedPath(href, lang)} class="group relative block p-6 bg-white border border-zinc-200 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-zinc-200/50 hover:-translate-y-1 overflow-hidden">
+	<!-- Decorative Background Gradient -->
+	<div class={`absolute -right-4 -top-4 w-24 h-24 blur-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-20 ${color === 'blue' ? 'bg-blue-400' : color === 'purple' ? 'bg-purple-400' : color === 'emerald' ? 'bg-emerald-400' : color === 'orange' ? 'bg-orange-400' : color === 'rose' ? 'bg-rose-400' : 'bg-amber-400'}`}></div>
+
+	<div class="relative z-10">
+		<div class="flex items-center justify-between mb-4">
+			<div class={`inline-flex items-center justify-center w-12 h-12 rounded-xl transition-colors duration-300 ${iconContainerClasses[color]}`}>
+				<Icon size={24} strokeWidth={2} />
+			</div>
+			{isExternal && (
+				<span class="px-2 py-1 bg-zinc-100 text-zinc-400 text-[10px] font-black uppercase tracking-widest rounded-md border border-zinc-200 group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900 transition-all">
+					{t('ui.external_label')}
+				</span>
+			)}
+		</div>
+		
+		<h3 class="text-lg font-bold text-zinc-900 mb-2 font-outfit group-hover:text-zinc-900 transition-colors">
+			{title}
+		</h3>
+		
+		<p class="text-zinc-500 text-sm leading-relaxed mb-4 group-hover:text-zinc-600 transition-colors">
+			{description}
+		</p>
+		
+		<div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-400 group-hover:text-zinc-900 transition-colors">
+			{t('nav.tools')}
+			<ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+		</div>
+	</div>
+</a>

@@ -1,0 +1,57 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = langParam || 'en';
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import OcrTool from '../../../components/tools/OcrTool';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.ocr.title')}
+	description={t('tool.ocr.desc')}
+	category="image"
+	toolId="ocr"
+>
+	<OcrTool client:only="react" lang={lang as any} />
+
+	<div slot="guide">
+		<h3 class="text-2xl font-bold mb-6">{t('ui.how_to')} {t('tool.ocr.title')}</h3>
+		<p class="text-zinc-500 mb-12">Digitize your physical documents, screenshots, and photos instantly with our private, on-device AI scanner.</p>
+		
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">01</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">Upload Image</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">Drop your image (JPG, PNG, WebP) into the upload area. For best results, ensure the text is clear and well-lit.</p>
+			</div>
+			
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">02</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">Select Language</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">Choose the primary language of the text in the image. This helps the AI recognize characters more accurately.</p>
+			</div>
+			
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">03</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">Scan & Copy</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">Click "Extract Text". Once finished, your editable text will appear in the result box, ready to be copied or edited.</p>
+			</div>
+		</div>
+	</div>
+</ToolLayout>

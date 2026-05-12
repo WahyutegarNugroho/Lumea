@@ -1,0 +1,35 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = langParam || 'en';
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import PdfCompressor from '../../../components/tools/PdfCompressor';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.pdf-compressor.title')}
+	description={t('tool.pdf-compressor.desc')}
+	category="pdf"
+	toolId="pdf-compressor"
+>
+	<PdfCompressor client:only="react" lang={lang as any} />
+
+	<div slot="guide">
+		<h3>{t('guide.pdf-compressor.h1')}</h3>
+		<p>{t('guide.pdf-compressor.p1')}</p>
+		
+		<ul>
+			<li><strong>{t('guide.pdf-compressor.f1_t')}:</strong> {t('guide.pdf-compressor.f1_d')}</li>
+		</ul>
+	</div>
+</ToolLayout>

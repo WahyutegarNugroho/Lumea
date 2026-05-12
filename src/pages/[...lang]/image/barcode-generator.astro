@@ -1,0 +1,57 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = langParam || 'en';
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import BarcodeGenerator from '../../../components/tools/BarcodeGenerator';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.barcode-generator.title')}
+	description={t('tool.barcode-generator.desc')}
+	category="image"
+	toolId="barcode-generator"
+>
+	<BarcodeGenerator client:only="react" lang={lang as any} />
+
+	<div slot="guide">
+		<h3 class="text-2xl font-bold mb-6">{t('ui.how_to')} {t('tool.barcode-generator.title')}</h3>
+		<p class="text-zinc-500 mb-12">Create industry-standard barcodes for your retail, inventory, or logistics needs instantly without any tracking.</p>
+		
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">01</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">Select Format</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">Choose from various standards like Code 128 (general purpose), EAN-13 (retail), or UPC-A (North American retail).</p>
+			</div>
+			
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">02</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">Input Data</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">Enter the text or numeric code you want to encode. The preview will update instantly to show your barcode.</p>
+			</div>
+			
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">03</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">Download</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">Once satisfied, download your barcode as a high-resolution PNG image ready for printing on labels or packaging.</p>
+			</div>
+		</div>
+	</div>
+</ToolLayout>

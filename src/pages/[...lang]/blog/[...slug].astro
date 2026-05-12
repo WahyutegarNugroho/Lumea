@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { BookOpen, ArrowLeft } from 'lucide-react';
+import { useTranslations, getLocalizedPath } from '../../../lib/i18n';
+
+export async function getStaticPaths() {
+	const guides = await getCollection('guides');
+	const langs = [undefined, 'id', 'es'];
+	
+	return langs.flatMap(lang => 
+		guides.map((entry: any) => ({
+			params: { lang, slug: entry.slug },
+			props: { entry, lang: lang || 'en' },
+		}))
+	);
+}
+
+const { entry, lang } = Astro.props;
+const { Content } = await entry.render();
+const t = useTranslations(lang as any);
+---
+
+<BaseLayout 
+	title={`${entry.data.title} - Lumea Blog`} 
+	description={entry.data.description}
+>
+	<div class="bg-zinc-50 border-b border-zinc-200 py-16">
+		<div class="container mx-auto px-4 max-w-4xl">
+			<a href={getLocalizedPath('/blog', lang as any)} class="inline-flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-zinc-900 transition-colors mb-8 uppercase tracking-widest">
+				<ArrowLeft size={16} />
+				{t('blog.back')}
+			</a>
+			
+			<div class="inline-flex items-center gap-2 px-3 py-1 bg-zinc-200 text-zinc-600 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
+				{entry.data.category}
+			</div>
+			
+			<h1 class="text-4xl md:text-6xl font-bold font-outfit text-zinc-900 mb-6 leading-tight">
+				{entry.data.title}
+			</h1>
+			
+			<p class="text-xl text-zinc-500 leading-relaxed max-w-3xl">
+				{entry.data.description}
+			</p>
+		</div>
+	</div>
+
+	<article class="container mx-auto px-4 py-16 max-w-4xl">
+		<div class="prose prose-zinc prose-lg max-w-none">
+			<Content />
+		</div>
+		
+		<div class="mt-16 pt-8 border-t border-zinc-100 flex flex-col items-center text-center">
+			<div class="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center text-white mb-4">
+				<BookOpen size={32} />
+			</div>
+			<h3 class="text-xl font-bold font-outfit text-zinc-900">{t('blog.helpful')}</h3>
+			<p class="text-zinc-500 mb-6">{t('blog.share')}</p>
+			
+			<div class="flex gap-4">
+				<a 
+					href={getLocalizedPath(`/${entry.data.category}/${entry.data.toolId}`, lang as any)} 
+				 class="px-8 py-4 bg-zinc-900 text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-xl shadow-zinc-200"
+				>
+					{t('blog.try_tool')}
+				</a>
+			</div>
+		</div>
+	</article>
+</BaseLayout>
+
+<style is:global>
+	@reference "../../../styles/global.css";
+	/* Custom prose styling for modern look */
+	.prose h3 {
+		@apply font-outfit font-bold text-2xl mt-12 mb-6;
+	}
+	.prose p {
+		@apply text-zinc-600 leading-relaxed mb-6;
+	}
+	.prose ul, .prose ol {
+		@apply my-6 space-y-3;
+	}
+	.prose li {
+		@apply text-zinc-600;
+	}
+	.prose strong {
+		@apply text-zinc-900 font-bold;
+	}
+	.prose code {
+		@apply bg-zinc-100 px-1.5 py-0.5 rounded text-zinc-900 font-mono text-sm;
+	}
+</style>

@@ -1,0 +1,57 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = langParam || 'en';
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import CodeFormatter from '../../../components/tools/CodeFormatter';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.code-formatter.title')}
+	description={t('tool.code-formatter.desc')}
+	category="dev"
+	toolId="code-formatter"
+>
+	<CodeFormatter client:only="react" lang={lang as any} />
+
+	<div slot="guide">
+		<h3 class="text-2xl font-bold mb-6">{t('ui.how_to')} {t('tool.code-formatter.title')}</h3>
+		<p class="text-zinc-500 mb-12">{t('guide.code-formatter.p1')}</p>
+		
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">01</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">{t('guide.code-formatter.step1_t')}</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">{t('guide.code-formatter.step1_d')}</p>
+			</div>
+			
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">02</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">{t('guide.code-formatter.step2_t')}</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">{t('guide.code-formatter.step2_d')}</p>
+			</div>
+			
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">03</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">{t('guide.code-formatter.step3_t')}</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">{t('guide.code-formatter.step3_d')}</p>
+			</div>
+		</div>
+	</div>
+</ToolLayout>

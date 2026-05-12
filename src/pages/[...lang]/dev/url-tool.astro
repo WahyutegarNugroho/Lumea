@@ -1,0 +1,94 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = (langParam || 'en') as any;
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import { ArrowLeftRight } from 'lucide-react';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.url-tool.title')}
+	description={t('tool.url-tool.desc')}
+	category="dev"
+>
+	<div class="space-y-8">
+		<div class="grid grid-cols-1 lg:grid-cols-[1fr,auto,1fr] items-center gap-6">
+			<div>
+				<label class="tool-label">{t('ui.decoded_url')}</label>
+				<textarea 
+					id="decoded-url" 
+				 class="tool-input min-h-[300px] font-mono text-sm" 
+					placeholder={t('ui.enter_decoded')}
+				></textarea>
+			</div>
+
+			<div class="flex flex-col gap-4">
+				<button id="convert-btn" class="tool-button-primary p-3 rounded-full flex items-center justify-center">
+					<ArrowLeftRight size={24} className="rotate-90 lg:rotate-0" />
+				</button>
+			</div>
+
+			<div>
+				<label class="tool-label">{t('ui.encoded_url')}</label>
+				<textarea 
+					id="encoded-url" 
+				 class="tool-input min-h-[300px] font-mono text-sm" 
+					placeholder={t('ui.enter_encoded')}
+				></textarea>
+			</div>
+		</div>
+
+		<div class="flex flex-wrap gap-4 pt-4 border-t border-zinc-100">
+			<button id="clear-btn" class="tool-button-secondary">{t('ui.clear')}</button>
+		</div>
+	</div>
+
+	<div slot="guide">
+		<h3>{t('guide.url-tool.h1')}</h3>
+		<p>{t('guide.url-tool.p1')}</p>
+		
+		<ul>
+			<li><strong>{t('guide.url-tool.f1_t')}:</strong> {t('guide.url-tool.f1_d')}</li>
+		</ul>
+	</div>
+</ToolLayout>
+
+<script>
+	const decodedInput = document.getElementById('decoded-url') as HTMLTextAreaElement;
+	const encodedInput = document.getElementById('encoded-url') as HTMLTextAreaElement;
+	const clearBtn = document.getElementById('clear-btn');
+
+	function encode() {
+		try {
+			encodedInput.value = encodeURIComponent(decodedInput.value);
+		} catch (e) {
+			console.error("Encoding failed", e);
+		}
+	}
+
+	function decode() {
+		try {
+			decodedInput.value = decodeURIComponent(encodedInput.value);
+		} catch (e) {
+			console.error("Decoding failed", e);
+		}
+	}
+
+	decodedInput?.addEventListener('input', encode);
+	encodedInput?.addEventListener('input', decode);
+
+	clearBtn?.addEventListener('click', () => {
+		decodedInput.value = '';
+		encodedInput.value = '';
+	});
+</script>

@@ -1,0 +1,270 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ToolCard from '../components/ui/ToolCard.astro';
+import { ALL_TOOLS } from '../lib/tools';
+import lucide from 'lucide-react';
+const { FileText, Image: ImageIcon, Type, Code, Clock } = lucide;
+
+const pdfTools = ALL_TOOLS.filter(t => t.category === 'pdf');
+const imageTools = ALL_TOOLS.filter(t => t.category === 'image');
+const textTools = ALL_TOOLS.filter(t => t.category === 'text');
+const devTools = ALL_TOOLS.filter(t => t.category === 'dev');
+
+import { useTranslations, translations, type Locale } from '../lib/i18n';
+const lang = (Astro.currentLocale || 'en') as Locale;
+const t = useTranslations(lang);
+---
+
+<BaseLayout>
+	<!-- Hero Section -->
+	<section class="relative pt-20 pb-32 overflow-hidden">
+		<!-- Background Glows -->
+		<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[500px] bg-zinc-100/50 rounded-[100%] blur-3xl -z-10"></div>
+		
+		<div class="container mx-auto px-4 text-center">
+			<div class="inline-flex items-center gap-2 px-3 py-1 bg-zinc-900 text-white rounded-full text-xs font-bold uppercase tracking-widest mb-8 animate-fade-in">
+				<span class="relative flex h-2 w-2">
+					<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+					<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+				</span>
+				{t('badge.browser_only')}
+			</div>
+			
+			<h1 class="text-5xl md:text-7xl font-bold font-outfit tracking-tight text-zinc-900 mb-6 max-w-4xl mx-auto leading-[1.1]">
+				{t('hero.title')} <span class="text-zinc-400">{t('hero.subtitle')}</span>
+			</h1>
+			
+			<p class="text-xl text-zinc-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+				{t('hero.description')}
+			</p>
+			
+			<div class="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto">
+				<a href="#pdf" class="group px-6 py-4 bg-zinc-900 text-white rounded-2xl font-bold transition-all hover:bg-zinc-800 hover:scale-105 hover:shadow-xl hover:shadow-rose-500/10 flex items-center gap-3 border border-zinc-800">
+					<div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
+						<FileText size={18} />
+					</div>
+					{t('hero.cta.pdf')}
+				</a>
+				<a href="#image" class="group px-6 py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-bold transition-all hover:bg-zinc-50 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/10 flex items-center gap-3">
+					<div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+						<ImageIcon size={18} />
+					</div>
+					{t('hero.cta.image')}
+				</a>
+				<a href="#text" class="group px-6 py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-bold transition-all hover:bg-zinc-50 hover:scale-105 hover:shadow-xl hover:shadow-emerald-500/10 flex items-center gap-3">
+					<div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+						<Type size={18} />
+					</div>
+					{t('hero.cta.text')}
+				</a>
+				<a href="#dev" class="group px-6 py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-bold transition-all hover:bg-zinc-50 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/10 flex items-center gap-3">
+					<div class="w-8 h-8 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+						<Code size={18} />
+					</div>
+					{t('hero.cta.dev')}
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<div class="container mx-auto px-4 pb-32 space-y-24">
+		<!-- Recent Tools Section -->
+		<section id="recent-tools-section" class="hidden scroll-mt-24">
+			<div class="flex items-center gap-4 mb-10">
+				<div class="w-12 h-12 bg-zinc-100 text-zinc-900 rounded-2xl flex items-center justify-center">
+					<Clock size={24} />
+				</div>
+				<div>
+					<h2 class="text-3xl font-bold font-outfit text-zinc-900">{t('recent.title')}</h2>
+					<p class="text-zinc-500">{t('recent.subtitle')}</p>
+				</div>
+			</div>
+			<div 
+				id="recent-tools-grid" 
+				data-label={t('recent.tag')} 
+				data-translations={JSON.stringify(translations[lang])}
+				data-lang={lang}
+			 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+			>
+				<!-- Injected via script -->
+			</div>
+		</section>
+		
+		<!-- PDF Section -->
+		<section id="pdf" class="scroll-mt-24">
+			<div class="flex items-center gap-4 mb-10">
+				<div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center">
+					<FileText size={24} />
+				</div>
+				<div>
+					<h2 class="text-3xl font-bold font-outfit text-zinc-900">{t('cat.pdf')}</h2>
+					<p class="text-zinc-500">{t('cat.pdf.desc')}</p>
+				</div>
+			</div>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				{pdfTools.map(tool => (
+					<ToolCard 
+						{...tool as any} 
+						title={t(`tool.${tool.id}.title`)}
+						description={t(`tool.${tool.id}.desc`)}
+						color="rose" 
+					/>
+				))}
+			</div>
+		</section>
+
+		<!-- Image Section -->
+		<section id="image" class="scroll-mt-24">
+			<div class="flex items-center gap-4 mb-10">
+				<div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center">
+					<ImageIcon size={24} />
+				</div>
+				<div>
+					<h2 class="text-3xl font-bold font-outfit text-zinc-900">{t('cat.image')}</h2>
+					<p class="text-zinc-500">{t('cat.image.desc')}</p>
+				</div>
+			</div>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				{imageTools.map(tool => (
+					<ToolCard 
+						{...tool as any} 
+						title={t(`tool.${tool.id}.title`)}
+						description={t(`tool.${tool.id}.desc`)}
+						color="blue" 
+					/>
+				))}
+			</div>
+		</section>
+
+		<!-- Text Section -->
+		<section id="text" class="scroll-mt-24">
+			<div class="flex items-center gap-4 mb-10">
+				<div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center">
+					<Type size={24} />
+				</div>
+				<div>
+					<h2 class="text-3xl font-bold font-outfit text-zinc-900">{t('cat.text')}</h2>
+					<p class="text-zinc-500">{t('cat.text.desc')}</p>
+				</div>
+			</div>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				{textTools.map(tool => (
+					<ToolCard 
+						{...tool as any} 
+						title={t(`tool.${tool.id}.title`)}
+						description={t(`tool.${tool.id}.desc`)}
+						color="emerald" 
+					/>
+				))}
+			</div>
+		</section>
+
+		<!-- Developer Section -->
+		<section id="dev" class="scroll-mt-24">
+			<div class="flex items-center gap-4 mb-10">
+				<div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center">
+					<Code size={24} />
+				</div>
+				<div>
+					<h2 class="text-3xl font-bold font-outfit text-zinc-900">{t('cat.dev')}</h2>
+					<p class="text-zinc-500">{t('cat.dev.desc')}</p>
+				</div>
+			</div>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				{devTools.map(tool => (
+					<ToolCard 
+						{...tool as any} 
+						title={t(`tool.${tool.id}.title`)}
+						description={t(`tool.${tool.id}.desc`)}
+						color="purple" 
+					/>
+				))}
+			</div>
+		</section>
+	</div>
+
+	<!-- Trust Banner -->
+	<section class="bg-zinc-900 py-24 overflow-hidden relative">
+		<div class="absolute top-0 right-0 w-96 h-96 bg-zinc-800 rounded-full blur-3xl opacity-50 -mr-48 -mt-48"></div>
+		<div class="container mx-auto px-4 relative z-10">
+			<div class="max-w-3xl">
+				<h2 class="text-3xl md:text-5xl font-bold font-outfit text-white mb-6">
+					{t('trust.title')}
+				</h2>
+				<p class="text-zinc-400 text-lg mb-8">
+					{t('trust.description')}
+				</p>
+				<div class="flex flex-wrap gap-8">
+					<div class="flex flex-col">
+						<span class="text-white font-bold text-3xl mb-1">0</span>
+						<span class="text-zinc-500 text-sm uppercase tracking-wider">{t('trust.uploaded')}</span>
+					</div>
+					<div class="flex flex-col">
+						<span class="text-white font-bold text-3xl mb-1">100%</span>
+						<span class="text-zinc-500 text-sm uppercase tracking-wider">{t('trust.client')}</span>
+					</div>
+					<div class="flex flex-col">
+						<span class="text-white font-bold text-3xl mb-1">∞</span>
+						<span class="text-zinc-500 text-sm uppercase tracking-wider">{t('trust.free')}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</BaseLayout>
+
+<script>
+	import { ALL_TOOLS } from '../lib/tools';
+
+	function updateRecentTools() {
+		const recentIds = JSON.parse(localStorage.getItem('recent_tools') || '[]');
+		const section = document.getElementById('recent-tools-section');
+		const grid = document.getElementById('recent-tools-grid');
+
+		if (recentIds.length > 0 && section && grid) {
+			const tData = JSON.parse(grid.dataset.translations || '{}');
+			section.classList.remove('hidden');
+			const recentTools = recentIds
+				.map((id: string) => ALL_TOOLS.find(t => t.id === id))
+				.filter(Boolean)
+				.slice(0, 3);
+
+			grid.innerHTML = recentTools.map((tool: any) => {
+				const currentLang = grid.dataset.lang || 'en';
+				const href = currentLang === 'en' ? tool.href : `/${currentLang}${tool.href}`;
+				const externalBadge = tool.isExternal 
+					? `<span class="px-2 py-1 bg-zinc-100 text-zinc-400 text-[10px] font-black uppercase tracking-widest rounded-md border border-zinc-200 group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900 transition-all">${tData['ui.external_label'] || 'External'}</span>`
+					: '';
+				
+				return `
+					<a href="${href}" class="group relative block p-6 bg-white border border-zinc-200 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-zinc-200/50 hover:-translate-y-1 overflow-hidden">
+						<div class="relative z-10">
+							<div class="flex items-center justify-between mb-4">
+								<div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-100 text-zinc-900 group-hover:bg-zinc-900 group-hover:text-white transition-colors">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+								</div>
+								${externalBadge}
+							</div>
+							<h3 class="text-lg font-bold text-zinc-900 mb-2 font-outfit">${tData['tool.' + tool.id + '.title'] || tool.title}</h3>
+							<p class="text-zinc-500 text-sm leading-relaxed mb-4">${tData['tool.' + tool.id + '.desc'] || tool.description}</p>
+							<div class="text-xs font-bold uppercase tracking-wider text-zinc-400 group-hover:text-zinc-900 transition-colors">${grid.dataset.label || 'Recently Used'}</div>
+						</div>
+					</a>
+				`;
+			}).join('');
+		}
+	}
+
+	// Run on initial load and after transitions
+	document.addEventListener('astro:page-load', updateRecentTools);
+</script>
+
+<style>
+	@keyframes fade-in {
+		from { opacity: 0; transform: translateY(10px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+	.animate-fade-in {
+		animation: fade-in 0.8s ease-out forwards;
+	}
+</style>

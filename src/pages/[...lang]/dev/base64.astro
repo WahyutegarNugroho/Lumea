@@ -1,0 +1,95 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = (langParam || 'en') as any;
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import { ArrowLeftRight } from 'lucide-react';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.base64.title')}
+	description={t('tool.base64.desc')}
+	category="dev"
+	toolId="base64"
+>
+	<div class="space-y-8">
+		<div class="grid grid-cols-1 lg:grid-cols-[1fr,auto,1fr] items-center gap-6">
+			<div>
+				<label class="tool-label">{t('ui.normal_text')}</label>
+				<textarea 
+					id="plain-text" 
+				 class="tool-input min-h-[300px] font-mono text-sm" 
+					placeholder={t('ui.enter_normal_text')}
+				></textarea>
+			</div>
+
+			<div class="flex flex-col gap-4">
+				<button id="encode-btn" class="tool-button-primary p-3 rounded-full flex items-center justify-center">
+					<ArrowLeftRight size={24} className="rotate-90 lg:rotate-0" />
+				</button>
+			</div>
+
+			<div>
+				<label class="tool-label">{t('ui.base64_encoded')}</label>
+				<textarea 
+					id="base64-text" 
+				 class="tool-input min-h-[300px] font-mono text-sm" 
+					placeholder={t('ui.enter_base64')}
+				></textarea>
+			</div>
+		</div>
+
+		<div class="flex flex-wrap gap-4 pt-4 border-t border-zinc-100">
+			<button id="clear-btn" class="tool-button-secondary">{t('ui.clear')}</button>
+		</div>
+	</div>
+
+	<div slot="guide">
+		<h3>{t('guide.base64.h1')}</h3>
+		<p>{t('guide.base64.p1')}</p>
+		
+		<ul>
+			<li><strong>{t('guide.base64.f1_t')}:</strong> {t('guide.base64.f1_d')}</li>
+		</ul>
+	</div>
+</ToolLayout>
+
+<script>
+	const plainText = document.getElementById('plain-text') as HTMLTextAreaElement;
+	const base64Text = document.getElementById('base64-text') as HTMLTextAreaElement;
+	const clearBtn = document.getElementById('clear-btn');
+
+	function encode() {
+		try {
+			base64Text.value = btoa(unescape(encodeURIComponent(plainText.value)));
+		} catch (e) {
+			console.error("Encoding failed", e);
+		}
+	}
+
+	function decode() {
+		try {
+			plainText.value = decodeURIComponent(escape(atob(base64Text.value)));
+		} catch (e) {
+			console.error("Decoding failed", e);
+		}
+	}
+
+	plainText?.addEventListener('input', encode);
+	base64Text?.addEventListener('input', decode);
+
+	clearBtn?.addEventListener('click', () => {
+		plainText.value = '';
+		base64Text.value = '';
+	});
+</script>

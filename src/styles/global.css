@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --font-outfit: "Outfit", sans-serif;
+  --font-inter: "Inter", sans-serif;
+}
+
+@layer components {
+	.tool-input {
+		@apply w-full bg-zinc-50 border border-zinc-200 rounded-2xl p-4 text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all;
+	}
+	
+	.tool-label {
+		@apply block text-sm font-bold text-zinc-400 uppercase tracking-wider mb-2 ml-1;
+	}
+
+	.tool-button-primary {
+		@apply px-6 py-3 bg-zinc-900 text-white rounded-xl font-bold transition-all hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+	}
+
+	.tool-button-secondary {
+		@apply px-6 py-3 bg-white text-zinc-900 border border-zinc-200 rounded-xl font-bold transition-all hover:bg-zinc-50 hover:border-zinc-300 active:scale-[0.98];
+	}
+}

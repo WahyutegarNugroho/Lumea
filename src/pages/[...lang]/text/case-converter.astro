@@ -1,0 +1,121 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = (langParam || 'en') as any;
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import { Copy, Trash2 } from 'lucide-react';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang);
+---
+
+<ToolLayout 
+	title={t('tool.case-converter.title')}
+	description={t('tool.case-converter.desc')}
+	category="text"
+	toolId="case-converter"
+>
+	<div class="space-y-6">
+		<div>
+			<label for="text-input" class="tool-label">{t('ui.your_text')}</label>
+			<textarea 
+				id="text-input" 
+			 class="tool-input min-h-[250px]" 
+				placeholder={t('ui.placeholder_text')}
+			></textarea>
+		</div>
+
+		<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+			<button data-case="upper" class="tool-button-secondary text-sm px-4">{t('ui.case.upper')}</button>
+			<button data-case="lower" class="tool-button-secondary text-sm px-4">{t('ui.case.lower')}</button>
+			<button data-case="title" class="tool-button-secondary text-sm px-4">{t('ui.case.title')}</button>
+			<button data-case="sentence" class="tool-button-secondary text-sm px-4">{t('ui.case.sentence')}</button>
+			<button data-case="capital" class="tool-button-secondary text-sm px-4">{t('ui.case.capitalize')}</button>
+		</div>
+
+		<div class="flex flex-wrap gap-4 pt-4 border-t border-zinc-100">
+			<button id="copy-btn" class="tool-button-primary flex items-center gap-2" data-copied={t('ui.copied')}>
+				<Copy size={18} />
+				{t('ui.copy')}
+			</button>
+			<button id="clear-btn" class="tool-button-secondary flex items-center gap-2">
+				<Trash2 size={18} />
+				{t('ui.clear')}
+			</button>
+		</div>
+	</div>
+
+	<div slot="guide">
+		<h3>{t('guide.case-converter.h1')}</h3>
+		<p>{t('guide.case-converter.p1')}</p>
+		
+		<ul>
+			<li><strong>{t('guide.case-converter.f1_t')}:</strong> {t('guide.case-converter.f1_d')}</li>
+			<li><strong>{t('guide.case-converter.f2_t')}:</strong> {t('guide.case-converter.f2_d')}</li>
+			<li><strong>{t('guide.case-converter.f3_t')}:</strong> {t('guide.case-converter.f3_d')}</li>
+			<li><strong>{t('guide.case-converter.f4_t')}:</strong> {t('guide.case-converter.f4_d')}</li>
+		</ul>
+	</div>
+</ToolLayout>
+
+<script>
+	const textInput = document.getElementById('text-input') as HTMLTextAreaElement;
+	const caseButtons = document.querySelectorAll('[data-case]');
+	const copyBtn = document.getElementById('copy-btn');
+	const clearBtn = document.getElementById('clear-btn');
+
+	function toTitleCase(str: string) {
+		return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase());
+	}
+
+	function toSentenceCase(str: string) {
+		return str.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => c.toUpperCase());
+	}
+
+	caseButtons.forEach(btn => {
+		btn.addEventListener('click', () => {
+			const type = btn.getAttribute('data-case');
+			const text = textInput.value;
+			
+			switch (type) {
+				case 'upper':
+					textInput.value = text.toUpperCase();
+					break;
+				case 'lower':
+					textInput.value = text.toLowerCase();
+					break;
+				case 'title':
+					textInput.value = toTitleCase(text);
+					break;
+				case 'sentence':
+					textInput.value = toSentenceCase(text);
+					break;
+				case 'capital':
+					textInput.value = text.replace(/\b\w/g, l => l.toUpperCase());
+					break;
+			}
+		});
+	});
+
+	copyBtn?.addEventListener('click', () => {
+		textInput.select();
+		navigator.clipboard.writeText(textInput.value);
+		const originalHtml = copyBtn.innerHTML;
+		const copiedText = copyBtn.getAttribute('data-copied') || '...';
+		copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><polyline points="20 6 9 17 4 12"/></svg> ${copiedText}`;
+		setTimeout(() => {
+			copyBtn.innerHTML = originalHtml;
+		}, 2000);
+	});
+
+	clearBtn?.addEventListener('click', () => {
+		textInput.value = '';
+	});
+</script>

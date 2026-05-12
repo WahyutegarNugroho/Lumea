@@ -1,0 +1,81 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { ShieldCheck, Info } from 'lucide-react';
+
+interface Props {
+	title: string;
+	description: string;
+	category: string;
+	toolId?: string;
+}
+
+const { title, description, category, toolId } = Astro.props;
+
+import { useTranslations, type Locale } from '../lib/i18n';
+const lang = (Astro.currentLocale || 'en') as Locale;
+const t = useTranslations(lang);
+
+import { getCollection, render } from 'astro:content';
+const guides = await getCollection('guides');
+const guide = toolId ? guides.find((g: any) => g.data.toolId === toolId) : null;
+const rendered = guide ? await render(guide) : null;
+const Content = rendered?.Content;
+---
+
+<BaseLayout title={`${title} - Lumea Tools`} description={description}>
+	<div class="container mx-auto px-4 py-12">
+		<!-- Breadcrumbs -->
+		<nav class="flex mb-8 text-sm font-medium text-zinc-500" aria-label="Breadcrumb">
+			<ol class="flex items-center space-x-2">
+				<li><a href="/" class="hover:text-zinc-900 transition-colors">{t('nav.home')}</a></li>
+				<li><span class="px-1">/</span></li>
+				<li class="capitalize">{t(`cat.${category}`) || category}</li>
+				<li><span class="px-1">/</span></li>
+				<li class="text-zinc-900">{t(`tool.${toolId}.title`) || title}</li>
+			</ol>
+		</nav>
+
+		<div class="max-w-5xl mx-auto">
+			<!-- Header -->
+			<div class="mb-10 text-center md:text-left">
+				<h1 class="text-4xl font-bold font-outfit text-zinc-900 mb-4">{t(`tool.${toolId}.title`) || title}</h1>
+				<p class="text-lg text-zinc-500 max-w-2xl">{t(`tool.${toolId}.desc`) || description}</p>
+				
+				<div class="mt-6 flex flex-wrap gap-4 justify-center md:justify-start">
+					<div class="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100 text-xs font-medium">
+						<ShieldCheck size={14} />
+						{t('ui.secure')}
+					</div>
+				</div>
+			</div>
+
+			<!-- Tool Interface -->
+			<div class="bg-white border border-zinc-200 rounded-3xl shadow-sm overflow-hidden mb-16">
+				<div id="tool-container" class="p-6 md:p-8">
+					<slot />
+				</div>
+			</div>
+
+			<!-- SEO Guide Area -->
+			<div class="prose prose-zinc max-w-none border-t border-zinc-100 pt-16 pb-24">
+				<div class="flex items-center gap-2 mb-8 text-zinc-400">
+					<Info size={20} />
+					<h2 class="text-xl font-bold font-outfit text-zinc-900 m-0">{t('ui.how_to')} {t(`tool.${toolId}.title`) || title}</h2>
+				</div>
+				<slot name="guide">
+					{Content ? <Content /> : <p>{t('ui.guide_coming_soon')} {title}.</p>}
+				</slot>
+			</div>
+		</div>
+	</div>
+</BaseLayout>
+
+<script is:inline define:vars={{ toolId }} data-astro-rerun>
+	if (toolId) {
+		const recent = JSON.parse(localStorage.getItem('recent_tools') || '[]');
+		const newRecent = [toolId, ...recent.filter(id => id !== toolId)].slice(0, 6);
+		localStorage.setItem('recent_tools', JSON.stringify(newRecent));
+	}
+</script>
+
+

@@ -1,0 +1,127 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = (langParam || 'en') as any;
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import { Copy, Trash2, AlignLeft, Minimize2 } from 'lucide-react';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.json-formatter.title')}
+	description={t('tool.json-formatter.desc')}
+	category="dev"
+	toolId="json-formatter"
+>
+	<div class="space-y-6">
+		<div class="flex flex-wrap gap-4 mb-4">
+			<button id="format-btn" class="tool-button-primary flex items-center gap-2">
+				<AlignLeft size={18} />
+				{t('ui.beautify')}
+			</button>
+			<button id="minify-btn" class="tool-button-secondary flex items-center gap-2">
+				<Minimize2 size={18} />
+				{t('ui.minify')}
+			</button>
+			<div class="flex items-center gap-2 ml-auto">
+				<span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">{t('ui.indent')}:</span>
+				<select id="indent" class="bg-zinc-50 border border-zinc-200 rounded-lg px-2 py-1 text-sm outline-none">
+					<option value="2">2 {t('ui.spaces')}</option>
+					<option value="4">4 {t('ui.spaces')}</option>
+					<option value="\t">{t('ui.indent')}</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="grid grid-cols-1 gap-6">
+			<div>
+				<label for="json-input" class="tool-label">{t('ui.json_input_output')}</label>
+				<textarea 
+					id="json-input" 
+				 class="tool-input min-h-[400px] font-mono text-sm" 
+					placeholder={t('ui.paste_json')}
+				></textarea>
+			</div>
+		</div>
+
+		<div id="error-msg" class="hidden p-4 bg-rose-50 border border-rose-100 rounded-2xl text-rose-600 text-sm font-medium">
+			{t('ui.invalid_json')}: <span id="error-details"></span>
+		</div>
+
+		<div class="flex flex-wrap gap-4 pt-4 border-t border-zinc-100">
+			<button id="copy-btn" class="tool-button-secondary flex items-center gap-2" data-copied={t('ui.copied')}>
+				<Copy size={18} />
+				{t('ui.copy')}
+			</button>
+			<button id="clear-btn" class="tool-button-secondary flex items-center gap-2">
+				<Trash2 size={18} />
+				{t('ui.clear')}
+			</button>
+		</div>
+	</div>
+
+	<div slot="guide">
+		<h3>{t('guide.json-formatter.h1')}</h3>
+		<p>{t('guide.json-formatter.p1')}</p>
+		
+		<ul>
+			<li><strong>{t('guide.json-formatter.f1_t')}:</strong> {t('guide.json-formatter.f1_d')}</li>
+			<li><strong>{t('guide.json-formatter.f2_t')}:</strong> {t('guide.json-formatter.f2_d')}</li>
+			<li><strong>{t('guide.json-formatter.f3_t')}:</strong> {t('guide.json-formatter.f3_d')}</li>
+		</ul>
+	</div>
+</ToolLayout>
+
+<script>
+	const jsonInput = document.getElementById('json-input') as HTMLTextAreaElement;
+	const formatBtn = document.getElementById('format-btn');
+	const minifyBtn = document.getElementById('minify-btn');
+	const indentSelect = document.getElementById('indent') as HTMLSelectElement;
+	const errorMsg = document.getElementById('error-msg');
+	const errorDetails = document.getElementById('error-details');
+	const copyBtn = document.getElementById('copy-btn');
+	const clearBtn = document.getElementById('clear-btn');
+
+	function processJson(minify = false) {
+		const val = jsonInput.value.trim();
+		if (!val) return;
+
+		try {
+			const parsed = JSON.parse(val);
+			const indent = minify ? 0 : (indentSelect.value === '\\t' ? '\t' : parseInt(indentSelect.value));
+			jsonInput.value = JSON.stringify(parsed, null, indent);
+			errorMsg?.classList.add('hidden');
+		} catch (e: any) {
+			errorMsg?.classList.remove('hidden');
+			if (errorDetails) errorDetails.textContent = e.message;
+		}
+	}
+
+	formatBtn?.addEventListener('click', () => processJson(false));
+	minifyBtn?.addEventListener('click', () => processJson(true));
+	
+	copyBtn?.addEventListener('click', () => {
+		jsonInput.select();
+		navigator.clipboard.writeText(jsonInput.value);
+		const originalText = copyBtn.innerHTML;
+		const copiedMsg = copyBtn.getAttribute('data-copied') || '...';
+		copyBtn.innerHTML = copiedMsg;
+		setTimeout(() => {
+			copyBtn.innerHTML = originalText;
+		}, 2000);
+	});
+
+	clearBtn?.addEventListener('click', () => {
+		jsonInput.value = '';
+		errorMsg?.classList.add('hidden');
+	});
+</script>

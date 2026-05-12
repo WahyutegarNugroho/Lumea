@@ -1,0 +1,57 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = langParam || 'en';
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import PdfToExcel from '../../../components/tools/PdfToExcel';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.pdf-to-excel.title')}
+	description={t('tool.pdf-to-excel.desc')}
+	category="pdf"
+	toolId="pdf-to-excel"
+>
+	<PdfToExcel client:only="react" lang={lang as any} />
+
+	<div slot="guide">
+		<h3>{t('guide.pdf-to-excel.h1')}</h3>
+		<p>{t('guide.pdf-to-excel.p1')}</p>
+		
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">01</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">{t('guide.pdf-to-excel.f1_t')}</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">{t('guide.pdf-to-excel.f1_d')}</p>
+			</div>
+			
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">02</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">{t('guide.pdf-to-excel.f2_t')}</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">{t('guide.pdf-to-excel.f2_d')}</p>
+			</div>
+			
+			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
+				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
+					<span class="font-bold">03</span>
+				</div>
+				<h4 class="text-lg font-bold mb-3">{t('guide.pdf-to-excel.f3_t')}</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">{t('guide.pdf-to-excel.f3_d')}</p>
+			</div>
+		</div>
+	</div>
+</ToolLayout>

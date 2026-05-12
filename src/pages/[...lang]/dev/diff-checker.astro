@@ -1,0 +1,31 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'id' } },
+    { params: { lang: 'es' } },
+  ];
+}
+
+const { lang: langParam } = Astro.params;
+const lang = langParam || 'en';
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import DiffChecker from '../../../components/tools/DiffChecker';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang as any);
+---
+
+<ToolLayout 
+	title={t('tool.diff-checker.title')}
+	description={t('tool.diff-checker.desc')}
+	category="dev"
+	toolId="diff-checker"
+>
+	<DiffChecker client:only="react" lang={lang as any} />
+
+	<div slot="guide">
+		<h3>{t('guide.diff-checker.h1')}</h3>
+		<p>{t('guide.diff-checker.p1')}</p>
+	</div>
+</ToolLayout>
