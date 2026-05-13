@@ -20,15 +20,15 @@ const cleanPath = ['id', 'es'].includes(segments[0])
 const nextPath = getLocalizedPath(cleanPath, nextLang);
 ---
 
-<!-- VERSI TERBARU: SATU KLIK LANGSUNG GANTI -->
+<!-- VERSI COMPACT PUTIH: SATU KLIK LANGSUNG GANTI -->
 <a 
   href={nextPath}
-  class="flex items-center gap-3 px-4 py-2 bg-zinc-900 text-white rounded-2xl text-xs font-bold hover:bg-zinc-800 transition-all active:scale-95 shadow-lg shadow-zinc-200"
-  id="lang-cycler-v2"
+  class="flex items-center gap-2 px-3 py-1.5 bg-white border border-zinc-200 rounded-full text-xs font-bold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-all active:scale-95 shadow-sm"
+  id="lang-cycler-v3"
+  title={`Next: ${nextLang.toUpperCase()}`}
 >
-  <Languages size={16} class="text-zinc-400" />
-  <div class="flex flex-col items-start leading-none">
-    <span class="text-[10px] text-zinc-500 uppercase mb-0.5">Lang</span>
-    <span class="uppercase text-sm">{currentLang} → {nextLang}</span>
-  </div>
+  <Languages size={14} class="text-zinc-400" />
+  <span class="uppercase tracking-tight">{currentLang}</span>
+  <span class="text-zinc-300">→</span>
+  <span class="uppercase tracking-tight text-zinc-400">{nextLang}</span>
 </a>
