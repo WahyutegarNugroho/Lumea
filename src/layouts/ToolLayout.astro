@@ -11,8 +11,8 @@ interface Props {
 
 const { title, description, category, toolId } = Astro.props;
 
-import { useTranslations, type Locale } from '../lib/i18n';
-const lang = (Astro.currentLocale || 'en') as Locale;
+import { useTranslations, type Locale, getLocaleFromPath } from '../lib/i18n';
+const lang = getLocaleFromPath(Astro.url.pathname);
 const t = useTranslations(lang);
 
 import { getCollection, render } from 'astro:content';
