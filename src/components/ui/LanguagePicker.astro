@@ -1,5 +1,5 @@
 ---
-import { Languages } from 'lucide-react';
+import { Languages, ChevronDown } from 'lucide-react';
 import { getLocalizedPath } from '../../lib/i18n';
 
 const languages = [
@@ -20,21 +20,97 @@ if (['id', 'es'].includes(pathSegments[0])) {
 }
 ---
 
-<div class="relative group">
-  <button class="flex items-center gap-2 px-3 py-1.5 bg-white border border-zinc-200 rounded-xl text-xs font-bold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-all">
+<div class="relative inline-block text-left" id="language-picker">
+  <button 
+    type="button"
+    id="language-button"
+    class="flex items-center gap-2 px-3 py-1.5 bg-white border border-zinc-200 rounded-xl text-xs font-bold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-all active:scale-95"
+    aria-expanded="false"
+    aria-haspopup="true"
+  >
     <Languages size={14} />
     <span class="uppercase">{currentLang}</span>
+    <ChevronDown size={12} class="text-zinc-400 transition-transform duration-200" id="language-chevron" />
   </button>
   
-  <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-zinc-200 rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
-    {languages.map((l) => (
-      <a 
-        href={getLocalizedPath(cleanPath, l.code)}
-        class={`flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-zinc-50 transition-colors ${currentLang === l.code ? 'text-zinc-900 bg-zinc-50' : 'text-zinc-500'}`}
-      >
-        <span>{l.flag}</span>
-        {l.name}
-      </a>
-    ))}
+  <div 
+    id="language-dropdown"
+    class="absolute right-0 top-full mt-2 w-48 bg-white border border-zinc-200 rounded-2xl shadow-xl opacity-0 invisible transition-all z-50 overflow-hidden transform origin-top-right scale-95"
+  >
+    <div class="py-1">
+      {languages.map((l) => (
+        <a 
+          href={getLocalizedPath(cleanPath, l.code)}
+          class={`flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-zinc-50 transition-colors ${currentLang === l.code ? 'text-zinc-900 bg-zinc-50' : 'text-zinc-500'}`}
+        >
+          <span class="text-lg leading-none">{l.flag}</span>
+          {l.name}
+        </a>
+      ))}
+    </div>
   </div>
 </div>
+
+<style>
+  #language-picker.open #language-button {
+    border-color: #18181b; /* zinc-900 */
+    color: #18181b; /* zinc-900 */
+    background-color: #f4f4f5; /* zinc-100 */
+  }
+
+  #language-picker.open #language-dropdown {
+    opacity: 1;
+    visible: visible;
+    transform: scale(1);
+  }
+  
+  #language-picker.open #language-chevron {
+    transform: rotate(180deg);
+  }
+</style>
+
+<script>
+  function setupLanguagePicker() {
+    const picker = document.getElementById('language-picker');
+    const button = document.getElementById('language-button');
+    const dropdown = document.getElementById('language-dropdown');
+
+    if (!picker || !button || !dropdown) return;
+
+    // Toggle dropdown on button click
+    button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = picker.classList.contains('open');
+      
+      if (isOpen) {
+        picker.classList.remove('open');
+        button.setAttribute('aria-expanded', 'false');
+      } else {
+        picker.classList.add('open');
+        button.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!picker.contains(e.target as Node)) {
+        picker.classList.remove('open');
+        button.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && picker.classList.contains('open')) {
+        picker.classList.remove('open');
+        button.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  // Setup on initial load
+  setupLanguagePicker();
+
+  // Setup on view transitions (Astro specific)
+  document.addEventListener('astro:after-swap', setupLanguagePicker);
+</script>
