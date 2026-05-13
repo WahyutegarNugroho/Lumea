@@ -3,33 +3,32 @@ import { Languages } from 'lucide-react';
 import { getLocalizedPath, getLocaleFromPath } from '../../lib/i18n';
 
 const languages = ['en', 'id', 'es'];
-const currentLang = getLocaleFromPath(Astro.url.pathname);
+const currentPath = Astro.url.pathname;
+const currentLang = getLocaleFromPath(currentPath);
 
-// Calculate next language in the cycle
+// Cycle logic
 const currentIndex = languages.indexOf(currentLang);
 const nextIndex = (currentIndex + 1) % languages.length;
 const nextLang = languages[nextIndex];
 
-// Get clean path (without current locale)
-const pathname = Astro.url.pathname;
-const getCleanPath = (path: string) => {
-  const segments = path.split('/').filter(Boolean);
-  if (['id', 'es'].includes(segments[0])) {
-    return '/' + segments.slice(1).join('/');
-  }
-  return path;
-};
+// Clean path helper
+const segments = currentPath.split('/').filter(Boolean);
+const cleanPath = ['id', 'es'].includes(segments[0]) 
+  ? '/' + segments.slice(1).join('/') 
+  : currentPath;
 
-const nextPath = getLocalizedPath(getCleanPath(pathname), nextLang);
+const nextPath = getLocalizedPath(cleanPath, nextLang);
 ---
 
+<!-- VERSI TERBARU: SATU KLIK LANGSUNG GANTI -->
 <a 
   href={nextPath}
-  class="flex items-center gap-2 px-3 py-1.5 bg-white border border-zinc-200 rounded-xl text-xs font-bold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-all active:scale-95 shadow-sm"
-  title={`Switch to ${nextLang.toUpperCase()}`}
+  class="flex items-center gap-3 px-4 py-2 bg-zinc-900 text-white rounded-2xl text-xs font-bold hover:bg-zinc-800 transition-all active:scale-95 shadow-lg shadow-zinc-200"
+  id="lang-cycler-v2"
 >
-  <Languages size={14} className="text-zinc-400" />
-  <span class="uppercase w-4 text-center">{currentLang}</span>
-  <div class="w-px h-3 bg-zinc-200 mx-0.5"></div>
-  <span class="uppercase text-[10px] text-zinc-400 font-medium">Next: {nextLang}</span>
+  <Languages size={16} class="text-zinc-400" />
+  <div class="flex flex-col items-start leading-none">
+    <span class="text-[10px] text-zinc-500 uppercase mb-0.5">Lang</span>
+    <span class="uppercase text-sm">{currentLang} → {nextLang}</span>
+  </div>
 </a>
