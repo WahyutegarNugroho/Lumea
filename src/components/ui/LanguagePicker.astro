@@ -23,22 +23,20 @@ const getCleanPath = (path: string) => {
 const cleanPath = getCleanPath(pathname);
 ---
 
-<div class="relative inline-block text-left" id="language-picker">
+<div class="relative inline-block text-left language-picker">
   <button 
     type="button"
-    id="language-button"
-    class="flex items-center gap-2 px-3 py-1.5 bg-white border border-zinc-200 rounded-xl text-xs font-bold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-all active:scale-95"
+    class="language-button flex items-center gap-2 px-3 py-1.5 bg-white border border-zinc-200 rounded-xl text-xs font-bold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-all active:scale-95"
     aria-expanded="false"
     aria-haspopup="true"
   >
     <Languages size={14} />
     <span class="uppercase">{currentLang}</span>
-    <ChevronDown size={12} class="text-zinc-400 transition-transform duration-200" id="language-chevron" />
+    <ChevronDown size={12} class="language-chevron text-zinc-400 transition-transform duration-200" />
   </button>
   
   <div 
-    id="language-dropdown"
-    class="absolute right-0 top-full mt-2 w-48 bg-white border border-zinc-200 rounded-2xl shadow-xl opacity-0 invisible transition-all z-50 overflow-hidden transform origin-top-right scale-95"
+    class="language-dropdown absolute right-0 top-full mt-2 w-48 bg-white border border-zinc-200 rounded-2xl shadow-xl z-50 overflow-hidden transform origin-top-right transition-all duration-200"
   >
     <div class="py-1">
       {languages.map((l) => (
@@ -55,65 +53,65 @@ const cleanPath = getCleanPath(pathname);
 </div>
 
 <style>
-  #language-picker.open #language-button {
-    border-color: #18181b; /* zinc-900 */
-    color: #18181b; /* zinc-900 */
-    background-color: #f4f4f5; /* zinc-100 */
+  .language-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.95);
   }
 
-  #language-picker.open #language-dropdown {
+  .language-picker.open .language-dropdown {
     opacity: 1;
     visibility: visible;
     transform: scale(1);
   }
   
-  #language-picker.open #language-chevron {
+  .language-picker.open .language-chevron {
     transform: rotate(180deg);
+  }
+
+  .language-picker.open .language-button {
+    border-color: #18181b;
+    color: #18181b;
+    background-color: #f4f4f5;
   }
 </style>
 
 <script>
-  function setupLanguagePicker() {
-    const picker = document.getElementById('language-picker');
-    const button = document.getElementById('language-button');
-    const dropdown = document.getElementById('language-dropdown');
+  function setupLanguagePickers() {
+    const pickers = document.querySelectorAll('.language-picker');
+    
+    pickers.forEach(picker => {
+      const button = picker.querySelector('.language-button');
+      if (!button) return;
 
-    if (!picker || !button || !dropdown) return;
+      // Toggle dropdown on button click
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        // Close all other pickers first
+        document.querySelectorAll('.language-picker.open').forEach(p => {
+          if (p !== picker) p.classList.remove('open');
+        });
 
-    // Toggle dropdown on button click
-    button.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isOpen = picker.classList.contains('open');
-      
-      if (isOpen) {
-        picker.classList.remove('open');
-        button.setAttribute('aria-expanded', 'false');
-      } else {
-        picker.classList.add('open');
-        button.setAttribute('aria-expanded', 'true');
-      }
+        const isOpen = picker.classList.contains('open');
+        picker.classList.toggle('open');
+        button.setAttribute('aria-expanded', (!isOpen).toString());
+      });
     });
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!picker.contains(e.target as Node)) {
+    // Close all dropdowns when clicking outside
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.language-picker.open').forEach(picker => {
         picker.classList.remove('open');
-        button.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    // Close on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && picker.classList.contains('open')) {
-        picker.classList.remove('open');
-        button.setAttribute('aria-expanded', 'false');
-      }
+        const button = picker.querySelector('.language-button');
+        if (button) button.setAttribute('aria-expanded', 'false');
+      });
     });
   }
 
   // Setup on initial load
-  setupLanguagePicker();
+  setupLanguagePickers();
 
-  // Setup on view transitions (Astro specific)
-  document.addEventListener('astro:after-swap', setupLanguagePicker);
+  // Setup on view transitions
+  document.addEventListener('astro:after-swap', setupLanguagePickers);
 </script>
