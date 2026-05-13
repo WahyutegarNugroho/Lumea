@@ -1,17 +1,17 @@
 ---
-import { Languages, ChevronDown } from 'lucide-react';
+import { Languages } from 'lucide-react';
 import { getLocalizedPath, getLocaleFromPath } from '../../lib/i18n';
 
-const languages = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'id', name: 'Bahasa Indonesia', flag: '🇮🇩' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-];
-
+const languages = ['en', 'id', 'es'];
 const currentLang = getLocaleFromPath(Astro.url.pathname);
-const pathname = Astro.url.pathname;
 
-// Helper to remove locale prefix from current path
+// Calculate next language in the cycle
+const currentIndex = languages.indexOf(currentLang);
+const nextIndex = (currentIndex + 1) % languages.length;
+const nextLang = languages[nextIndex];
+
+// Get clean path (without current locale)
+const pathname = Astro.url.pathname;
 const getCleanPath = (path: string) => {
   const segments = path.split('/').filter(Boolean);
   if (['id', 'es'].includes(segments[0])) {
@@ -20,98 +20,16 @@ const getCleanPath = (path: string) => {
   return path;
 };
 
-const cleanPath = getCleanPath(pathname);
+const nextPath = getLocalizedPath(getCleanPath(pathname), nextLang);
 ---
 
-<div class="relative inline-block text-left language-picker">
-  <button 
-    type="button"
-    class="language-button flex items-center gap-2 px-3 py-1.5 bg-white border border-zinc-200 rounded-xl text-xs font-bold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-all active:scale-95"
-    aria-expanded="false"
-    aria-haspopup="true"
-  >
-    <Languages size={14} />
-    <span class="uppercase">{currentLang}</span>
-    <ChevronDown size={12} class="language-chevron text-zinc-400 transition-transform duration-200" />
-  </button>
-  
-  <div 
-    class="language-dropdown absolute right-0 top-full mt-2 w-48 bg-white border border-zinc-200 rounded-2xl shadow-xl z-50 overflow-hidden transform origin-top-right transition-all duration-200"
-  >
-    <div class="py-1">
-      {languages.map((l) => (
-        <a 
-          href={getLocalizedPath(cleanPath, l.code)}
-          class={`flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-zinc-50 transition-colors ${currentLang === l.code ? 'text-zinc-900 bg-zinc-50' : 'text-zinc-500'}`}
-        >
-          <span class="text-lg leading-none">{l.flag}</span>
-          {l.name}
-        </a>
-      ))}
-    </div>
-  </div>
-</div>
-
-<style>
-  .language-dropdown {
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(0.95);
-  }
-
-  .language-picker.open .language-dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1);
-  }
-  
-  .language-picker.open .language-chevron {
-    transform: rotate(180deg);
-  }
-
-  .language-picker.open .language-button {
-    border-color: #18181b;
-    color: #18181b;
-    background-color: #f4f4f5;
-  }
-</style>
-
-<script>
-  function setupLanguagePickers() {
-    const pickers = document.querySelectorAll('.language-picker');
-    
-    pickers.forEach(picker => {
-      const button = picker.querySelector('.language-button');
-      if (!button) return;
-
-      // Toggle dropdown on button click
-      button.addEventListener('click', (e) => {
-        e.stopPropagation();
-        
-        // Close all other pickers first
-        document.querySelectorAll('.language-picker.open').forEach(p => {
-          if (p !== picker) p.classList.remove('open');
-        });
-
-        const isOpen = picker.classList.contains('open');
-        picker.classList.toggle('open');
-        button.setAttribute('aria-expanded', (!isOpen).toString());
-      });
-    });
-
-    // Close all dropdowns when clicking outside
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.language-picker.open').forEach(picker => {
-        picker.classList.remove('open');
-        const button = picker.querySelector('.language-button');
-        if (button) button.setAttribute('aria-expanded', 'false');
-      });
-    });
-  }
-
-  // Setup on initial load
-  setupLanguagePickers();
-
-  // Setup on view transitions
-  document.addEventListener('astro:after-swap', setupLanguagePickers);
-</script>
+<a 
+  href={nextPath}
+  class="flex items-center gap-2 px-3 py-1.5 bg-white border border-zinc-200 rounded-xl text-xs font-bold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-all active:scale-95 shadow-sm"
+  title={`Switch to ${nextLang.toUpperCase()}`}
+>
+  <Languages size={14} className="text-zinc-400" />
+  <span class="uppercase w-4 text-center">{currentLang}</span>
+  <div class="w-px h-3 bg-zinc-200 mx-0.5"></div>
+  <span class="uppercase text-[10px] text-zinc-400 font-medium">Next: {nextLang}</span>
+</a>
