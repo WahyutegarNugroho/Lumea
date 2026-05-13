@@ -4,6 +4,7 @@ import lucide from 'lucide-react';
 const { ShieldCheck, Mail } = lucide;
 import { ClientRouter } from 'astro:transitions';
 import CommandPalette from '../components/ui/CommandPalette.astro';
+import LanguagePicker from '../components/ui/LanguagePicker.astro';
 import { useTranslations, type Locale, getLocalizedPath, getLocaleFromPath } from '../lib/i18n';
 
 const lang = getLocaleFromPath(Astro.url.pathname);
