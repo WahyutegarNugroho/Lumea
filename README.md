@@ -1,4 +1,4 @@
-# 🌟 Lumea
+# Lumea
 
 <p align="center">
   <img src="./public/favicon.svg" alt="Lumea Logo" width="120px" height="120px" />
@@ -19,7 +19,7 @@
 
 <hr />
 
-## 📖 Short Description
+## Short Description
 
 **Lumea** (derived from the word for *"Light"*) is a comprehensive, modern, and high-fidelity web utility suite featuring **30+ professional-grade online tools**. Built with **Astro**, **React**, and **Tailwind CSS v4**, Lumea works like a beam of light in the darkness, providing clean, instant, and angelic solutions to your daily file processing, image manipulation, text formatting, and developer utility needs.
 
@@ -27,7 +27,7 @@ Unlike traditional web utilities, **Lumea is 100% client-side**. All computation
 
 ---
 
-## 🛡️ The Problems We Solve
+## The Problems We Solve
 
 ### 1. The Death of Data Privacy
 Most mainstream utility sites (like PDF mergers, file converters, or image background removers) require you to upload your files to their remote servers. For companies, professionals, and privacy-conscious users, this is a massive compliance and security risk. Your financial reports, personal photos, or legal contracts end up in a third-party cloud, vulnerable to data breaches or unauthorized use in AI training datasets.
@@ -43,11 +43,11 @@ Having to jump between a dozen different websites to format JSON, merge a PDF, g
 
 ---
 
-## 🛠️ Main Features
+## Main Features
 
 Lumea compiles over 30 powerful utility tools categorized into four distinct workspaces, designed with visually curated dashboards and responsive modern interfaces:
 
-### 📂 1. PDF Tools (Document & Page Management)
+### 1. PDF Tools (Document & Page Management)
 Complete suite for manipulating and formatting document structures securely inside your browser:
 *   **Merge PDF:** Combine multiple PDF files in any order.
 *   **Split PDF:** Extract custom page ranges (e.g. `1-5, 8, 10-12`) into separate documents.
@@ -60,7 +60,7 @@ Complete suite for manipulating and formatting document structures securely insi
     *   **Word to PDF** & **PDF to Word** (reconstruction of text structures and formatting).
     *   **Excel to PDF** & **PDF to Excel** (spatial text distribution analysis for spreadsheet table extraction).
 
-### 🖼️ 2. Image Tools (Local Processing & AI)
+### 2. Image Tools (Local Processing & AI)
 High-performance visual manipulation without a single network call:
 *   **Background Remover:** On-device AI-powered background removal using the **MediaPipe Selfie Segmentation** model running locally on your CPU/GPU.
 *   **SVG Vectorizer:** Trace raster images into clean, scale-ready SVG vector paths with adjustable detail presets using `imagetracerjs`.
@@ -70,14 +70,14 @@ High-performance visual manipulation without a single network call:
 *   **SVG to PNG:** Convert vector graphics to high-resolution rasters with custom dimensions.
 *   **QR Code & Barcode Generator:** Highly customizable vector outputs with color customization.
 
-### ✍️ 3. Text Tools (Content Cleaners)
+### 3. Text Tools (Content Cleaners)
 Clean, structure, and inspect prose and text copy:
 *   **Markdown Editor:** Interactive side-by-side split editor with live Markdown-to-HTML rendering.
 *   **Word Counter:** Real-time character (with/without spaces), word, sentence, and paragraph counts alongside calculated reading times.
 *   **Case Converter:** Toggle text instantly between UPPERCASE, lowercase, Title Case, Sentence Case, and Capitalization.
 *   **Lorem Ipsum Generator:** Generate custom amounts of placeholder words, sentences, or paragraphs.
 
-### 💻 4. Developer Tools (Formatters & Generators)
+### 4. Developer Tools (Formatters & Generators)
 Essential offline utilities for software engineers and power users:
 *   **JSON Formatter:** Beautify, minify, and syntactically validate JSON structures with immediate error highlight.
 *   **Base64 Encoder/Decoder:** Secure local translation of string arrays.
@@ -89,7 +89,7 @@ Essential offline utilities for software engineers and power users:
 
 ---
 
-## 💻 Tech Stack & Rationales
+## Tech Stack & Rationales
 
 The architecture of Lumea was carefully chosen to maximize on-device efficiency, ensure type safety, and offer a premium UI experience:
 
@@ -101,7 +101,7 @@ The architecture of Lumea was carefully chosen to maximize on-device efficiency,
 | **Framer Motion** | Micro-Animations | Powering rich, smooth transitions and hover micro-animations that make the entire utility suite feel alive, premium, and extremely responsive. |
 | **WebAssembly & Web Workers** | Heavy Computation | Multi-threaded client-side execution ensures that complex tasks—like large image compressions or PDF page parsing—happen in background threads, keeping the browser UI completely lag-free. |
 
-### 📦 Key On-Device Packages Utilized:
+### Key On-Device Packages Utilized:
 *   **`pdf-lib` & `pdfjs-dist`:** Perform precise local modifications and render previews of PDF documents.
 *   **`@tensorflow/tfjs` & `@mediapipe/selfie_segmentation`:** Local ML execution for private, instant photo background removal.
 *   **`tesseract.js`:** Runs a highly accurate optical character recognition engine directly in the browser's sandbox.
@@ -114,7 +114,7 @@ The architecture of Lumea was carefully chosen to maximize on-device efficiency,
 
 ---
 
-## 🚀 Installation & Local Development
+## Installation & Local Development
 
 Run Lumea locally on your machine in just a few steps:
 
@@ -152,23 +152,23 @@ npm run preview
 
 ---
 
-## 🌐 Localization (i18n)
+## Localization (i18n)
 
 Lumea features full multi-language localization to be accessible globally:
-*   🇺🇸 **English** (Default)
-*   🇮🇩 **Indonesian**
-*   🇪🇸 **Spanish**
+*   **English** (Default)
+*   **Indonesian**
+*   **Spanish**
 
 Translations are dynamically matched using Astro's built-in i18n locale sub-paths (`/id/`, `/es/`).
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ---
 
 <p align="center">
-  Built with 🤍 and client-side processing. Your files, your privacy.
+  © 2026 whtsn dev.
 </p>
