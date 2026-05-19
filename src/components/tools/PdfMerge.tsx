@@ -1,14 +1,16 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
 import { useState } from 'react';
-import { PDFDocument } from 'pdf-lib';
 import { Dropzone } from '../ui/Dropzone';
 import { Download, Plus, FileText, X, GripVertical, ShieldCheck } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function PdfMerge({ lang = 'en' }: Props) {
+function PdfMerge({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -26,6 +28,7 @@ export default function PdfMerge({ lang = 'en' }: Props) {
     setIsProcessing(true);
 
     try {
+      const { PDFDocument } = await import('pdf-lib');
       const mergedPdf = await PDFDocument.create();
       
       for (const file of files) {
@@ -39,21 +42,15 @@ export default function PdfMerge({ lang = 'en' }: Props) {
       const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'lumea_merged_result.pdf';
-      link.style.display = 'none';
-      document.body.appendChild(link);
+      downloadFile(url, 'lumea_merged_result.pdf');
       
       setTimeout(() => {
-        link.click();
-        setTimeout(() => {
-          document.body.removeChild(link);
-          setIsProcessing(false);
-        }, 3000);
-      }, 100);
+        URL.revokeObjectURL(url);
+        setIsProcessing(false);
+      }, 5000);
     } catch (error) {
       console.error('Merge failed:', error);
+      toast(t('ui.error_merge_failed') || 'Merge failed');
     } finally {
       setIsProcessing(false);
     }
@@ -148,3 +145,5 @@ export default function PdfMerge({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(PdfMerge);

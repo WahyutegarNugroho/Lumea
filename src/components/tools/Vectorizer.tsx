@@ -1,12 +1,15 @@
-import { useState, useRef } from 'react';
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
+import { useState } from 'react';
 // @ts-ignore
 import ImageTracer from 'imagetracerjs';
 import { Dropzone } from '../ui/Dropzone';
-import { Download, Zap, ImageIcon, Palette, Settings2 } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { Download, Zap, Palette } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
 const PRESETS = [
@@ -16,7 +19,7 @@ const PRESETS = [
   { id: 'bw', name: 'ui.vector_preset_bw', colors: 2, blur: 0, lt_desc: 'ui.vector_bw_desc' },
 ];
 
-export default function Vectorizer({ lang = 'en' }: Props) {
+function Vectorizer({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [preset, setPreset] = useState(PRESETS[0]);
@@ -45,7 +48,7 @@ export default function Vectorizer({ lang = 'en' }: Props) {
       });
     } catch (error) {
       console.error(error);
-      alert(t('ui.error_vector_failed'));
+      toast(t('ui.error_vector_failed'));
       setIsProcessing(false);
     }
   };
@@ -54,13 +57,7 @@ export default function Vectorizer({ lang = 'en' }: Props) {
     if (!resultSvg || !file) return;
     const blob = new Blob([resultSvg], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `lumea-vector-${file.name.split('.')[0]}.svg`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    // Removed immediate revoke
+    downloadFile(url, `vector-${file.name.split('.')[0]}.svg`);
   };
 
   if (!file) {
@@ -137,3 +134,5 @@ export default function Vectorizer({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(Vectorizer);

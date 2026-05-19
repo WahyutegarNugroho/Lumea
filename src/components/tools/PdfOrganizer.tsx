@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import * as pdfjsLib from 'pdfjs-dist';
-import { PDFDocument } from 'pdf-lib';
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
+import { useState, useCallback } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -23,10 +23,11 @@ import { CSS } from '@dnd-kit/utilities';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { Dropzone } from '../ui/Dropzone';
 import { Download, Trash2, GripVertical, FileText, ShieldCheck, RotateCw, LayoutGrid } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
 interface PageItem {
@@ -90,20 +91,13 @@ function SortablePage({ id, page, onDelete, index, t }: { id: string, page: Page
   );
 }
 
-export default function PdfOrganizer({ lang = 'en' }: Props) {
+function PdfOrganizer({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [pages, setPages] = useState<PageItem[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [status, setStatus] = useState('');
-
-  useEffect(() => {
-    // Initialize PDF.js worker inside useEffect for client-side safety
-    if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
-    }
-  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -117,6 +111,9 @@ export default function PdfOrganizer({ lang = 'en' }: Props) {
     setStatus(t('ui.generating_previews'));
 
     try {
+      const pdfjsLib = await import('pdfjs-dist');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+
       const arrayBuffer = await selectedFile.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       const totalPages = pdf.numPages;
@@ -124,7 +121,6 @@ export default function PdfOrganizer({ lang = 'en' }: Props) {
 
       for (let i = 1; i <= totalPages; i++) {
         const page = await pdf.getPage(i);
-        // Increased scale from 0.3 to 0.8 for bigger/clearer previews
         const viewport = page.getViewport({ scale: 0.8 });
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
@@ -143,7 +139,7 @@ export default function PdfOrganizer({ lang = 'en' }: Props) {
       setPages(newPages);
     } catch (error) {
       console.error(error);
-      alert(t('ui.error_pdf_load'));
+      toast(t('ui.error_pdf_load'));
 
     } finally {
       setIsProcessing(false);
@@ -177,6 +173,7 @@ export default function PdfOrganizer({ lang = 'en' }: Props) {
     setStatus(t('ui.creating_pdf'));
 
     try {
+      const { PDFDocument } = await import('pdf-lib');
       const arrayBuffer = await file.arrayBuffer();
       const srcDoc = await PDFDocument.load(arrayBuffer);
       const outDoc = await PDFDocument.create();
@@ -189,16 +186,18 @@ export default function PdfOrganizer({ lang = 'en' }: Props) {
       const pdfBytes = await outDoc.save();
       const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `organized-${file.name}`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      
+      // Ensure the filename has .pdf extension and use shared utility
+      let safeName = file.name.toLowerCase().endsWith('.pdf') ? file.name : `${file.name}.pdf`;
+      downloadFile(url, `organized-${safeName}`);
+      
+      // Cleanup will be handled by downloadFile utility (via timeout)
+      // but we should revoke the URL after use. downloadFile handles deletion of the element.
+      // We manually revoke after the download is likely triggered.
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
     } catch (error) {
       console.error(error);
-      alert(t('ui.error_pdf_save'));
+      toast(t('ui.error_pdf_save'));
 
     } finally {
       setIsProcessing(false);
@@ -330,3 +329,5 @@ export default function PdfOrganizer({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(PdfOrganizer);

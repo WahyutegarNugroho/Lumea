@@ -1,17 +1,16 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
 import { useState } from 'react';
-import * as pdfjsLib from 'pdfjs-dist';
 import { Dropzone } from '../ui/Dropzone';
 import { FileImage, FileText, Layers, ShieldCheck } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
-
-// Initialize PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function PdfToJpg({ lang = 'en' }: Props) {
+function PdfToJpg({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -26,6 +25,9 @@ export default function PdfToJpg({ lang = 'en' }: Props) {
     setIsProcessing(true);
 
     try {
+      const pdfjsLib = await import('pdfjs-dist');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       const totalPages = pdf.numPages;
@@ -44,18 +46,14 @@ export default function PdfToJpg({ lang = 'en' }: Props) {
           await page.render({ canvasContext: context as any, viewport } as any).promise;
           const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
           
-          const link = document.createElement('a');
-          link.href = dataUrl;
-          link.download = `lumea-page-${i}-${file.name.replace('.pdf', '')}.jpg`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          downloadFile(dataUrl, `lumea-page-${i}-${file.name.replace('.pdf', '')}.jpg`);
         }
         
         setProgress(prev => ({ ...prev, current: i }));
       }
     } catch (error) {
       console.error(error);
+      toast(t('ui.error_conversion_failed') || 'Conversion failed');
     } finally {
       setIsProcessing(false);
     }
@@ -154,3 +152,5 @@ export default function PdfToJpg({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(PdfToJpg);

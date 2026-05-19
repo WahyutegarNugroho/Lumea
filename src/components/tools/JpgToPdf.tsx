@@ -1,14 +1,16 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
 import { useState } from 'react';
-import { PDFDocument } from 'pdf-lib';
 import { Dropzone } from '../ui/Dropzone';
-import { Download, FileImage, FileText, X, GripVertical, Plus } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { FileImage, FileText, X, Plus } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function JpgToPdf({ lang = 'en' }: Props) {
+function JpgToPdf({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [images, setImages] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -26,6 +28,7 @@ export default function JpgToPdf({ lang = 'en' }: Props) {
     setIsProcessing(true);
 
     try {
+      const { PDFDocument } = await import('pdf-lib');
       const pdfDoc = await PDFDocument.create();
       
       for (const imageFile of images) {
@@ -52,16 +55,12 @@ export default function JpgToPdf({ lang = 'en' }: Props) {
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `lumea-images-to-${Date.now()}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      // Removed immediate revoke
+      
+      downloadFile(url, `lumea-images-to-${Date.now()}.pdf`);
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
     } catch (error) {
       console.error(error);
-      alert(t('ui.error_jpg_to_pdf_failed'));
+      toast(t('ui.error_jpg_to_pdf_failed'));
     } finally {
       setIsProcessing(false);
     }
@@ -141,3 +140,5 @@ export default function JpgToPdf({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(JpgToPdf);

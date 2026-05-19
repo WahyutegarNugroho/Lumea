@@ -1,11 +1,19 @@
 ---
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/outfit/500.css';
+import '@fontsource/outfit/600.css';
+import '@fontsource/outfit/700.css';
 import '../styles/global.css';
 import lucide from 'lucide-react';
 const { ShieldCheck, Mail } = lucide;
 import { ClientRouter } from 'astro:transitions';
 import CommandPalette from '../components/ui/CommandPalette.astro';
 import LanguagePicker from '../components/ui/LanguagePicker.astro';
-import { useTranslations, type Locale, getLocalizedPath, getLocaleFromPath } from '../lib/i18n';
+import { ToastProvider } from '../components/ui/ToastProvider';
+import { useTranslations, getLocalizedPath, getLocaleFromPath } from '../lib/i18n';
 
 const lang = getLocaleFromPath(Astro.url.pathname);
 const t = useTranslations(lang);
@@ -13,12 +21,19 @@ const t = useTranslations(lang);
 interface Props {
 	title?: string;
 	description?: string;
+	image?: string;
 }
 
 const { 
 	title = t('site.title'), 
-	description = t('site.description') 
+	description = t('site.description'),
+	image = '/favicon.svg'
 } = Astro.props;
+
+const currentPath = Astro.url.pathname;
+const cleanPath = currentPath.replace(/^\/(id|es)/, '') === '' ? '/' : currentPath.replace(/^\/(id|es)/, '');
+const baseUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://lumea-whtsn.vercel.app';
+const canonicalURL = new URL(getLocalizedPath(cleanPath, lang), baseUrl);
 ---
 
 <!doctype html>
@@ -32,10 +47,26 @@ const {
 		<meta name="description" content={description} />
 		<meta name="theme-color" content="#09090b" />
 		
-		<!-- Google Fonts -->
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+		<!-- Canonical & hreflang -->
+		<link rel="canonical" href={canonicalURL} />
+		<link rel="alternate" hreflang="x-default" href={new URL(getLocalizedPath(cleanPath, 'en'), baseUrl)} />
+		<link rel="alternate" hreflang="en" href={new URL(getLocalizedPath(cleanPath, 'en'), baseUrl)} />
+		<link rel="alternate" hreflang="id" href={new URL(getLocalizedPath(cleanPath, 'id'), baseUrl)} />
+		<link rel="alternate" hreflang="es" href={new URL(getLocalizedPath(cleanPath, 'es'), baseUrl)} />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL(image, baseUrl)} />
+
+		<!-- Twitter -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={canonicalURL} />
+		<meta property="twitter:title" content={title} />
+		<meta property="twitter:description" content={description} />
+		<meta property="twitter:image" content={new URL(image, baseUrl)} />
 		
 		<ClientRouter />
 	</head>
@@ -133,50 +164,28 @@ const {
 			</div>
 		</footer>
 		<script is:inline>
-			// FORCE HARD RESET OF ALL SERVICE WORKERS AND CACHES
-			if ('serviceWorker' in navigator) {
-				navigator.serviceWorker.getRegistrations().then(registrations => {
-					for(let registration of registrations) registration.unregister();
-				});
-			}
-			if ('caches' in window) {
-				caches.keys().then(names => {
-					for (let name of names) caches.delete(name);
-				});
-			}
-
-			// Auto-detect language on first visit
+			// Auto-detect language on first visit (Lightweight fallback)
 			if (!localStorage.getItem('lumea_lang_detected') && window.location.pathname === '/') {
 				const browserLang = navigator.language.split('-')[0];
-				const supported = ['id', 'es'];
-				if (supported.includes(browserLang)) {
+				if (['id', 'es'].includes(browserLang)) {
 					localStorage.setItem('lumea_lang_detected', 'true');
 					window.location.href = `/${browserLang}/`;
 				}
 			}
 
-			// FORCE UNREGISTER SERVICE WORKER TO FIX DOWNLOAD ISSUES
+			// Clean up any old service workers strictly to avoid cache issues
 			if ('serviceWorker' in navigator) {
-				navigator.serviceWorker.getRegistrations().then(function(registrations) {
-					for(let registration of registrations) {
-						registration.unregister();
-						console.log('SW Unregistered for stability');
-					}
+				navigator.serviceWorker.getRegistrations().then(registrations => {
+					for(let registration of registrations) registration.unregister();
 				});
-			}
-
-			/*
-			if ('serviceWorker' in navigator) {
-				window.addEventListener('load', () => {
-					navigator.serviceWorker.register('/sw.js').then(registration => {
-						console.log('SW registered: ', registration);
-					}).catch(registrationError => {
-						console.log('SW registration failed: ', registrationError);
+				if ('caches' in window) {
+					caches.keys().then(names => {
+						for (let name of names) caches.delete(name);
 					});
-				});
+				}
 			}
-			*/
 		</script>
+		<ToastProvider client:load />
 	</body>
 </html>
 

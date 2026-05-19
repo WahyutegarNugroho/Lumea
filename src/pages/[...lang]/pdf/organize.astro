@@ -1,19 +1,13 @@
 ---
-export function getStaticPaths() {
-  return [
-    { params: { lang: undefined } },
-    { params: { lang: 'id' } },
-    { params: { lang: 'es' } },
-  ];
-}
-
+import { getI18nPaths } from '../../../lib/routing';
+export const getStaticPaths = getI18nPaths;
 const { lang: langParam } = Astro.params;
 const lang = langParam || 'en';
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
 import PdfOrganizer from '../../../components/tools/PdfOrganizer';
 import { useTranslations } from '../../../lib/i18n';
-const t = useTranslations(lang as any);
+const t = useTranslations(lang);
 ---
 
 <ToolLayout 
@@ -22,7 +16,7 @@ const t = useTranslations(lang as any);
 	category="pdf"
 	toolId="organize"
 >
-	<PdfOrganizer client:only="react" lang={lang as any} />
+	<PdfOrganizer client:only="react" lang={lang} />
 
 	<div slot="guide">
 		<h3 class="text-2xl font-bold mb-6">{t('ui.how_to')} {t('tool.organize.title')}</h3>

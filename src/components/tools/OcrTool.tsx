@@ -1,11 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
-import { createWorker } from 'tesseract.js';
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
+import { useState, useRef } from 'react';
 import { Dropzone } from '../ui/Dropzone';
-import { Download, Copy, ScanText, ShieldCheck, Languages, Zap, Check, Trash2, Wand2 } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { Copy, ScanText, ShieldCheck, Languages, Zap, Check, Trash2, Wand2 } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
 const OCR_LANGS = [
@@ -14,7 +15,7 @@ const OCR_LANGS = [
   { code: 'spa', name: 'Español' },
 ];
 
-export default function OcrTool({ lang = 'en' }: Props) {
+function OcrTool({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -67,6 +68,7 @@ export default function OcrTool({ lang = 'en' }: Props) {
     setProgress(0);
 
     try {
+      const { createWorker } = await import('tesseract.js');
       const img = new Image();
       img.src = imagePreview!;
       await new Promise(resolve => img.onload = resolve);
@@ -74,15 +76,15 @@ export default function OcrTool({ lang = 'en' }: Props) {
       // Use pre-processed image for OCR
       const processedSrc = preprocessImage(img);
 
-      const worker = await createWorker(ocrLang, 1, {
-        logger: m => {
+      const worker = await (createWorker as any)(ocrLang, 1, {
+        logger: (m: any) => {
           if (m.status === 'recognizing text') {
             setProgress(Math.round(m.progress * 100));
           }
         }
       });
       
-      const { data: { text } } = await worker.recognize(processedSrc);
+      const { data: { text } } = await (worker as any).recognize(processedSrc);
       
       // Post-process: Clean up text
       const cleanedText = text
@@ -91,10 +93,10 @@ export default function OcrTool({ lang = 'en' }: Props) {
         .trim();
 
       setResult(cleanedText);
-      await worker.terminate();
+      await (worker as any).terminate();
     } catch (error) {
       console.error(error);
-      alert(t('ui.error_ocr_failed'));
+      toast(t('ui.error_ocr_failed'));
     } finally {
       setIsProcessing(false);
     }
@@ -245,3 +247,5 @@ export default function OcrTool({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(OcrTool);

@@ -1,16 +1,18 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
 import { useState } from 'react';
-import { PDFDocument } from 'pdf-lib';
 import { Dropzone } from '../ui/Dropzone';
 import { Download, ArrowDownCircle, ShieldCheck, Loader2, Check, FileText } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
 type CompressionLevel = 'low' | 'medium' | 'high';
 
-export default function PdfCompressor({ lang = 'en' }: Props) {
+function PdfCompressor({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -30,6 +32,7 @@ export default function PdfCompressor({ lang = 'en' }: Props) {
     setProgress(20);
 
     try {
+      const { PDFDocument } = await import('pdf-lib');
       const arrayBuffer = await file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(arrayBuffer);
       setProgress(50);
@@ -42,8 +45,6 @@ export default function PdfCompressor({ lang = 'en' }: Props) {
       setProgress(80);
 
       // Optimization settings
-      // Note: pdf-lib doesn't support complex image re-compression yet.
-      // We focus on cleaning metadata and optimizing streams.
       const pdfBytes = await newPdfDoc.save({
         useObjectStreams: compressionLevel !== 'low',
         addDefaultPage: false,
@@ -54,7 +55,7 @@ export default function PdfCompressor({ lang = 'en' }: Props) {
       setProgress(100);
     } catch (error) {
       console.error(error);
-      alert(t('ui.error_compress_failed'));
+      toast(t('ui.error_compress_failed'));
     } finally {
       setIsProcessing(false);
     }
@@ -152,10 +153,10 @@ export default function PdfCompressor({ lang = 'en' }: Props) {
               ) : (
                 <button 
                   onClick={() => {
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(result.blob);
-                    link.download = `lumea-compressed-${file.name}`;
-                    link.click();
+                    const url = URL.createObjectURL(result.blob);
+                    let safeName = file.name.toLowerCase().endsWith('.pdf') ? file.name : `${file.name}.pdf`;
+                    downloadFile(url, `lumea-compressed-${safeName}`);
+                    setTimeout(() => URL.revokeObjectURL(url), 5000);
                   }}
                   className="w-full py-4 bg-emerald-500 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-200"
                 >
@@ -181,3 +182,5 @@ export default function PdfCompressor({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(PdfCompressor);

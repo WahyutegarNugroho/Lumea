@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
 import { Upload, FileText } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { useTranslations } from '../../lib/i18n';
 
 interface DropzoneProps {
   onFilesSelected: (files: File[]) => void;
   accept?: string;
   multiple?: boolean;
-  lang?: Locale;
+  lang?: string;
 }
 
 export const Dropzone: React.FC<DropzoneProps> = ({ onFilesSelected, accept = "image/*", multiple = false, lang = 'en' }) => {

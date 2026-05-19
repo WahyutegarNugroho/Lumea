@@ -1,3 +1,4 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
 import { useState, useEffect } from 'react';
 import { marked } from 'marked';
 import { 
@@ -11,13 +12,14 @@ import {
   ShieldCheck,
   Type
 } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function MarkdownEditor({ lang = 'en' }: Props) {
+function MarkdownEditor({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [markdown, setMarkdown] = useState(t('ui.markdown_placeholder'));
   const [html, setHtml] = useState('');
@@ -41,13 +43,8 @@ export default function MarkdownEditor({ lang = 'en' }: Props) {
   const downloadMd = () => {
     const blob = new Blob([markdown], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'document.md';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    downloadFile(url, 'document.md');
+    // Removed immediate revoke for better mobile support via utility
   };
 
   return (
@@ -157,3 +154,5 @@ export default function MarkdownEditor({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(MarkdownEditor);

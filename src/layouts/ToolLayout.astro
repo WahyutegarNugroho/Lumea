@@ -11,7 +11,7 @@ interface Props {
 
 const { title, description, category, toolId } = Astro.props;
 
-import { useTranslations, type Locale, getLocaleFromPath } from '../lib/i18n';
+import { useTranslations, getLocaleFromPath } from '../lib/i18n';
 const lang = getLocaleFromPath(Astro.url.pathname);
 const t = useTranslations(lang);
 
@@ -23,6 +23,21 @@ const Content = rendered?.Content;
 ---
 
 <BaseLayout title={`${title} - Lumea Tools`} description={description}>
+	<script is:inline type="application/ld+json" define:vars={{ title, description, category }}>
+		{
+			"@context": "https://schema.org",
+			"@type": "SoftwareApplication",
+			"name": title,
+			"description": description,
+			"applicationCategory": category,
+			"operatingSystem": "Web",
+			"offers": {
+				"@type": "Offer",
+				"price": "0",
+				"priceCurrency": "USD"
+			}
+		}
+	</script>
 	<div class="container mx-auto px-4 py-12">
 		<!-- Breadcrumbs -->
 		<nav class="flex mb-8 text-sm font-medium text-zinc-500" aria-label="Breadcrumb">

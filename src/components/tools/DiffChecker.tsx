@@ -1,9 +1,10 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
 import { useState } from 'react';
-import { Columns2, ArrowLeftRight, Trash2, Zap, Info } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { Columns2, Zap, Info } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
 interface DiffLine {
@@ -12,7 +13,7 @@ interface DiffLine {
   parts?: { type: 'same' | 'added' | 'removed'; value: string }[];
 }
 
-export default function DiffChecker({ lang = 'en' }: Props) {
+function DiffChecker({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [text1, setText1] = useState('');
   const [text2, setText2] = useState('');
@@ -264,3 +265,5 @@ export default function DiffChecker({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(DiffChecker);

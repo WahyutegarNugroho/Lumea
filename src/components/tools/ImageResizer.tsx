@@ -1,13 +1,15 @@
-import { useState, useRef, useEffect } from 'react';
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import { downloadFile } from '../../lib/utils';
+import { useState, useRef } from 'react';
 import { Dropzone } from '../ui/Dropzone';
-import { Download, Maximize, RefreshCw, Lock, Unlock } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { Maximize, RefreshCw, Lock, Unlock } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function ImageResizer({ lang = 'en' }: Props) {
+function ImageResizer({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [originalSize, setOriginalSize] = useState({ width: 0, height: 0 });
@@ -64,12 +66,7 @@ export default function ImageResizer({ lang = 'en' }: Props) {
     if (ctx) {
       ctx.drawImage(imgRef.current, 0, 0, newSize.width, newSize.height);
       const dataUrl = canvas.toDataURL(file?.type || 'image/png');
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.download = `lumea-resized-${file?.name}`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      downloadFile(dataUrl, `resized-${file?.name || 'image'}`);
     }
     
     setIsProcessing(false);
@@ -156,3 +153,5 @@ export default function ImageResizer({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(ImageResizer);

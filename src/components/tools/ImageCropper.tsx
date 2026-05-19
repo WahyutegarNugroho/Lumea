@@ -1,15 +1,17 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Dropzone } from '../ui/Dropzone';
-import { Download, Crop as CropIcon, RefreshCw, Maximize, RotateCcw, Check } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { Crop as CropIcon, RefreshCw, Maximize, RotateCcw, Check } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
 type AspectRatio = 'free' | '1:1' | '4:3' | '16:9';
 
-export default function ImageCropper({ lang = 'en' }: Props) {
+function ImageCropper({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -144,10 +146,8 @@ export default function ImageCropper({ lang = 'en' }: Props) {
     canvas.height = cropH;
     ctx.drawImage(image, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
     
-    const link = document.createElement('a');
-    link.download = `lumea-cropped-${file?.name || 'image'}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    const dataUrl = canvas.toDataURL('image/png');
+    downloadFile(dataUrl, `cropped-${file?.name || 'image'}.png`);
   };
 
   if (!file) {
@@ -293,3 +293,5 @@ export default function ImageCropper({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(ImageCropper);

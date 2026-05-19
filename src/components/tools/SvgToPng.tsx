@@ -1,13 +1,15 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
 import { useState, useEffect } from 'react';
 import { Dropzone } from '../ui/Dropzone';
-import { Download, ImageIcon, ShieldCheck, Maximize2, Zap, Info, RefreshCw } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { Download, ShieldCheck, Maximize2, RefreshCw } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function SvgToPng({ lang = 'en' }: Props) {
+function SvgToPng({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [svgContent, setSvgContent] = useState<string | null>(null);
@@ -66,13 +68,7 @@ export default function SvgToPng({ lang = 'en' }: Props) {
       if (ctx) {
         ctx.drawImage(img, 0, 0, dimensions.width, dimensions.height);
         const pngUrl = canvas.toDataURL('image/png');
-        
-        const link = document.createElement('a');
-        link.href = pngUrl;
-        link.download = `${file?.name.replace('.svg', '')}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        downloadFile(pngUrl, `${file?.name.replace('.svg', '') || 'vector'}.png`);
       }
       URL.revokeObjectURL(url);
       setIsProcessing(false);
@@ -168,13 +164,13 @@ export default function SvgToPng({ lang = 'en' }: Props) {
 
           <div className="bg-emerald-50 border border-emerald-100 rounded-3xl p-6 flex gap-4 items-start">
             <div className="p-2 bg-emerald-100 text-emerald-600 rounded-xl">
-              <ShieldCheck size={20} />
+               <ShieldCheck size={20} />
             </div>
             <div>
-              <h4 className="font-bold text-emerald-900 text-sm mb-1">{t('ui.lossless_rendering')}</h4>
-              <p className="text-emerald-700/70 text-xs leading-relaxed">
-                {t('ui.svg_privacy_desc')}
-              </p>
+               <h4 className="font-bold text-emerald-900 text-sm mb-1">{t('ui.lossless_rendering')}</h4>
+               <p className="text-emerald-700/70 text-xs leading-relaxed">
+                 {t('ui.svg_privacy_desc')}
+               </p>
             </div>
           </div>
         </div>
@@ -182,3 +178,5 @@ export default function SvgToPng({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(SvgToPng);

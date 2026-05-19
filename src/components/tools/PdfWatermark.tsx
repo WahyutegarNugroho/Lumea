@@ -1,18 +1,16 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
 import { useState, useEffect, useRef } from 'react';
-import { PDFDocument, rgb, StandardFonts, degrees } from 'pdf-lib';
-import * as pdfjsLib from 'pdfjs-dist';
 import { Dropzone } from '../ui/Dropzone';
 import { Stamp, Type, Shield, Move, RotateCw, Maximize, ShieldCheck } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
-
-// Initialize PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function PdfWatermark({ lang = 'en' }: Props) {
+function PdfWatermark({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -57,6 +55,9 @@ export default function PdfWatermark({ lang = 'en' }: Props) {
 
   const generatePreview = async (file: File) => {
     try {
+      const pdfjsLib = await import('pdfjs-dist');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       const page = await pdf.getPage(1);
@@ -78,18 +79,6 @@ export default function PdfWatermark({ lang = 'en' }: Props) {
     }
   };
 
-  // Update scale when image is loaded or resized
-  useEffect(() => {
-    if (previewImgRef.current && pageSize.width > 0) {
-      const updateScale = () => {
-        // Update scale logic removed as displayScale is not used
-      };
-      updateScale();
-      window.addEventListener('resize', updateScale);
-      return () => window.removeEventListener('resize', updateScale);
-    }
-  }, [previewUrl, pageSize]);
-
   const [fontMetrics, setFontMetrics] = useState<{ width: number; vOffset: number } | null>(null);
 
   // Sync metrics between preview and PDF
@@ -97,6 +86,7 @@ export default function PdfWatermark({ lang = 'en' }: Props) {
     let isMounted = true;
     const loadMetrics = async () => {
       try {
+        const { PDFDocument, StandardFonts } = await import('pdf-lib');
         const doc = await PDFDocument.create();
         const font = await doc.embedFont(StandardFonts.HelveticaBold);
         if (isMounted) {
@@ -127,6 +117,7 @@ export default function PdfWatermark({ lang = 'en' }: Props) {
     setIsProcessing(true);
 
     try {
+      const { PDFDocument, rgb, StandardFonts, degrees } = await import('pdf-lib');
       const arrayBuffer = await file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
       const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
@@ -159,19 +150,16 @@ export default function PdfWatermark({ lang = 'en' }: Props) {
       const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `lumea_watermarked_${file.name}`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      downloadFile(url, `watermarked-${file.name}`);
       
-      setTimeout(() => URL.revokeObjectURL(url), 100);
-      setIsProcessing(false);
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        setIsProcessing(false);
+      }, 5000);
 
     } catch (err: any) {
       console.error('Watermark Error:', err);
-      alert(`${t('ui.error')}: ${err.message || t('ui.error_unknown')}`);
+      toast(`${t('ui.error')}: ${err.message || t('ui.error_unknown')}`);
 
       setIsProcessing(false);
     }
@@ -198,9 +186,6 @@ export default function PdfWatermark({ lang = 'en' }: Props) {
               <img 
                 ref={previewImgRef}
                 src={previewUrl} 
-                onLoad={() => {
-                  // onLoad logic removed
-                }}
                 className="max-h-[600px] w-auto block" 
                 alt="PDF Preview" 
               />
@@ -348,3 +333,5 @@ export default function PdfWatermark({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(PdfWatermark);

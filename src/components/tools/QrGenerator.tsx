@@ -1,19 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import { useState, useEffect } from 'react';
 import QRCode from 'qrcode';
-import { QrCode, Download, Share2, Copy, Palette, ShieldCheck } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { QrCode, Download, Palette, ShieldCheck } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function QrGenerator({ lang = 'en' }: Props) {
+function QrGenerator({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [text, setText] = useState('https://lumea.app');
   const [color, setColor] = useState('#000000');
   const [bgColor, setBgColor] = useState('#ffffff');
   const [qrUrl, setQrUrl] = useState('');
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     generateQr();
@@ -36,13 +37,8 @@ export default function QrGenerator({ lang = 'en' }: Props) {
   };
 
   const download = () => {
-    const link = document.createElement('a');
-    link.href = qrUrl;
-    link.download = `lumea-qr-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    // Removed immediate revoke
+    if (!qrUrl) return;
+    downloadFile(qrUrl, `qr-${Date.now()}.png`);
   };
 
   return (
@@ -140,3 +136,5 @@ export default function QrGenerator({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(QrGenerator);

@@ -1,11 +1,12 @@
-import { FileText, ExternalLink, ShieldCheck, Zap, Info, ArrowRight } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import { FileText, ExternalLink, ShieldCheck, Zap, ArrowRight } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function WordToPdf({ lang = 'en' }: Props) {
+function WordToPdf({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const externalLink = "https://www.ilovepdf.com/word_to_pdf";
 
@@ -89,3 +90,5 @@ export default function WordToPdf({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(WordToPdf);

@@ -1,12 +1,13 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 const guides = defineCollection({
-	type: 'content',
+	loader: glob({ pattern: "**/*.md", base: "./src/content/guides" }),
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
 		category: z.string(),
-		toolId: z.string(), // Matches the tool page name
+		toolId: z.string(),
 		publishDate: z.date().optional(),
 		image: z.string().optional(),
 	}),

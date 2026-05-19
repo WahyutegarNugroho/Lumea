@@ -1,14 +1,16 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
 import { useState } from 'react';
-import { PDFDocument, degrees } from 'pdf-lib';
 import { Dropzone } from '../ui/Dropzone';
 import { Download, RotateCw, FileText } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function PdfRotate({ lang = 'en' }: Props) {
+function PdfRotate({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [rotation, setRotation] = useState(0);
@@ -23,6 +25,7 @@ export default function PdfRotate({ lang = 'en' }: Props) {
     setIsProcessing(true);
 
     try {
+      const { PDFDocument, degrees } = await import('pdf-lib');
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await PDFDocument.load(arrayBuffer);
       const pages = pdf.getPages();
@@ -35,15 +38,13 @@ export default function PdfRotate({ lang = 'en' }: Props) {
       const pdfBytes = await pdf.save();
       const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `lumea-rotated-${file.name.replace('.pdf', '')}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      // Removed immediate revoke
+      
+      let safeName = file.name.toLowerCase().endsWith('.pdf') ? file.name : `${file.name}.pdf`;
+      downloadFile(url, `rotated-${safeName}`);
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
     } catch (error) {
       console.error(error);
+      toast(t('ui.error_rotate_failed') || 'Rotation failed');
     } finally {
       setIsProcessing(false);
     }
@@ -106,3 +107,5 @@ export default function PdfRotate({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(PdfRotate);

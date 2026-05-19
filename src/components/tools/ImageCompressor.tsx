@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import imageCompression from 'browser-image-compression';
 import { Dropzone } from '../ui/Dropzone';
-import { Download, Shrink, FileImage, CheckCircle2, Loader2, X } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { Download, Shrink, FileImage, Loader2, X } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
+import toast from 'react-hot-toast';
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
 interface CompressedFile {
@@ -13,14 +16,25 @@ interface CompressedFile {
   originalSize: number;
   compressedSize: number;
   url: string;
+  previewUrl: string;
   status: 'pending' | 'processing' | 'completed' | 'error';
 }
 
-export default function ImageCompressor({ lang = 'en' }: Props) {
+function ImageCompressor({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [files, setFiles] = useState<CompressedFile[]>([]);
   const [quality, setQuality] = useState(0.8);
   const [isProcessingAll, setIsProcessingAll] = useState(false);
+
+  // Bersihkan semua URL blobs jika komponen di-unmount
+  useEffect(() => {
+    return () => {
+      files.forEach(f => {
+        if (f.previewUrl) URL.revokeObjectURL(f.previewUrl);
+        if (f.url) URL.revokeObjectURL(f.url);
+      });
+    };
+  }, [files]);
 
   const handleFiles = (newFiles: File[]) => {
     const formatted = newFiles.map(f => ({
@@ -28,19 +42,35 @@ export default function ImageCompressor({ lang = 'en' }: Props) {
       originalSize: f.size,
       compressedSize: 0,
       url: '',
+      previewUrl: URL.createObjectURL(f), // Buat SATU KALI saat state diinisiasi, bukan di dalam render!
       status: 'pending' as const
     }));
     setFiles(prev => [...prev, ...formatted]);
   };
 
   const removeFile = (index: number) => {
+    const item = files[index];
+    if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+    if (item.url) URL.revokeObjectURL(item.url);
     setFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const clearFiles = () => {
+    files.forEach(f => {
+      if (f.previewUrl) URL.revokeObjectURL(f.previewUrl);
+      if (f.url) URL.revokeObjectURL(f.url);
+    });
+    setFiles([]);
   };
 
   const compressAll = async () => {
     setIsProcessingAll(true);
+    let successCount = 0;
     
     const updatedFiles = [...files];
+    
+    // Gunakan toast loading
+    const processingToast = toast.loading(t('ui.merging_pdfs') || "Processing images...");
     
     for (let i = 0; i < updatedFiles.length; i++) {
       if (updatedFiles[i].status === 'completed') continue;
@@ -62,6 +92,7 @@ export default function ImageCompressor({ lang = 'en' }: Props) {
         updatedFiles[i].url = URL.createObjectURL(compressedFile);
         updatedFiles[i].status = 'completed';
         setFiles([...updatedFiles]);
+        successCount++;
       } catch (error) {
         console.error(error);
         updatedFiles[i].status = 'error';
@@ -70,6 +101,12 @@ export default function ImageCompressor({ lang = 'en' }: Props) {
     }
     
     setIsProcessingAll(false);
+    
+    if (successCount > 0) {
+      toast.success(successCount === 1 ? "Image compressed" : `${successCount} images compressed`, { id: processingToast });
+    } else {
+      toast.error("Compression failed", { id: processingToast });
+    }
   };
 
   return (
@@ -101,7 +138,7 @@ export default function ImageCompressor({ lang = 'en' }: Props) {
               {files.map((item, index) => (
                 <div key={`${item.file.name}-${index}`} className="bg-white border border-zinc-100 rounded-2xl p-4 flex items-center gap-4 group">
                   <div className="w-12 h-12 bg-zinc-50 rounded-lg overflow-hidden flex-shrink-0 border border-zinc-100">
-                    <img src={URL.createObjectURL(item.file)} className="w-full h-full object-cover" alt="Preview" />
+                    <img src={item.previewUrl} className="w-full h-full object-cover" alt="Preview" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold text-zinc-900 truncate">{item.file.name}</div>
@@ -120,12 +157,8 @@ export default function ImageCompressor({ lang = 'en' }: Props) {
                         </span>
                         <button 
                           onClick={() => {
-                            const link = document.createElement('a');
-                            link.href = item.url;
-                            link.download = `lumea-compressed-${item.file.name}`;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
+                            downloadFile(item.url, `compressed-${item.file.name}`);
+                            toast.success("Download started");
                           }}
                           className="text-zinc-400 hover:text-zinc-900 transition-colors"
                         >
@@ -146,14 +179,14 @@ export default function ImageCompressor({ lang = 'en' }: Props) {
             <button 
               onClick={compressAll}
               disabled={isProcessingAll || files.every(f => f.status === 'completed')}
-              className="flex-1 py-4 bg-zinc-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-200"
+              className="flex-1 py-4 bg-zinc-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-200 disabled:opacity-50"
             >
               {isProcessingAll ? <Loader2 size={20} className="animate-spin" /> : <Shrink size={20} />}
               {t('tool.compressor.title')}
             </button>
             <button 
-              onClick={() => setFiles([])}
-              className="px-8 py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-bold hover:bg-zinc-50 transition-all"
+              onClick={clearFiles}
+              className="px-8 py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-bold hover:bg-zinc-50 transition-all disabled:opacity-50"
             >
               {t('ui.clear')}
             </button>
@@ -163,3 +196,5 @@ export default function ImageCompressor({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(ImageCompressor);

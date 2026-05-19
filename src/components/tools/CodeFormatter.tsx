@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
+import { useState } from 'react';
 import * as prettier from 'prettier/standalone';
 import * as parserBabel from 'prettier/parser-babel';
 import * as parserHtml from 'prettier/parser-html';
 import * as parserPostcss from 'prettier/parser-postcss';
 import { Copy, Braces, ShieldCheck, Zap, Check, RefreshCw } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { useTranslations } from '../../lib/i18n';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
 const LANGUAGES = [
@@ -16,7 +18,7 @@ const LANGUAGES = [
   { id: 'css', name: 'ui.lang_css' },
 ];
 
-export default function CodeFormatter({ lang = 'en' }: Props) {
+function CodeFormatter({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [code, setCode] = useState('');
   const [selectedLang, setSelectedLang] = useState('babel');
@@ -38,7 +40,7 @@ export default function CodeFormatter({ lang = 'en' }: Props) {
       setCode(formatted);
     } catch (error) {
       console.error(error);
-      alert(t('ui.error_format_failed'));
+      toast(t('ui.error_format_failed'));
     } finally {
       setIsProcessing(false);
     }
@@ -132,3 +134,5 @@ export default function CodeFormatter({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(CodeFormatter);

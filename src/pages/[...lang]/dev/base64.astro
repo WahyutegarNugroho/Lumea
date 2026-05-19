@@ -1,19 +1,13 @@
 ---
-export function getStaticPaths() {
-  return [
-    { params: { lang: undefined } },
-    { params: { lang: 'id' } },
-    { params: { lang: 'es' } },
-  ];
-}
-
+import { getI18nPaths } from '../../../lib/routing';
+export const getStaticPaths = getI18nPaths;
 const { lang: langParam } = Astro.params;
-const lang = (langParam || 'en') as any;
+const lang = (langParam || 'en') as string;
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
 import { ArrowLeftRight } from 'lucide-react';
 import { useTranslations } from '../../../lib/i18n';
-const t = useTranslations(lang as any);
+const t = useTranslations(lang);
 ---
 
 <ToolLayout 
@@ -70,16 +64,23 @@ const t = useTranslations(lang as any);
 	const clearBtn = document.getElementById('clear-btn');
 
 	function encode() {
+		if (!plainText || !base64Text) return;
 		try {
-			base64Text.value = btoa(unescape(encodeURIComponent(plainText.value)));
+			const str = plainText.value;
+			const bytes = new TextEncoder().encode(str);
+			const binString = Array.from(bytes, (byte) => String.fromCharCode(byte)).join("");
+			base64Text.value = btoa(binString);
 		} catch (e) {
 			console.error("Encoding failed", e);
 		}
 	}
 
 	function decode() {
+		if (!plainText || !base64Text) return;
 		try {
-			plainText.value = decodeURIComponent(escape(atob(base64Text.value)));
+			const binString = atob(base64Text.value);
+			const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0) || 0);
+			plainText.value = new TextDecoder().decode(bytes);
 		} catch (e) {
 			console.error("Decoding failed", e);
 		}
@@ -89,7 +90,7 @@ const t = useTranslations(lang as any);
 	base64Text?.addEventListener('input', decode);
 
 	clearBtn?.addEventListener('click', () => {
-		plainText.value = '';
-		base64Text.value = '';
+		if (plainText) plainText.value = '';
+		if (base64Text) base64Text.value = '';
 	});
 </script>

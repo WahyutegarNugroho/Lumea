@@ -1,0 +1,369 @@
+﻿[2m20:35:49[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m20:35:50[22m [34m[content][39m Syncing content
+[2m20:35:50[22m [34m[content][39m Synced content
+[2m20:35:50[22m [34m[types][39m Generated [2m1.34s[22m
+[2m20:35:50[22m [34m[check][39m Getting diagnostics for Astro files in C:\xampp\htdocs\lumea-app...
+[96msrc/content.config.ts[0m:[93m12[0m:[93m10[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m12[0m   image: z.string().optional(),
+[7m  [0m [93m         ~[0m
+[96msrc/content.config.ts[0m:[93m11[0m:[93m16[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m11[0m   publishDate: z.date().optional(),
+[7m  [0m [93m               ~[0m
+[96msrc/content.config.ts[0m:[93m10[0m:[93m11[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m10[0m   toolId: z.string(),
+[7m  [0m [93m          ~[0m
+[96msrc/content.config.ts[0m:[93m9[0m:[93m13[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m9[0m   category: z.string(),
+[7m [0m [93m            ~[0m
+[96msrc/content.config.ts[0m:[93m8[0m:[93m16[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m8[0m   description: z.string(),
+[7m [0m [93m               ~[0m
+[96msrc/content.config.ts[0m:[93m7[0m:[93m10[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m7[0m   title: z.string(),
+[7m [0m [93m         ~[0m
+[96msrc/content.config.ts[0m:[93m6[0m:[93m10[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m6[0m  schema: z.object({
+[7m [0m [93m         ~[0m
+[96msrc/content.config.ts[0m:[93m1[0m:[93m28[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m1[0m import { defineCollection, z } from 'astro:content';
+[7m [0m [93m                           ~[0m
+
+[96msrc/components/tools/BackgroundRemover.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+
+[96msrc/components/tools/BarcodeGenerator.tsx[0m:[93m7[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m7[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/BarcodeGenerator.tsx[0m:[93m6[0m:[93m53[0m - [93mwarning[0m[90m ts(6133): [0m'ArrowRight' is declared but its value is never read.
+
+[7m6[0m import { Download, Barcode, ShieldCheck, Zap, Info, ArrowRight, Settings2, AlertCircle, CheckCircle2 } from 'lucide-react';
+[7m [0m [93m                                                    ~~~~~~~~~~[0m
+[96msrc/components/tools/BarcodeGenerator.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/CodeFormatter.tsx[0m:[93m9[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m9[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/CodeFormatter.tsx[0m:[93m3[0m:[93m20[0m - [93mwarning[0m[90m ts(6133): [0m'useEffect' is declared but its value is never read.
+
+[7m3[0m import { useState, useEffect } from 'react';
+[7m [0m [93m                   ~~~~~~~~~[0m
+
+[96msrc/components/tools/ColorPicker.tsx[0m:[93m5[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m5[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/ColorPicker.tsx[0m:[93m4[0m:[93m52[0m - [93mwarning[0m[90m ts(6133): [0m'Info' is declared but its value is never read.
+
+[7m4[0m import { Palette, Copy, Check, Pipette, RotateCcw, Info } from 'lucide-react';
+[7m [0m [93m                                                   ~~~~[0m
+[96msrc/components/tools/ColorPicker.tsx[0m:[93m4[0m:[93m41[0m - [93mwarning[0m[90m ts(6133): [0m'RotateCcw' is declared but its value is never read.
+
+[7m4[0m import { Palette, Copy, Check, Pipette, RotateCcw, Info } from 'lucide-react';
+[7m [0m [93m                                        ~~~~~~~~~[0m
+[96msrc/components/tools/ColorPicker.tsx[0m:[93m4[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Pipette' is declared but its value is never read.
+
+[7m4[0m import { Palette, Copy, Check, Pipette, RotateCcw, Info } from 'lucide-react';
+[7m [0m [93m                               ~~~~~~~[0m
+[96msrc/components/tools/ColorPicker.tsx[0m:[93m4[0m:[93m10[0m - [93mwarning[0m[90m ts(6133): [0m'Palette' is declared but its value is never read.
+
+[7m4[0m import { Palette, Copy, Check, Pipette, RotateCcw, Info } from 'lucide-react';
+[7m [0m [93m         ~~~~~~~[0m
+[96msrc/components/tools/ColorPicker.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/DiffChecker.tsx[0m:[93m5[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m5[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/DiffChecker.tsx[0m:[93m4[0m:[93m36[0m - [93mwarning[0m[90m ts(6133): [0m'Trash2' is declared but its value is never read.
+
+[7m4[0m import { Columns2, ArrowLeftRight, Trash2, Zap, Info } from 'lucide-react';
+[7m [0m [93m                                   ~~~~~~[0m
+[96msrc/components/tools/DiffChecker.tsx[0m:[93m4[0m:[93m20[0m - [93mwarning[0m[90m ts(6133): [0m'ArrowLeftRight' is declared but its value is never read.
+
+[7m4[0m import { Columns2, ArrowLeftRight, Trash2, Zap, Info } from 'lucide-react';
+[7m [0m [93m                   ~~~~~~~~~~~~~~[0m
+[96msrc/components/tools/DiffChecker.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/ExcelToPdf.tsx[0m:[93m4[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m4[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/ExcelToPdf.tsx[0m:[93m3[0m:[93m52[0m - [93mwarning[0m[90m ts(6133): [0m'Info' is declared but its value is never read.
+
+[7m3[0m import { FileText, ExternalLink, ShieldCheck, Zap, Info, ArrowRight, Database } from 'lucide-react';
+[7m [0m [93m                                                   ~~~~[0m
+[96msrc/components/tools/ExcelToPdf.tsx[0m:[93m3[0m:[93m10[0m - [93mwarning[0m[90m ts(6133): [0m'FileText' is declared but its value is never read.
+
+[7m3[0m import { FileText, ExternalLink, ShieldCheck, Zap, Info, ArrowRight, Database } from 'lucide-react';
+[7m [0m [93m         ~~~~~~~~[0m
+[96msrc/components/tools/ExcelToPdf.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/FormatConverter.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/FormatConverter.tsx[0m:[93m5[0m:[93m10[0m - [93mwarning[0m[90m ts(6133): [0m'Download' is declared but its value is never read.
+
+[7m5[0m import { Download, RefreshCw, Layers } from 'lucide-react';
+[7m [0m [93m         ~~~~~~~~[0m
+[96msrc/components/tools/FormatConverter.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/ImageCompressor.tsx[0m:[93m4[0m:[93m39[0m - [93mwarning[0m[90m ts(6133): [0m'CheckCircle2' is declared but its value is never read.
+
+[7m4[0m import { Download, Shrink, FileImage, CheckCircle2, Loader2, X } from 'lucide-react';
+[7m [0m [93m                                      ~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/ImageCropper.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/ImageCropper.tsx[0m:[93m5[0m:[93m10[0m - [93mwarning[0m[90m ts(6133): [0m'Download' is declared but its value is never read.
+
+[7m5[0m import { Download, Crop as CropIcon, RefreshCw, Maximize, RotateCcw, Check } from 'lucide-react';
+[7m [0m [93m         ~~~~~~~~[0m
+[96msrc/components/tools/ImageCropper.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/ImageResizer.tsx[0m:[93m7[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m7[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/ImageResizer.tsx[0m:[93m6[0m:[93m10[0m - [93mwarning[0m[90m ts(6133): [0m'Download' is declared but its value is never read.
+
+[7m6[0m import { Download, Maximize, RefreshCw, Lock, Unlock } from 'lucide-react';
+[7m [0m [93m         ~~~~~~~~[0m
+[96msrc/components/tools/ImageResizer.tsx[0m:[93m4[0m:[93m28[0m - [93mwarning[0m[90m ts(6133): [0m'useEffect' is declared but its value is never read.
+
+[7m4[0m import { useState, useRef, useEffect } from 'react';
+[7m [0m [93m                           ~~~~~~~~~[0m
+[96msrc/components/tools/ImageResizer.tsx[0m:[93m3[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m3[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/JpgToPdf.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/JpgToPdf.tsx[0m:[93m5[0m:[93m44[0m - [93mwarning[0m[90m ts(6133): [0m'GripVertical' is declared but its value is never read.
+
+[7m5[0m import { Download, FileImage, FileText, X, GripVertical, Plus } from 'lucide-react';
+[7m [0m [93m                                           ~~~~~~~~~~~~[0m
+[96msrc/components/tools/JpgToPdf.tsx[0m:[93m5[0m:[93m10[0m - [93mwarning[0m[90m ts(6133): [0m'Download' is declared but its value is never read.
+
+[7m5[0m import { Download, FileImage, FileText, X, GripVertical, Plus } from 'lucide-react';
+[7m [0m [93m         ~~~~~~~~[0m
+
+[96msrc/components/tools/MarkdownEditor.tsx[0m:[93m16[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m16[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m  [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/MarkdownEditor.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/OcrTool.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/OcrTool.tsx[0m:[93m5[0m:[93m10[0m - [93mwarning[0m[90m ts(6133): [0m'Download' is declared but its value is never read.
+
+[7m5[0m import { Download, Copy, ScanText, ShieldCheck, Languages, Zap, Check, Trash2, Wand2 } from 'lucide-react';
+[7m [0m [93m         ~~~~~~~~[0m
+
+[96msrc/components/tools/PdfCompressor.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+
+[96msrc/components/tools/PdfMerge.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+
+[96msrc/components/tools/PdfOrganizer.tsx[0m:[93m26[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m26[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m  [0m [93m                               ~~~~~~[0m
+
+[96msrc/components/tools/PdfRotate.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+
+[96msrc/components/tools/PdfSplit.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+
+[96msrc/components/tools/PdfToExcel.tsx[0m:[93m4[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m4[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/PdfToExcel.tsx[0m:[93m3[0m:[93m52[0m - [93mwarning[0m[90m ts(6133): [0m'Info' is declared but its value is never read.
+
+[7m3[0m import { FileText, ExternalLink, ShieldCheck, Zap, Info, ArrowRight, Table } from 'lucide-react';
+[7m [0m [93m                                                   ~~~~[0m
+[96msrc/components/tools/PdfToExcel.tsx[0m:[93m3[0m:[93m10[0m - [93mwarning[0m[90m ts(6133): [0m'FileText' is declared but its value is never read.
+
+[7m3[0m import { FileText, ExternalLink, ShieldCheck, Zap, Info, ArrowRight, Table } from 'lucide-react';
+[7m [0m [93m         ~~~~~~~~[0m
+[96msrc/components/tools/PdfToExcel.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/PdfToJpg.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+
+[96msrc/components/tools/PdfToWord.tsx[0m:[93m4[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m4[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/PdfToWord.tsx[0m:[93m3[0m:[93m52[0m - [93mwarning[0m[90m ts(6133): [0m'Info' is declared but its value is never read.
+
+[7m3[0m import { FileText, ExternalLink, ShieldCheck, Zap, Info, ArrowRight, Wrench } from 'lucide-react';
+[7m [0m [93m                                                   ~~~~[0m
+[96msrc/components/tools/PdfToWord.tsx[0m:[93m3[0m:[93m10[0m - [93mwarning[0m[90m ts(6133): [0m'FileText' is declared but its value is never read.
+
+[7m3[0m import { FileText, ExternalLink, ShieldCheck, Zap, Info, ArrowRight, Wrench } from 'lucide-react';
+[7m [0m [93m         ~~~~~~~~[0m
+[96msrc/components/tools/PdfToWord.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/PdfWatermark.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+
+[96msrc/components/tools/QrGenerator.tsx[0m:[93m19[0m:[93m9[0m - [93mwarning[0m[90m ts(6133): [0m'canvasRef' is declared but its value is never read.
+
+[7m19[0m   const canvasRef = useRef<HTMLCanvasElement>(null);
+[7m  [0m [93m        ~~~~~~~~~[0m
+[96msrc/components/tools/QrGenerator.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/QrGenerator.tsx[0m:[93m5[0m:[93m36[0m - [93mwarning[0m[90m ts(6133): [0m'Copy' is declared but its value is never read.
+
+[7m5[0m import { QrCode, Download, Share2, Copy, Palette, ShieldCheck } from 'lucide-react';
+[7m [0m [93m                                   ~~~~[0m
+[96msrc/components/tools/QrGenerator.tsx[0m:[93m5[0m:[93m28[0m - [93mwarning[0m[90m ts(6133): [0m'Share2' is declared but its value is never read.
+
+[7m5[0m import { QrCode, Download, Share2, Copy, Palette, ShieldCheck } from 'lucide-react';
+[7m [0m [93m                           ~~~~~~[0m
+[96msrc/components/tools/QrGenerator.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/SvgToPng.tsx[0m:[93m6[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m6[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/SvgToPng.tsx[0m:[93m5[0m:[93m60[0m - [93mwarning[0m[90m ts(6133): [0m'Info' is declared but its value is never read.
+
+[7m5[0m import { Download, ImageIcon, ShieldCheck, Maximize2, Zap, Info, RefreshCw } from 'lucide-react';
+[7m [0m [93m                                                           ~~~~[0m
+[96msrc/components/tools/SvgToPng.tsx[0m:[93m5[0m:[93m55[0m - [93mwarning[0m[90m ts(6133): [0m'Zap' is declared but its value is never read.
+
+[7m5[0m import { Download, ImageIcon, ShieldCheck, Maximize2, Zap, Info, RefreshCw } from 'lucide-react';
+[7m [0m [93m                                                      ~~~[0m
+[96msrc/components/tools/SvgToPng.tsx[0m:[93m5[0m:[93m20[0m - [93mwarning[0m[90m ts(6133): [0m'ImageIcon' is declared but its value is never read.
+
+[7m5[0m import { Download, ImageIcon, ShieldCheck, Maximize2, Zap, Info, RefreshCw } from 'lucide-react';
+[7m [0m [93m                   ~~~~~~~~~[0m
+[96msrc/components/tools/SvgToPng.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/tools/Vectorizer.tsx[0m:[93m8[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m8[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/Vectorizer.tsx[0m:[93m7[0m:[93m45[0m - [93mwarning[0m[90m ts(6133): [0m'Settings2' is declared but its value is never read.
+
+[7m7[0m import { Download, Zap, ImageIcon, Palette, Settings2 } from 'lucide-react';
+[7m [0m [93m                                            ~~~~~~~~~[0m
+[96msrc/components/tools/Vectorizer.tsx[0m:[93m7[0m:[93m25[0m - [93mwarning[0m[90m ts(6133): [0m'ImageIcon' is declared but its value is never read.
+
+[7m7[0m import { Download, Zap, ImageIcon, Palette, Settings2 } from 'lucide-react';
+[7m [0m [93m                        ~~~~~~~~~[0m
+[96msrc/components/tools/Vectorizer.tsx[0m:[93m3[0m:[93m20[0m - [93mwarning[0m[90m ts(6133): [0m'useRef' is declared but its value is never read.
+
+[7m3[0m import { useState, useRef } from 'react';
+[7m [0m [93m                   ~~~~~~[0m
+
+[96msrc/components/tools/WordToPdf.tsx[0m:[93m4[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m4[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+[96msrc/components/tools/WordToPdf.tsx[0m:[93m3[0m:[93m52[0m - [93mwarning[0m[90m ts(6133): [0m'Info' is declared but its value is never read.
+
+[7m3[0m import { FileText, ExternalLink, ShieldCheck, Zap, Info, ArrowRight } from 'lucide-react';
+[7m [0m [93m                                                   ~~~~[0m
+[96msrc/components/tools/WordToPdf.tsx[0m:[93m2[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'toast' is declared but its value is never read.
+
+[7m2[0m import toast from 'react-hot-toast';
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/ui/Dropzone.tsx[0m:[93m3[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m3[0m import { useTranslations, type Locale } from '../../lib/i18n';
+[7m [0m [93m                               ~~~~~~[0m
+
+[96msrc/components/ui/ErrorBoundary.tsx[0m:[93m1[0m:[93m8[0m - [93mwarning[0m[90m ts(6133): [0m'React' is declared but its value is never read.
+
+[7m1[0m import React, { Component, type ErrorInfo, type ReactNode } from 'react';
+[7m [0m [93m       ~~~~~[0m
+
+[96msrc/layouts/BaseLayout.astro[0m:[93m16[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m16[0m import { useTranslations, type Locale, getLocalizedPath, getLocaleFromPath } from '../lib/i18n';
+[7m  [0m [93m                               ~~~~~~[0m
+
+[96msrc/layouts/ToolLayout.astro[0m:[93m14[0m:[93m32[0m - [93mwarning[0m[90m ts(6133): [0m'Locale' is declared but its value is never read.
+
+[7m14[0m import { useTranslations, type Locale, getLocaleFromPath } from '../lib/i18n';
+[7m  [0m [93m                               ~~~~~~[0m
+
+Result (89 files): 
+- 0 errors
+- 0 warnings
+- 82 hints
+

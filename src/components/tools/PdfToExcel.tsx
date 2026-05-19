@@ -1,11 +1,12 @@
-import { FileText, ExternalLink, ShieldCheck, Zap, Info, ArrowRight, Table } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import { ExternalLink, ShieldCheck, Zap, ArrowRight, Table } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function PdfToExcel({ lang = 'en' }: Props) {
+function PdfToExcel({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const externalLink = "https://www.ilovepdf.com/pdf_to_excel";
 
@@ -89,3 +90,5 @@ export default function PdfToExcel({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(PdfToExcel);

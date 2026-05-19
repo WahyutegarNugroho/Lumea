@@ -11,6 +11,7 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   site: 'https://lumea-whtsn.vercel.app',
   vite: {
+    // @ts-ignore
     plugins: [tailwindcss()]
   },
 

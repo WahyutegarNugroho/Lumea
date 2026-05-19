@@ -1,14 +1,8 @@
 ---
-export function getStaticPaths() {
-  return [
-    { params: { lang: undefined } },
-    { params: { lang: 'id' } },
-    { params: { lang: 'es' } },
-  ];
-}
-
+import { getI18nPaths } from '../../../lib/routing';
+export const getStaticPaths = getI18nPaths;
 const { lang: langParam } = Astro.params;
-const lang = (langParam || 'en') as any;
+const lang = (langParam || 'en') as string;
 
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';

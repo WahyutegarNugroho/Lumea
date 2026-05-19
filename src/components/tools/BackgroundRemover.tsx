@@ -1,15 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
-import pkg from '@mediapipe/selfie_segmentation';
-const { SelfieSegmentation } = pkg;
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
+import { useState, useRef } from 'react';
 import { Dropzone } from '../ui/Dropzone';
 import { Download, Eraser, ImageIcon, Loader2, Zap, ShieldCheck } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
-export default function BackgroundRemover({ lang = 'en' }: Props) {
+function BackgroundRemover({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -22,7 +23,6 @@ export default function BackgroundRemover({ lang = 'en' }: Props) {
   const [hdMode, setHdMode] = useState(true);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
 
   const handleFiles = (files: File[]) => {
     setFile(files[0]);
@@ -36,8 +36,11 @@ export default function BackgroundRemover({ lang = 'en' }: Props) {
     setProgress(10);
 
     try {
+      const pkg = await import('@mediapipe/selfie_segmentation');
+      const SelfieSegmentation = pkg.SelfieSegmentation || (pkg as any).default?.SelfieSegmentation || (pkg as any).default;
+      
       const segmentation = new SelfieSegmentation({
-        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`,
+        locateFile: (file: string) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`,
       });
 
       segmentation.setOptions({
@@ -55,7 +58,7 @@ export default function BackgroundRemover({ lang = 'en' }: Props) {
       canvas.width = img.width;
       canvas.height = img.height;
 
-      segmentation.onResults((results) => {
+      segmentation.onResults((results: any) => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
         
@@ -66,11 +69,8 @@ export default function BackgroundRemover({ lang = 'en' }: Props) {
         
         if (hdMode) {
           // Refined Pro Pipeline: Balanced Smoothing + High Contrast
-          // A blur proportional to the scale factor hides the AI grid perfectly.
           const smoothBlur = (smoothness * scaleFactor) / 2.5;
-          // Expansion/Contraction with a wider, more accurate range.
           const brightnessVal = 100 + (expansion * 130);
-          // 2000% Contrast provides a very sharp edge that still retains sub-pixel smoothness.
           ctx.filter = `blur(${smoothBlur}px) brightness(${brightnessVal}%) contrast(2500%)`;
         } else {
           ctx.filter = `blur(${smoothness * 2}px) contrast(300%)`;
@@ -96,7 +96,7 @@ export default function BackgroundRemover({ lang = 'en' }: Props) {
       await segmentation.send({ image: img });
     } catch (error) {
       console.error(error);
-      alert(t('ui.error_bg_remover_failed'));
+      toast(t('ui.error_bg_remover_failed'));
       setIsProcessing(false);
     }
   };
@@ -233,12 +233,7 @@ export default function BackgroundRemover({ lang = 'en' }: Props) {
                   <button 
                     onClick={() => {
                       if (!resultUrl) return;
-                      const link = document.createElement('a');
-                      link.href = resultUrl;
-                      link.download = `lumea-no-bg-${file.name.split('.')[0]}.png`;
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
+                      downloadFile(resultUrl, `no-bg-${file.name.split('.')[0]}.png`);
                     }}
                     className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-200"
                   >
@@ -278,3 +273,5 @@ export default function BackgroundRemover({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(BackgroundRemover);

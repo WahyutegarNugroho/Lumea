@@ -1,15 +1,13 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
+import toast from 'react-hot-toast';
 import { useState } from 'react';
-import { PDFDocument } from 'pdf-lib';
-import * as pdfjsLib from 'pdfjs-dist';
 import { Dropzone } from '../ui/Dropzone';
 import { Scissors, CheckCircle2, Plus, X, Layers, Grid, ShieldCheck } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
-
-// Use a more stable worker source
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
 interface PagePreview {
@@ -17,7 +15,7 @@ interface PagePreview {
   dataUrl: string;
 }
 
-export default function PdfSplit({ lang = 'en' }: Props) {
+function PdfSplit({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [file, setFile] = useState<File | null>(null);
   const [previews, setPreviews] = useState<PagePreview[]>([]);
@@ -38,6 +36,10 @@ export default function PdfSplit({ lang = 'en' }: Props) {
     setPreviews([]);
     
     try {
+      const pdfjsLib = await import('pdfjs-dist');
+      // Set worker source dynamically
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+
       const arrayBuffer = await file.arrayBuffer();
       const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
       const pdf = await loadingTask.promise;
@@ -90,7 +92,7 @@ export default function PdfSplit({ lang = 'en' }: Props) {
   const splitPdf = async () => {
     if (!file) return;
     if (mode === 'extract' && selectedPages.length === 0) {
-      alert(t('ui.error_select_page'));
+      toast(t('ui.error_select_page'));
 
       return;
     }
@@ -98,6 +100,7 @@ export default function PdfSplit({ lang = 'en' }: Props) {
     setIsProcessing(true);
 
     try {
+      const { PDFDocument } = await import('pdf-lib');
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await PDFDocument.load(arrayBuffer);
       const newPdf = await PDFDocument.create();
@@ -124,23 +127,17 @@ export default function PdfSplit({ lang = 'en' }: Props) {
       const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `lumea_split_result.pdf`;
-      link.style.display = 'none';
-      document.body.appendChild(link);
+      let safeName = file.name.toLowerCase().endsWith('.pdf') ? file.name : `${file.name}.pdf`;
+      downloadFile(url, `split-${safeName}`);
       
       setTimeout(() => {
-        link.click();
-        setTimeout(() => {
-          document.body.removeChild(link);
-          setIsProcessing(false);
-        }, 3000);
-      }, 100);
+        URL.revokeObjectURL(url);
+        setIsProcessing(false);
+      }, 5000);
 
     } catch (error) {
       console.error('Split error:', error);
-      alert(`${t('ui.error_split_failed')}: ${error instanceof Error ? error.message : t('ui.error_unknown')}`);
+      toast(`${t('ui.error_split_failed')}: ${error instanceof Error ? error.message : t('ui.error_unknown')}`);
 
       setIsProcessing(false);
     }
@@ -290,3 +287,5 @@ export default function PdfSplit({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(PdfSplit);

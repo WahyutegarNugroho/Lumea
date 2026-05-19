@@ -1,11 +1,13 @@
+import { withErrorBoundary } from '../ui/withErrorBoundary';
 import { useState, useEffect, useRef } from 'react';
 // @ts-ignore
 import bwipjs from 'bwip-js';
-import { Download, Barcode, ShieldCheck, Zap, Info, ArrowRight, Settings2, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { useTranslations, type Locale } from '../../lib/i18n';
+import { Download, Barcode, ShieldCheck, Zap, Info, Settings2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { useTranslations } from '../../lib/i18n';
+import { downloadFile } from '../../lib/utils';
 
 interface Props {
-  lang?: Locale;
+  lang?: string;
 }
 
 const BARCODE_TYPES = [
@@ -17,7 +19,7 @@ const BARCODE_TYPES = [
   { id: 'itf14', name: 'ITF-14 (Shipping)', desc: 'Requires 14 digits' },
 ];
 
-export default function BarcodeGenerator({ lang = 'en' }: Props) {
+function BarcodeGenerator({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
   const [content, setContent] = useState('1234567890');
   const [type, setType] = useState('code128');
@@ -72,12 +74,7 @@ export default function BarcodeGenerator({ lang = 'en' }: Props) {
   const downloadBarcode = () => {
     if (!canvasRef.current || error) return;
     const url = canvasRef.current.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `barcode-${type}-${content}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    downloadFile(url, `barcode-${type}-${content}.png`);
   };
 
   const selectedTypeInfo = BARCODE_TYPES.find(t => t.id === type);
@@ -224,3 +221,5 @@ export default function BarcodeGenerator({ lang = 'en' }: Props) {
     </div>
   );
 }
+
+export default withErrorBoundary(BarcodeGenerator);
