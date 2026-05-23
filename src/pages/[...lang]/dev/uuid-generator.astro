@@ -18,7 +18,7 @@ const t = useTranslations(lang);
 	<div class="space-y-8">
 		<div class="flex flex-wrap gap-6 items-end">
 			<div>
-				<label class="tool-label">{t('ui.quantity')}</label>
+				<label class="tool-label" for="quantity">{t('ui.quantity')}</label>
 				<input type="number" id="quantity" value="5" min="1" max="100" class="tool-input w-32" />
 			</div>
 			<button id="generate-btn" class="tool-button-primary flex items-center gap-2">
@@ -28,7 +28,7 @@ const t = useTranslations(lang);
 		</div>
 
 		<div>
-			<label class="tool-label">{t('ui.generated_uuids')}</label>
+			<label class="tool-label" for="uuid-output">{t('ui.generated_uuids')}</label>
 			<textarea 
 				id="uuid-output" 
 			 class="tool-input min-h-[300px] font-mono text-base tracking-tight leading-relaxed bg-zinc-50" 
@@ -57,6 +57,7 @@ const t = useTranslations(lang);
 </ToolLayout>
 
 <script>
+	window.addEventListener('error', e => console.error('[Tool Error]', e.error || e.message));
 	const quantityInput = document.getElementById('quantity') as HTMLInputElement;
 	const uuidOutput = document.getElementById('uuid-output') as HTMLTextAreaElement;
 	const generateBtn = document.getElementById('generate-btn');

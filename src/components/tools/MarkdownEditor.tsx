@@ -1,6 +1,7 @@
 import { withErrorBoundary } from '../ui/withErrorBoundary';
 import { useState, useEffect } from 'react';
 import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import { 
   FileText, 
   Eye, 
@@ -27,11 +28,12 @@ function MarkdownEditor({ lang = 'en' }: Props) {
   const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'split'>('split');
 
   useEffect(() => {
-    const renderMarkdown = async () => {
+    let cancelled = false;
+    (async () => {
       const rendered = await marked.parse(markdown);
-      setHtml(rendered);
-    };
-    renderMarkdown();
+      if (!cancelled) setHtml(rendered);
+    })();
+    return () => { cancelled = true; };
   }, [markdown]);
 
   const copyHtml = () => {
@@ -106,7 +108,7 @@ function MarkdownEditor({ lang = 'en' }: Props) {
               <button 
                 onClick={() => setMarkdown('')}
                 className="p-1.5 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-all"
-                title={t('ui.clear_all')}
+                aria-label={t('ui.clear_all')}
               >
                 <RotateCcw size={14} />
               </button>
@@ -131,7 +133,7 @@ function MarkdownEditor({ lang = 'en' }: Props) {
             </div>
             <div 
               className="flex-1 w-full p-8 overflow-y-auto prose prose-zinc max-w-none prose-sm md:prose-base prose-headings:font-outfit prose-headings:font-bold prose-a:text-zinc-900 prose-strong:text-zinc-900"
-              dangerouslySetInnerHTML={{ __html: html }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }}
             />
           </div>
         )}

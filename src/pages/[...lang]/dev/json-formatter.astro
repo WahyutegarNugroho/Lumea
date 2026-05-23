@@ -76,6 +76,7 @@ const t = useTranslations(lang);
 </ToolLayout>
 
 <script>
+	window.addEventListener('error', e => console.error('[Tool Error]', e.error || e.message));
 	const jsonInput = document.getElementById('json-input') as HTMLTextAreaElement;
 	const formatBtn = document.getElementById('format-btn');
 	const minifyBtn = document.getElementById('minify-btn');

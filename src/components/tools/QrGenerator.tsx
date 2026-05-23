@@ -17,12 +17,16 @@ function QrGenerator({ lang = 'en' }: Props) {
   const [qrUrl, setQrUrl] = useState('');
 
   useEffect(() => {
-    generateQr();
+    let cancelled = false;
+    generateQr().then((url) => {
+      if (!cancelled && url) setQrUrl(url);
+    });
+    return () => { cancelled = true; };
   }, [text, color, bgColor]);
 
-  const generateQr = async () => {
+  const generateQr = async (): Promise<string | null> => {
     try {
-      const url = await QRCode.toDataURL(text, {
+      return await QRCode.toDataURL(text, {
         width: 1000,
         margin: 2,
         color: {
@@ -30,9 +34,9 @@ function QrGenerator({ lang = 'en' }: Props) {
           light: bgColor
         }
       });
-      setQrUrl(url);
     } catch (err) {
       console.error(err);
+      return null;
     }
   };
 

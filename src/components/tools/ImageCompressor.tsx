@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import imageCompression from 'browser-image-compression';
 import { Dropzone } from '../ui/Dropzone';
 import { Download, Shrink, FileImage, Loader2, X } from 'lucide-react';
@@ -26,15 +26,6 @@ function ImageCompressor({ lang = 'en' }: Props) {
   const [quality, setQuality] = useState(0.8);
   const [isProcessingAll, setIsProcessingAll] = useState(false);
 
-  // Bersihkan semua URL blobs jika komponen di-unmount
-  useEffect(() => {
-    return () => {
-      files.forEach(f => {
-        if (f.previewUrl) URL.revokeObjectURL(f.previewUrl);
-        if (f.url) URL.revokeObjectURL(f.url);
-      });
-    };
-  }, [files]);
 
   const handleFiles = (newFiles: File[]) => {
     const formatted = newFiles.map(f => ({
@@ -53,6 +44,7 @@ function ImageCompressor({ lang = 'en' }: Props) {
     if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
     if (item.url) URL.revokeObjectURL(item.url);
     setFiles(prev => prev.filter((_, i) => i !== index));
+    if (item.url) URL.revokeObjectURL(item.url);
   };
 
   const clearFiles = () => {
@@ -161,12 +153,13 @@ function ImageCompressor({ lang = 'en' }: Props) {
                             toast.success("Download started");
                           }}
                           className="text-zinc-400 hover:text-zinc-900 transition-colors"
+                          aria-label={t('ui.download')}
                         >
                           <Download size={18} />
                         </button>
                       </div>
                     )}
-                    <button onClick={() => removeFile(index)} className="text-zinc-300 hover:text-rose-500 transition-colors">
+                    <button onClick={() => removeFile(index)} className="text-zinc-300 hover:text-rose-500 transition-colors" aria-label={t('ui.remove_file')}>
                       <X size={18} />
                     </button>
                   </div>

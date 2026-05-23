@@ -19,7 +19,7 @@ const t = useTranslations(lang);
 	<div class="space-y-8">
 		<div class="grid grid-cols-1 lg:grid-cols-[1fr,auto,1fr] items-center gap-6">
 			<div>
-				<label class="tool-label">{t('ui.normal_text')}</label>
+				<label class="tool-label" for="plain-text">{t('ui.normal_text')}</label>
 				<textarea 
 					id="plain-text" 
 				 class="tool-input min-h-[300px] font-mono text-sm" 
@@ -28,13 +28,13 @@ const t = useTranslations(lang);
 			</div>
 
 			<div class="flex flex-col gap-4">
-				<button id="encode-btn" class="tool-button-primary p-3 rounded-full flex items-center justify-center">
-					<ArrowLeftRight size={24} className="rotate-90 lg:rotate-0" />
-				</button>
+			<button id="encode-btn" class="tool-button-primary p-3 rounded-full flex items-center justify-center" aria-label="Encode/Decode">
+				<ArrowLeftRight size={24} className="rotate-90 lg:rotate-0" />
+			</button>
 			</div>
 
 			<div>
-				<label class="tool-label">{t('ui.base64_encoded')}</label>
+				<label class="tool-label" for="base64-text">{t('ui.base64_encoded')}</label>
 				<textarea 
 					id="base64-text" 
 				 class="tool-input min-h-[300px] font-mono text-sm" 
@@ -59,6 +59,7 @@ const t = useTranslations(lang);
 </ToolLayout>
 
 <script>
+	window.addEventListener('error', e => console.error('[Tool Error]', e.error || e.message));
 	const plainText = document.getElementById('plain-text') as HTMLTextAreaElement;
 	const base64Text = document.getElementById('base64-text') as HTMLTextAreaElement;
 	const clearBtn = document.getElementById('clear-btn');

@@ -76,7 +76,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onFilesSelected, accept = "i
 
       <div className="absolute bottom-6 flex items-center gap-2 text-zinc-300 z-10">
         <FileText size={14} />
-        <span className="text-[10px] font-bold uppercase tracking-widest">Safe & Secure Engine</span>
+        <span className="text-[10px] font-bold uppercase tracking-widest">{t('ui.safe_secure_engine')}</span>
       </div>
     </div>
   );

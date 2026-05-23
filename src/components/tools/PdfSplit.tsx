@@ -210,7 +210,7 @@ function PdfSplit({ lang = 'en' }: Props) {
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <label className="tool-label m-0">{t('ui.split_range')}</label>
-                  <button onClick={addRange} className="p-1.5 bg-zinc-100 text-zinc-900 rounded-lg hover:bg-zinc-200 transition-colors">
+                  <button onClick={addRange} className="p-1.5 bg-zinc-100 text-zinc-900 rounded-lg hover:bg-zinc-200 transition-colors" aria-label={t('ui.add_range')}>
                     <Plus size={16} />
                   </button>
                 </div>
@@ -238,7 +238,7 @@ function PdfSplit({ lang = 'en' }: Props) {
                       className="w-14 bg-white border border-zinc-200 rounded-lg p-1.5 text-center text-sm font-bold"
                     />
                     {ranges.length > 1 && (
-                      <button onClick={() => removeRange(i)} className="text-zinc-300 hover:text-rose-500 p-1">
+                      <button onClick={() => removeRange(i)} className="text-zinc-300 hover:text-rose-500 p-1" aria-label={t('ui.remove_range')}>
                         <X size={16} />
                       </button>
                     )}

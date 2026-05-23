@@ -112,7 +112,7 @@ function ImageResizer({ lang = 'en' }: Props) {
                 <button 
                   onClick={() => setIsLocked(!isLocked)}
                   className={`w-10 h-10 rounded-full flex items-center justify-center border transition-all ${isLocked ? 'bg-zinc-900 border-zinc-900 text-white shadow-lg' : 'bg-white border-zinc-200 text-zinc-400'}`}
-                  title={isLocked ? t('ui.aspect_ratio_unlock') : t('ui.aspect_ratio_lock')}
+                  aria-label={isLocked ? t('ui.aspect_ratio_unlock') : t('ui.aspect_ratio_lock')}
                 >
                   {isLocked ? <Lock size={16} /> : <Unlock size={16} />}
                 </button>

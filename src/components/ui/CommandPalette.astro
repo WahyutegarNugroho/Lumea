@@ -24,7 +24,7 @@ const t = useTranslations(lang);
 				placeholder={t('search.placeholder')}
 				autocomplete="off"
 			>
-			<button id="palette-close" class="absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 transition-colors">
+			<button id="palette-close" class="absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 transition-colors" aria-label={t('search.close')}>
 				<X size={20} />
 			</button>
 		</div>
@@ -57,6 +57,7 @@ const t = useTranslations(lang);
 	let isOpen = false;
 	let selectedIndex = -1;
 	let filteredTools: any[] = [];
+	let previousFocus: HTMLElement | null = null;
 
 	const palette = document.getElementById('command-palette');
 	const backdrop = document.getElementById('palette-backdrop');
@@ -68,13 +69,47 @@ const t = useTranslations(lang);
 	const panel = document.querySelector('[data-translations]') as HTMLElement;
 	const tData = JSON.parse(panel?.dataset.translations || '{}');
 
+	function getFocusableElements(): HTMLElement[] {
+		if (!palette) return [];
+		return Array.from(
+			palette.querySelectorAll<HTMLElement>(
+				'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+			)
+		);
+	}
+
+	function trapFocus(e: KeyboardEvent) {
+		if (e.key !== 'Tab' || !palette) return;
+		const focusable = getFocusableElements();
+		if (focusable.length === 0) return;
+		const first = focusable[0];
+		const last = focusable[focusable.length - 1];
+		if (e.shiftKey) {
+			if (document.activeElement === first) {
+				e.preventDefault();
+				last.focus();
+			}
+		} else {
+			if (document.activeElement === last) {
+				e.preventDefault();
+				first.focus();
+			}
+		}
+	}
+
 	function togglePalette(open: boolean) {
 		isOpen = open;
 		if (palette) {
 			palette.classList.toggle('hidden', !open);
 			if (open) {
+				previousFocus = document.activeElement as HTMLElement;
 				input?.focus();
 				renderResults('');
+				palette.addEventListener('keydown', trapFocus);
+			} else {
+				palette.removeEventListener('keydown', trapFocus);
+				previousFocus?.focus();
+				previousFocus = null;
 			}
 		}
 	}

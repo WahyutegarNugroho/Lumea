@@ -60,6 +60,7 @@ const t = useTranslations(lang);
 </ToolLayout>
 
 <script>
+	window.addEventListener('error', e => console.error('[Tool Error]', e.error || e.message));
 	const textInput = document.getElementById('text-input') as HTMLTextAreaElement;
 	const caseButtons = document.querySelectorAll('[data-case]');
 	const copyBtn = document.getElementById('copy-btn');
@@ -76,6 +77,7 @@ const t = useTranslations(lang);
 	caseButtons.forEach(btn => {
 		btn.addEventListener('click', () => {
 			const type = btn.getAttribute('data-case');
+			if (!textInput) return;
 			const text = textInput.value;
 			
 			switch (type) {

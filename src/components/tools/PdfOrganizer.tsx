@@ -83,6 +83,7 @@ function SortablePage({ id, page, onDelete, index, t }: { id: string, page: Page
         <button 
           onClick={() => onDelete(id)}
           className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-all"
+          aria-label={t('ui.remove_file')}
         >
           <Trash2 size={16} />
         </button>

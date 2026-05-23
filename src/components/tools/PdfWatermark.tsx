@@ -157,9 +157,10 @@ function PdfWatermark({ lang = 'en' }: Props) {
         setIsProcessing(false);
       }, 5000);
 
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : t('ui.error_unknown');
       console.error('Watermark Error:', err);
-      toast(`${t('ui.error')}: ${err.message || t('ui.error_unknown')}`);
+      toast(`${t('ui.error')}: ${msg}`);
 
       setIsProcessing(false);
     }
@@ -235,6 +236,7 @@ function PdfWatermark({ lang = 'en' }: Props) {
                     onClick={() => setColor(c)}
                     className={`w-7 h-7 rounded-full border-2 transition-all ${color === c ? 'border-zinc-900 scale-110 shadow-md' : 'border-zinc-200 hover:scale-105'}`}
                     style={{ backgroundColor: c }}
+                    aria-label={c}
                   />
                 ))}
                 <div className="relative w-7 h-7 rounded-full border-2 border-zinc-200 overflow-hidden group">

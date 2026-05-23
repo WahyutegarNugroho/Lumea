@@ -25,7 +25,7 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
   const [type, setType] = useState('code128');
   const [error, setError] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const renderTimeout = useRef<any>(null);
+  const renderTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (renderTimeout.current) clearTimeout(renderTimeout.current);
@@ -48,7 +48,7 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
     if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (!content.trim()) {
-      setError('Content cannot be empty');
+      setError(t('ui.barcode_content_empty'));
       return;
     }
 
@@ -65,8 +65,8 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
         backgroundcolor: 'ffffff'
       });
       setError(null);
-    } catch (e: any) {
-      const msg = e.message || 'Invalid data for this barcode type';
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : t('ui.barcode_data_invalid');
       setError(msg.split(':').pop()?.trim() || msg);
     }
   };
@@ -90,9 +90,9 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
                   <Barcode size={28} />
                </div>
                <div>
-                  <h4 className="font-bold text-zinc-900 text-xl tracking-tight">Barcode Engine</h4>
-                  <p className="text-xs text-zinc-400 font-black uppercase tracking-widest mt-1">Smart Validation Active</p>
-               </div>
+                   <h4 className="font-bold text-zinc-900 text-xl tracking-tight">{t('ui.barcode_engine')}</h4>
+                   <p className="text-xs text-zinc-400 font-black uppercase tracking-widest mt-1">{t('ui.smart_validation')}</p>
+                </div>
             </div>
 
             <div className="space-y-6">
@@ -124,7 +124,7 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
                   type="text" 
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="Enter barcode data..."
+                  placeholder={t('ui.barcode_placeholder')}
                   className={`w-full bg-zinc-50 border rounded-2xl px-5 py-4 font-bold text-zinc-900 outline-none transition-all ${
                     error ? 'border-rose-500 focus:ring-rose-500 ring-1 ring-rose-500/20' : 'border-zinc-200 focus:ring-zinc-900'
                   }`}
@@ -138,7 +138,7 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
                 ) : (
                   <div className="flex items-center gap-2 text-emerald-600 bg-emerald-500/5 p-3 rounded-xl border border-emerald-500/20">
                     <CheckCircle2 size={16} className="shrink-0" />
-                    <p className="text-[11px] font-bold tracking-tight">Format looks correct</p>
+                    <p className="text-[11px] font-bold tracking-tight">{t('ui.format_correct')}</p>
                   </div>
                 )}
               </div>
@@ -154,7 +154,7 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
               }`}
             >
               <Download size={22} className={error ? 'text-zinc-200' : 'text-blue-400'} />
-              {t('ui.download')} PNG
+              {t('ui.download_png')}
             </button>
           </div>
 
@@ -198,8 +198,8 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
                         <AlertCircle size={40} />
                      </div>
                      <div className="space-y-1">
-                        <p className="text-white font-bold text-lg">Invalid Input</p>
-                        <p className="text-zinc-500 text-xs max-w-[200px]">Fix the errors in settings to update the preview.</p>
+                        <p className="text-white font-bold text-lg">{t('ui.invalid_input')}</p>
+                         <p className="text-zinc-500 text-xs max-w-[200px]">{t('ui.barcode_preview_error')}</p>
                      </div>
                   </div>
                 )}
@@ -208,7 +208,7 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
                   <div className="mt-12 text-center relative z-10">
                     <div className="px-4 py-2 bg-zinc-900/50 backdrop-blur-md rounded-full border border-zinc-800 flex items-center gap-2">
                         <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                        <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Live Engine Active</p>
+                        <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{t('ui.engine_active')}</p>
                     </div>
                   </div>
                 )}

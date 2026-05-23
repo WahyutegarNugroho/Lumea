@@ -2,7 +2,7 @@ import en from '../locales/en.json';
 import id from '../locales/id.json';
 import es from '../locales/es.json';
 
-export const translations: Record<string, any> = { en, id, es };
+export const translations: Record<string, Record<string, string>> = { en, id, es };
 
 export const SUPPORTED_LOCALES = ['en', 'id', 'es'] as const;
 export type Locale = typeof SUPPORTED_LOCALES[number];

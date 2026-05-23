@@ -123,11 +123,12 @@ function OcrTool({ lang = 'en' }: Props) {
             <img src={imagePreview!} alt="Preview" className="max-w-full max-h-[600px] rounded-2xl shadow-2xl transition-transform group-hover:scale-[1.01] duration-500" />
             <div className="absolute top-6 right-6 flex gap-2">
                <button 
-                onClick={() => { setFile(null); setImagePreview(null); }}
-                className="w-10 h-10 bg-white/90 backdrop-blur text-rose-500 rounded-full flex items-center justify-center shadow-lg hover:bg-rose-500 hover:text-white transition-all"
-               >
-                 <Trash2 size={18} />
-               </button>
+                 onClick={() => { setFile(null); setImagePreview(null); }}
+                 className="w-10 h-10 bg-white/90 backdrop-blur text-rose-500 rounded-full flex items-center justify-center shadow-lg hover:bg-rose-500 hover:text-white transition-all"
+                 aria-label={t('ui.remove_file')}
+                >
+                  <Trash2 size={18} />
+                </button>
             </div>
           </div>
 
@@ -139,7 +140,7 @@ function OcrTool({ lang = 'en' }: Props) {
                 </div>
                 <div>
                   <h4 className="font-bold text-zinc-900 text-sm leading-tight">{t('ui.ocr_lang')}</h4>
-                  <p className="text-[10px] text-zinc-400 uppercase font-black tracking-widest mt-1">AI Language Engine</p>
+                  <p className="text-[10px] text-zinc-400 uppercase font-black tracking-widest mt-1">{t('ui.ai_lang_engine')}</p>
                 </div>
               </div>
               <select 
@@ -194,7 +195,7 @@ function OcrTool({ lang = 'en' }: Props) {
                    <div className="w-10 h-10 bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-800">
                       <ScanText size={20} className="text-zinc-500" />
                    </div>
-                   <h4 className="text-white font-bold font-outfit text-lg">AI Result</h4>
+                   <h4 className="text-white font-bold font-outfit text-lg">{t('ui.ai_result')}</h4>
                 </div>
                 {result && (
                   <button 
@@ -202,7 +203,7 @@ function OcrTool({ lang = 'en' }: Props) {
                     className="px-6 py-2 bg-white text-zinc-900 rounded-xl transition-all flex items-center gap-2 font-bold text-xs hover:bg-zinc-200 active:scale-95"
                   >
                     {copied ? <Check size={18} className="text-emerald-600" /> : <Copy size={18} />}
-                    {copied ? 'Copied' : 'Copy Text'}
+                    {copied ? t('ui.copied') : t('ui.copy')}
                   </button>
                 )}
              </div>
@@ -214,7 +215,7 @@ function OcrTool({ lang = 'en' }: Props) {
                     value={result}
                     onChange={(e) => setResult(e.target.value)}
                     className="w-full h-full min-h-[500px] bg-transparent border-none text-zinc-300 text-lg leading-relaxed focus:ring-0 resize-none font-medium custom-scrollbar selection:bg-zinc-700"
-                    placeholder="Result will appear here..."
+                    placeholder={t('ui.ocr_placeholder')}
                   />
                 ) : (
                   <div className="h-full min-h-[500px] flex flex-col items-center justify-center text-center space-y-6 animate-pulse">
@@ -222,8 +223,8 @@ function OcrTool({ lang = 'en' }: Props) {
                         <Zap size={48} className="text-zinc-700" />
                     </div>
                     <div className="space-y-2">
-                       <p className="text-zinc-500 text-sm font-bold uppercase tracking-widest">Ready for Scan</p>
-                       <p className="text-zinc-700 text-xs max-w-[200px]">Click the magic wand to extract text from your image.</p>
+                       <p className="text-zinc-500 text-sm font-bold uppercase tracking-widest">{t('ui.ready_for_scan')}</p>
+                       <p className="text-zinc-700 text-xs max-w-[200px]">{t('ui.ocr_ready_desc')}</p>
                     </div>
                   </div>
                 )}
@@ -236,9 +237,9 @@ function OcrTool({ lang = 'en' }: Props) {
               <ShieldCheck size={24} />
             </div>
             <div className="space-y-1">
-              <h4 className="font-bold text-emerald-900 text-sm">Enhanced Neural Processing</h4>
+              <h4 className="font-bold text-emerald-900 text-sm">{t('ui.neural_processing')}</h4>
               <p className="text-emerald-700/70 text-xs leading-relaxed">
-                Kami kini menerapkan pra-pemrosesan gambar otomatis untuk meningkatkan kontras dan ketajaman teks sebelum pemindaian AI dilakukan. Hasilnya jauh lebih akurat pada gambar buram atau gelap.
+                {t('ui.ocr_neural_desc')}
               </p>
             </div>
           </div>

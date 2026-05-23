@@ -1,9 +1,10 @@
 import { withErrorBoundary } from '../ui/withErrorBoundary';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Dropzone } from '../ui/Dropzone';
 import { Download, ShieldCheck, Maximize2, RefreshCw } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
 import { downloadFile } from '../../lib/utils';
+import DOMPurify from 'dompurify';
 
 interface Props {
   lang?: string;
@@ -16,10 +17,13 @@ function SvgToPng({ lang = 'en' }: Props) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0, originalWidth: 0, originalHeight: 0 });
   const [scale, setScale] = useState(1);
+  const readerRef = useRef<FileReader | null>(null);
 
   useEffect(() => {
     if (file) {
+      readerRef.current?.abort();
       const reader = new FileReader();
+      readerRef.current = reader;
       reader.onload = (e) => {
         const content = e.target?.result as string;
         setSvgContent(content);
@@ -36,6 +40,10 @@ function SvgToPng({ lang = 'en' }: Props) {
       };
       reader.readAsText(file);
     }
+    return () => {
+      readerRef.current?.abort();
+      readerRef.current = null;
+    };
   }, [file]);
 
   const handleFiles = (files: File[]) => {
@@ -89,7 +97,7 @@ function SvgToPng({ lang = 'en' }: Props) {
             {svgContent ? (
               <div 
                 className="max-w-full max-h-[400px] shadow-2xl bg-white rounded-lg p-4"
-                dangerouslySetInnerHTML={{ __html: svgContent }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(svgContent) }}
               />
             ) : (
               <div className="animate-pulse flex flex-col items-center gap-4">

@@ -7,6 +7,7 @@ import { Dropzone } from '../ui/Dropzone';
 import { Download, Zap, Palette } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
 import { downloadFile } from '../../lib/utils';
+import DOMPurify from 'dompurify';
 
 interface Props {
   lang?: string;
@@ -71,7 +72,7 @@ function Vectorizer({ lang = 'en' }: Props) {
           {!resultSvg ? (
             <img src={URL.createObjectURL(file)} className="max-h-[500px] w-auto shadow-lg rounded-lg" alt="Original" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center" dangerouslySetInnerHTML={{ __html: resultSvg }} />
+            <div className="w-full h-full flex items-center justify-center" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(resultSvg) }} />
           )}
         </div>
 

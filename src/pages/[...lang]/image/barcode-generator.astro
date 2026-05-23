@@ -20,31 +20,31 @@ const t = useTranslations(lang);
 
 	<div slot="guide">
 		<h3 class="text-2xl font-bold mb-6">{t('ui.how_to')} {t('tool.barcode-generator.title')}</h3>
-		<p class="text-zinc-500 mb-12">Create industry-standard barcodes for your retail, inventory, or logistics needs instantly without any tracking.</p>
+		<p class="text-zinc-500 mb-12">{t('guide.barcode-generator.p1')}</p>
 		
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
 			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
 				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
 					<span class="font-bold">01</span>
 				</div>
-				<h4 class="text-lg font-bold mb-3">Select Format</h4>
-				<p class="text-zinc-500 text-sm leading-relaxed">Choose from various standards like Code 128 (general purpose), EAN-13 (retail), or UPC-A (North American retail).</p>
+				<h4 class="text-lg font-bold mb-3">{t('guide.barcode-generator.s1_t')}</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">{t('guide.barcode-generator.s1_d')}</p>
 			</div>
 			
 			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
 				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
 					<span class="font-bold">02</span>
 				</div>
-				<h4 class="text-lg font-bold mb-3">Input Data</h4>
-				<p class="text-zinc-500 text-sm leading-relaxed">Enter the text or numeric code you want to encode. The preview will update instantly to show your barcode.</p>
+				<h4 class="text-lg font-bold mb-3">{t('guide.barcode-generator.s2_t')}</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">{t('guide.barcode-generator.s2_d')}</p>
 			</div>
 			
 			<div class="bg-white p-8 rounded-3xl border border-zinc-100 shadow-sm">
 				<div class="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-900 mb-6">
 					<span class="font-bold">03</span>
 				</div>
-				<h4 class="text-lg font-bold mb-3">Download</h4>
-				<p class="text-zinc-500 text-sm leading-relaxed">Once satisfied, download your barcode as a high-resolution PNG image ready for printing on labels or packaging.</p>
+				<h4 class="text-lg font-bold mb-3">{t('guide.barcode-generator.s3_t')}</h4>
+				<p class="text-zinc-500 text-sm leading-relaxed">{t('guide.barcode-generator.s3_d')}</p>
 			</div>
 		</div>
 	</div>

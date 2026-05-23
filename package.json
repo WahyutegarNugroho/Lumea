@@ -35,6 +35,7 @@
     "bwip-js": "^4.10.1",
     "clsx": "^2.1.1",
     "docx": "^9.6.1",
+    "dompurify": "^3.4.5",
     "framer-motion": "^12.38.0",
     "html2canvas": "^1.4.1",
     "imagetracerjs": "^1.2.6",
@@ -57,6 +58,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@types/dompurify": "^3.0.5",
     "@types/qrcode": "^1.5.6",
     "@vitejs/plugin-react": "^6.0.2",
     "eslint": "^9.39.4",

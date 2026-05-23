@@ -2,7 +2,7 @@ import { withErrorBoundary } from '../ui/withErrorBoundary';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { Dropzone } from '../ui/Dropzone';
-import { Download, Plus, FileText, X, GripVertical, ShieldCheck } from 'lucide-react';
+import { Download, Plus, FileText, X, ShieldCheck } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
 import { downloadFile } from '../../lib/utils';
 
@@ -72,7 +72,7 @@ function PdfMerge({ lang = 'en' }: Props) {
               {files.map((file, index) => (
                 <div key={`${file.name}-${index}`} className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-zinc-100 shadow-sm transition-all hover:border-zinc-200 group">
                   <div className="text-zinc-300 group-hover:text-zinc-500 cursor-grab">
-                    <GripVertical size={20} />
+                    
                   </div>
                   <div className="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center shrink-0">
                     <FileText size={20} />
@@ -84,6 +84,7 @@ function PdfMerge({ lang = 'en' }: Props) {
                   <button 
                     onClick={() => removeFile(index)}
                     className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                    aria-label={t('ui.remove_file')}
                   >
                     <X size={16} />
                   </button>

@@ -42,6 +42,7 @@ const canonicalURL = new URL(getLocalizedPath(cleanPath, lang), baseUrl);
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="manifest" href="/manifest.webmanifest" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
@@ -173,16 +174,9 @@ const canonicalURL = new URL(getLocalizedPath(cleanPath, lang), baseUrl);
 				}
 			}
 
-			// Clean up any old service workers strictly to avoid cache issues
+			// Register service worker for offline support
 			if ('serviceWorker' in navigator) {
-				navigator.serviceWorker.getRegistrations().then(registrations => {
-					for(let registration of registrations) registration.unregister();
-				});
-				if ('caches' in window) {
-					caches.keys().then(names => {
-						for (let name of names) caches.delete(name);
-					});
-				}
+				navigator.serviceWorker.register('/sw.js');
 			}
 		</script>
 		<ToastProvider client:load />

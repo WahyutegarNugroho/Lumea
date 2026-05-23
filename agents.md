@@ -1,56 +1,95 @@
-# AI Agent Rules of Engagement & Code Preservation Protocol (`agents.md`)
+# Agents.md — Lumea (lumea-app)
 
-> **Compatibility:** Universally applicable across any tech stack (Web, Mobile, Backend, Scripts). 
-> **Target AI Behavior:** Optimized for Gemini Flash, Claude, and Agentic IDEs (Antigravity, Cursor, Roo Code).
+> Compact repo-specific guidance for AI agents. Skip these at your own risk.
 
-Dokumen ini adalah undang-undang tertinggi bagi AI Agent. Anda WAJIB mematuhi seluruh arsitektur kerja dan batasan ketat (guardrails) di bawah ini tanpa pengecualian. Pelanggaran terhadap aturan ini dapat merusak integritas sistem produksi.
+## Quick start
 
+```bash
+npm install        # node >= 22.12.0
+npm run dev        # astro dev → http://localhost:4321
+npm run build      # astro build → dist/
+npm run preview    # astro preview
+```
+
+## Verification pipeline (CI order)
+
+```bash
+npx astro check    # types + Astro integrity check (runs first)
+npm test            # vitest run (jsdom, globals)
+npm run build       # fails if check or test fails
+npm run lint        # eslint . (separate, not in CI)
+npm run format      # prettier --write . (no CI gate)
+```
+
+Run single test: `npx vitest src/lib/utils.test.ts`
+
+## Architecture
+
+- **Astro v6** hybrid framework + **React 19** interactive components + **Tailwind CSS v4** (via `@tailwindcss/vite` plugin)
+- **100% client-side** — all processing in browser, zero server uploads
+- **Vercel adapter** — deployed via `@astrojs/vercel`
+
+## Routing & i18n
+
+- 3 locales: `en` (default, no prefix), `id`, `es` — configured in `astro.config.mjs`
+- All content pages use catch-all `[...lang]` directory pattern
+- Tool pages: `src/pages/[...lang]/{category}/{tool}.astro`
+- Pages must export `getStaticPaths` using `getI18nPaths()` from `src/lib/routing.ts`
+- Breadcrumb-safe locale detection via `getLocaleFromPath()` in `src/lib/i18n.ts`
+
+**Tool page template** (every tool follows this):
+```astro
 ---
-
-## 1. The 3-Tier Architecture (Universal Workflow)
-
-Untuk mencegah penumpukan kesalahan (*compounding errors*) dalam tugas multi-tahap, Anda wajib memisahkan proses berpikir, perencanaan, dan eksekusi ke dalam 3 lapisan berikut:
-
-* **Tier 1: The Blueprint (Directives & PRD)**
-  Dokumen spesifikasi, aturan, atau instruksi manusia (seperti `prd.md`, folder `directives/`, atau file `agents.md` ini). Ini adalah panduan absolut yang menentukan hasil akhir yang diharapkan.
-* **Tier 2: The Brain (Orchestration & Planning)**
-  Peran utama Anda sebagai AI. Anda wajib membaca Blueprint, menganalisis file yang ada, menggunakan **Plan Mode**, dan merancang logika perubahan sebelum menyentuh kode.
-* **Tier 3: The Muscle (The Target Codebase & Tools)**
-  Kode sumber aplikasi, API, skrip otomasi, atau database. Ini adalah wilayah deterministik. Tugas Anda adalah memastikan wilayah ini tetap bersih, andal, cepat, dan aman.
-
+import { getI18nPaths } from '../../../lib/routing';
+export const getStaticPaths = getI18nPaths;
+const lang = Astro.params.lang || 'en';
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import SomeComponent from '../../../components/tools/SomeComponent';
+import { useTranslations } from '../../../lib/i18n';
+const t = useTranslations(lang);
 ---
+<ToolLayout title={t('tool.<id>.title')} description={t('tool.<id>.desc')} category="<cat>" toolId="<id>">
+  <SomeComponent client:only="react" lang={lang} />
+</ToolLayout>
+```
 
-## 2. Aturan Ketat Pemeliharaan Kode (Anti-Deletion Protocol)
+## Key directories
 
-Bagian ini adalah aturan paling kritis saat Anda melakukan perbaikan bug, optimalisasi, penambahan fitur, atau refactoring pada kode yang sudah berjalan.
+| Path | Role |
+|------|------|
+| `src/pages/[...lang]/` | All routes (pdf/, image/, text/, dev/, blog/) |
+| `src/components/tools/` | React interactive tool components |
+| `src/components/ui/` | Astro+React shared UI (Layout, ToolCard, etc.) |
+| `src/layouts/` | `BaseLayout.astro` (shell) + `ToolLayout.astro` (tool wrapper) |
+| `src/lib/` | Shared logic: `i18n.ts`, `routing.ts`, `tools.ts` (tool registry), `utils.ts` |
+| `src/locales/` | `en.json`, `id.json`, `es.json` — all UI strings keyed by `tool.<id>.*` |
+| `src/content/guides/` | Markdown collection for tool guide pages |
 
-### 🟢 YANG WAJIB DILAKUKAN (DO)
-1. **Surgical Modifications (Perubahan Bedah):** Lakukan perubahan kode secara minimal, presisi, dan hanya pada baris atau fungsi yang ditargetkan. Biarkan 90% sisa kode lainnya dalam file tersebut tetap utuh 100%.
-2. **Context-First Reading:** Baca dan pahami seluruh isi file serta dependensinya sebelum melakukan modifikasi. Cari tahu apakah kode yang akan Anda ubah memiliki ketergantungan dengan fungsi di bagian lain.
-3. **Lock Critical Core Logic:** Kunci dan amankan logika kritis yang sudah berjalan dengan baik. Anda DILARANG mengubah atau menghapus fungsi yang mengatur:
-   * **Sistem Keamanan:** Autentikasi, otorisasi, pengecekan token, sesi, dan enkripsi.
-   * **Hak Akses Pengguna (RBAC):** Pengecekan tingkatan pengguna (Admin, Petugas, Customer, dll).
-   * **Aliran Data Dasar:** Fungsi pengalihan (*redirect*), *middleware*, penanganan *streaming*, dan *loading state*.
-4. **Verifikasi Output Diff:** Sebelum menyajikan atau menerapkan kode, periksa panel *Diff* (Merah/Hijau). Pastikan baris yang memerah (dihapus) memang merupakan kode rusak atau usang, bukan kode fungsional.
+## Tool registry
 
-### 🔴 YANG DILARANG KERAS (DON'T)
-1. **Dilarang Melakukan Phantom Cleanup (Pembersihan Siluman):** JANGAN PERNAH menghapus, menyederhanakan, merapikan, atau memformat ulang (*auto-format*) kode di luar lingkup tugas utama dengan alasan "efisiensi" atau "perapian", kecuali diminta secara tertulis oleh pengguna.
-2. **Jangan Menulis Ulang Satu File Penuh (Full Rewrite):** Jika perbaikan hanya terjadi pada 5-10 baris kode, jangan menulis ulang 200 baris kode lainnya di file tersebut. Tindakan ini berisiko menghilangkan logika tersembunyi (*edge cases*).
-3. **Jangan Berasumsi Kode Redundan:** Jika Anda melihat ada variabel, fungsi, atau potongan logika yang tampaknya tidak aktif, JANGAN dihapus. Kode tersebut mungkin digunakan untuk penanganan kasus khusus, skrip pengujian (*testing*), atau diakses oleh sistem lain secara tidak langsung.
-4. **Jangan Menghapus Komentar Developer:** Dilarang menghapus komentar dokumentasi, anotasi penting, atau catatan penolak pengecekan kompiler (seperti `// @ts-ignore`, `# noqa`, atau sejenisnya).
+All 30+ tools are defined in `src/lib/tools.ts` with `{ id, title, description, href, category, icon }`. The `ALL_TOOLS` array drives the homepage grid and command palette. Adding a new tool = add entry here + create page + add locale keys + optionally create React component.
 
----
+## Important conventions
 
-## 3. Protokol Koreksi Mandiri & Troubleshooting (Auto-Correction Protocol)
+- React interactive components use `client:only="react"` (never `client:load` or `client:idle`)
+- TypeScript with `astro/tsconfigs/strict` base — `allowJs: true`, `resolveJsonModule: true`
+- CSS via Tailwind v4 utility classes + `@theme` custom fonts (`--font-outfit`, `--font-inter`)
+- Prettier: `semi: true`, `singleQuote: true`, `trailingComma: "es5"`, `printWidth: 100`, `prettier-plugin-astro`
+- ESLint: `typescript-eslint` recommended + `eslint-plugin-astro` + `eslint-plugin-react` (prop-types off, using TS)
+- `vite` overridden to `^6.0.0` in package.json overrides
+- `.astro/` (generated types) and `dist/` are gitignored
+- `node_modules` and `.vercel` are gitignored
 
-* **Root Cause Analysis (Analisis Akar Masalah):** Saat menghadapi *error*, kegagalan kompilasi, atau *crash* sistem, Anda wajib membaca *log error* atau *stack trace* secara menyeluruh terlebih dahulu. Identifikasi dan jelaskan akar masalahnya (*root cause*) secara singkat kepada pengguna sebelum menyusun rencana perbaikan (Plan Mode).
-* **Anti-Trial-and-Error:** Dilarang keras melakukan modifikasi spekulatif atau mengubah kode secara membabi buta hanya untuk melihat apakah kesalahan tersebut hilang secara tidak sengaja. Setiap perubahan harus didasari alasan logis yang kuat berdasarkan analisis kode.
-* **Regression Check:** Pastikan perbaikan yang Anda lakukan untuk menyelesaikan masalah "A" tidak menimbulkan masalah baru "B" di file yang sama atau merusak komponen sistem yang saling bergantung (*regression safe*).
-* **Dokumentasikan Perubahan:** Jika Anda menemukan batasan sistem atau *bug* bawaan pada pustaka pihak ketiga, perbarui dokumen panduan (*Blueprint/Directives*) agar kesalahan serupa tidak terulang di masa depan.
+## Testing
 
----
+- Vitest with jsdom environment, globals enabled
+- Test files: `src/**/*.{test,spec}.{js,ts,jsx,tsx}`
+- DOM APIs available (jsdom); mock `document`/`window` as needed
+- No integration/E2E test suite currently
 
-## 4. Protokol Output & Komunikasi
+## Locale keys
 
-* **Tampilkan Potongan Kode (Code Snippets):** Berikan hasil kerja dalam bentuk potongan fungsi yang berubah atau format *diff* sebelum vs sesudah. Jangan menimbun ruang obrolan dengan isi satu file penuh yang dominan berisi kode yang tidak berubah.
-* **Berhenti dan Bertanya Jika Ambigu:** Jika instruksi pengguna tidak jelas, tidak lengkap, atau berpotensi melanggar aturan keamanan dan merusak struktur yang sudah ada di `agents.md` ini, Anda **WAJIB berhenti** dan meminta klarifikasi sebelum menulis satu baris kode pun.
+All translatable strings live in `src/locales/*.json` as flat key-value pairs. Pattern:
+- `tool.<id>.title` / `tool.<id>.desc` — tool name and description
+- `guide.<id>.*` — how-to guide content
+- Locale keys can contain dots but are always flat (no nesting in keys — use dot-delimited strings)

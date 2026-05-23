@@ -82,6 +82,7 @@ const t = useTranslations(lang);
 </ToolLayout>
 
 <script>
+	window.addEventListener('error', e => console.error('[Tool Error]', e.error || e.message));
 	const textInput = document.getElementById('text-input') as HTMLTextAreaElement;
 	const wordCountEl = document.getElementById('word-count');
 	const charCountEl = document.getElementById('char-count');

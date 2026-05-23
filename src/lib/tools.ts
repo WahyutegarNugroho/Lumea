@@ -44,14 +44,14 @@ export const ALL_TOOLS = [
 	{ id: 'jpg-to-pdf', title: 'JPG to PDF', description: 'Convert images to PDF.', href: '/pdf/jpg-to-pdf', category: 'pdf', icon: FileImage },
 	{ id: 'pdf-to-jpg', title: 'PDF to JPG', description: 'Extract pages as JPG images.', href: '/pdf/pdf-to-jpg', category: 'pdf', icon: ImageIcon },
 	{ id: 'pdf-to-word', title: 'PDF to Word', description: 'Convert PDF to Word document.', href: '/pdf/pdf-to-word', category: 'pdf', icon: FileCode, isExternal: true },
-	{ id: 'pdf-compressor', title: 'Compress PDF', description: 'Reduce PDF file size.', href: '/pdf/compress', category: 'pdf', icon: ArrowDownCircle },
+	{ id: 'pdf-compressor', title: 'Compress PDF', description: 'Reduce PDF file size.', href: '/pdf/pdf-compressor', category: 'pdf', icon: ArrowDownCircle },
 	
 	// Image
 	{ id: 'compressor', title: 'Image Compressor', description: 'Reduce image file size.', href: '/image/compressor', category: 'image', icon: Shrink },
 	{ id: 'background-remover', title: 'Background Remover', description: 'Remove backgrounds using AI.', href: '/image/background-remover', category: 'image', icon: Eraser },
 	{ id: 'vectorizer', title: 'SVG Vectorizer', description: 'Convert images to clean SVG.', href: '/image/vectorizer', category: 'image', icon: Zap },
 	{ id: 'resizer', title: 'Image Resizer', description: 'Change image dimensions.', href: '/image/resizer', category: 'image', icon: Maximize },
-	{ id: 'cropper', title: 'Image Cropper', description: 'Crop and rotate images.', href: '/image/crop', category: 'image', icon: Crop },
+	{ id: 'cropper', title: 'Image Cropper', description: 'Crop and rotate images.', href: '/image/cropper', category: 'image', icon: Crop },
 	{ id: 'converter', title: 'Format Converter', description: 'Convert JPG, PNG, WebP.', href: '/image/converter', category: 'image', icon: RefreshCw },
 	{ id: 'svg-to-png', title: 'SVG to PNG', description: 'Convert SVG to PNG image.', href: '/image/svg-to-png', category: 'image', icon: ImageIcon },
 	{ id: 'qr-generator', title: 'QR Generator', description: 'Create custom QR codes.', href: '/image/qr-generator', category: 'image', icon: QrCode },
