@@ -28,7 +28,7 @@ Banyak pengguna yang membutuhkan alat untuk mengedit dokumen (misal: PDF, Image,
 - Performa aplikasi sangat bergantung pada spesifikasi CPU dan RAM perangkat klien (misal: melakukan _Background Removal AI_ atau kompresi file besar bisa jadi lambat di _smartphone_ tua).
 - Tidak bisa digunakan di peramban (browser) usang yang tidak mendukung modul JavaScript modern (ESM) atau WebAssembly.
 
-## Tech stack + alasan:
+## Tech stack
 - **Astro (v6):** Dipilih sebagai pondasi framework berkat kemampuan _View Transitions_-nya yang membuat situs terasa seperti SPA yang sangat cepat, serta kapabilitas integrasi komponen yang fleksibel dan manajemen routing bahasa yang rapi.
 - **React (19):** Digunakan untuk mengelola _state_ komponen utilitas interaktif tingkat lanjut yang kompleks di sisi klien.
 - **Tailwind CSS (v4):** Memberikan _utility classes_ yang ringan, efisien, dan mendukung variasi tema khusus (_custom variants_ seperti `dark:` via WebMedia) tanpa perlu memuat stylesheet eksternal yang besar.
