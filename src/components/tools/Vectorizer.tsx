@@ -1,12 +1,12 @@
 import { withErrorBoundary } from '../ui/withErrorBoundary';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
-// @ts-ignore
+// @ts-expect-error -- imagetracerjs has no TS types
 import ImageTracer from 'imagetracerjs';
 import { Dropzone } from '../ui/Dropzone';
 import { Download, Zap, Palette } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
-import { downloadFile } from '../../lib/utils';
+import { useDownload } from '../../lib/hooks/useDownload';
 import DOMPurify from 'dompurify';
 
 interface Props {
@@ -22,6 +22,7 @@ const PRESETS = [
 
 function Vectorizer({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
+  const { download } = useDownload();
   const [file, setFile] = useState<File | null>(null);
   const [preset, setPreset] = useState(PRESETS[0]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -57,8 +58,7 @@ function Vectorizer({ lang = 'en' }: Props) {
   const downloadSvg = () => {
     if (!resultSvg || !file) return;
     const blob = new Blob([resultSvg], { type: 'image/svg+xml' });
-    const url = URL.createObjectURL(blob);
-    downloadFile(url, `vector-${file.name.split('.')[0]}.svg`);
+    download(blob, `vector-${file.name.split('.')[0]}.svg`);
   };
 
   if (!file) {
@@ -68,7 +68,7 @@ function Vectorizer({ lang = 'en' }: Props) {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-zinc-50 border border-zinc-200 rounded-3xl p-8 flex items-center justify-center min-h-[400px] relative overflow-hidden">
+        <div className="lg:col-span-2 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 flex items-center justify-center min-h-[400px] relative overflow-hidden">
           {!resultSvg ? (
             <img src={URL.createObjectURL(file)} className="max-h-[500px] w-auto shadow-lg rounded-lg" alt="Original" />
           ) : (
@@ -77,8 +77,8 @@ function Vectorizer({ lang = 'en' }: Props) {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm">
-            <h3 className="font-bold text-zinc-900 mb-4 flex items-center gap-2">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm">
+            <h3 className="font-bold text-zinc-900 dark:text-zinc-50 mb-4 flex items-center gap-2">
               <Palette size={18} />
               {t('ui.settings')}
             </h3>
@@ -91,11 +91,11 @@ function Vectorizer({ lang = 'en' }: Props) {
                   className={`w-full p-4 rounded-xl text-left transition-all border-2 ${
                     preset.id === p.id 
                       ? 'border-zinc-900 bg-zinc-900 text-white shadow-lg' 
-                      : 'border-transparent bg-zinc-50 text-zinc-600 hover:bg-zinc-100'
+                      : 'border-transparent bg-zinc-50 dark:bg-zinc-950 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-800'
                   }`}
                 >
-                  <div className="font-bold text-sm">{t(p.name as any)}</div>
-                  <div className={`text-[10px] mt-1 ${preset.id === p.id ? 'text-zinc-400' : 'text-zinc-400'}`}>
+                  <div className="font-bold text-sm">{t(p.name)}</div>
+                  <div className={`text-[10px] mt-1 ${preset.id === p.id ? 'text-zinc-500 dark:text-zinc-400' : 'text-zinc-500 dark:text-zinc-400'}`}>
                     {p.colors} {t('ui.colors')} • {p.blur > 0 ? t('ui.smooth') : t('ui.sharp')}
                   </div>
                 </button>
@@ -125,7 +125,7 @@ function Vectorizer({ lang = 'en' }: Props) {
 
             <button 
               onClick={() => { setFile(null); setResultSvg(null); }}
-              className="w-full py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-bold hover:bg-zinc-50 transition-all"
+              className="w-full py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 transition-all"
             >
               {t('ui.clear')}
             </button>

@@ -12,6 +12,8 @@ const { ShieldCheck, Mail } = lucide;
 import { ClientRouter } from 'astro:transitions';
 import CommandPalette from '../components/ui/CommandPalette.astro';
 import LanguagePicker from '../components/ui/LanguagePicker.astro';
+import { ThemeToggle } from '../components/ui/ThemeToggle';
+import { InstallPwaButton } from '../components/ui/InstallPwaButton';
 import { ToastProvider } from '../components/ui/ToastProvider';
 import { useTranslations, getLocalizedPath, getLocaleFromPath } from '../lib/i18n';
 
@@ -70,15 +72,36 @@ const canonicalURL = new URL(getLocalizedPath(cleanPath, lang), baseUrl);
 		<meta property="twitter:image" content={new URL(image, baseUrl)} />
 		
 		<ClientRouter />
+		<script is:inline>
+			const getTheme = () => {
+				const saved = localStorage.getItem('lumea-theme');
+				if (saved) return saved;
+				return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			};
+			
+			const applyTheme = () => {
+				if (getTheme() === 'dark') {
+					document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
+			};
+
+			applyTheme();
+			document.addEventListener('astro:after-swap', applyTheme);
+		</script>
 	</head>
-	<body class="bg-zinc-50 text-zinc-900 font-sans min-h-screen flex flex-col">
-		<header class="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/80 backdrop-blur-md">
+	<body class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 font-sans min-h-screen flex flex-col transition-colors duration-300">
+		<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-zinc-900 focus:text-white focus:rounded-xl focus:text-sm focus:font-bold">
+			Skip to main content
+		</a>
+		<header class="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md transition-colors duration-300">
 			<div class="container mx-auto px-4 h-16 flex items-center">
 				<!-- Logo Section -->
 				<div class="flex-1 flex items-center">
 					<a href={getLocalizedPath('/', lang)} class="flex items-center gap-2 group">
-						<div class="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
-							<span class="text-white font-bold text-xl leading-none">L</span>
+						<div class="w-8 h-8 bg-zinc-900 dark:bg-white rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
+							<span class="text-white dark:text-zinc-900 font-bold text-xl leading-none">L</span>
 						</div>
 						<span class="text-xl font-bold font-outfit tracking-tight">Lumea</span>
 					</a>
@@ -86,19 +109,21 @@ const canonicalURL = new URL(getLocalizedPath(cleanPath, lang), baseUrl);
 				
 				<!-- Nav Section (Centered) -->
 				<nav class="hidden md:flex items-center justify-center gap-8">
-					<a href={getLocalizedPath('/', lang)} class="text-sm font-bold text-zinc-600 hover:text-zinc-900 transition-colors uppercase tracking-widest">{t('nav.home')}</a>
-					<a href={getLocalizedPath('/#pdf', lang)} class="text-sm font-bold text-zinc-600 hover:text-zinc-900 transition-colors uppercase tracking-widest">{t('nav.tools')}</a>
-					<a href={getLocalizedPath('/blog', lang)} class="text-sm font-bold text-zinc-600 hover:text-zinc-900 transition-colors uppercase tracking-widest">{t('nav.blog')}</a>
+					<a href={getLocalizedPath('/', lang)} class="text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors uppercase tracking-widest">{t('nav.home')}</a>
+					<a href={getLocalizedPath('/#pdf', lang)} class="text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors uppercase tracking-widest">{t('nav.tools')}</a>
+					<a href={getLocalizedPath('/blog', lang)} class="text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors uppercase tracking-widest">{t('nav.blog')}</a>
 				</nav>
 
 				<!-- Right Section -->
 				<div class="flex-1 flex items-center justify-end gap-4">
+					<InstallPwaButton client:only="react" />
+					<ThemeToggle client:only="react" />
 					<LanguagePicker />
-					<button id="search-trigger" class="flex items-center gap-2 px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-500 rounded-lg text-xs font-medium transition-colors border border-zinc-200">
+					<button id="search-trigger" class="flex items-center gap-2 px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-500 dark:text-zinc-400 rounded-lg text-xs font-medium transition-colors border border-zinc-200 dark:border-zinc-700">
 						<kbd class="font-sans">Ctrl+K</kbd>
 						<span>{t('nav.tools')}</span>
 					</button>
-					<div class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100 text-xs font-medium">
+					<div class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full border border-emerald-100 dark:border-emerald-800 text-xs font-medium">
 						<ShieldCheck size={14} />
 						{t('ui.client_side')}
 					</div>
@@ -108,55 +133,55 @@ const canonicalURL = new URL(getLocalizedPath(cleanPath, lang), baseUrl);
 
 		<CommandPalette />
 
-		<main class="flex-grow">
+		<main id="main-content" class="flex-grow">
 			<slot />
 		</main>
 
-		<footer class="border-t border-zinc-200 bg-white py-12">
+		<footer class="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 py-12 transition-colors duration-300">
 			<div class="container mx-auto px-4">
 				<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
 					<div class="col-span-1 md:col-span-2">
 						<div class="flex items-center gap-2 mb-4">
-							<div class="w-8 h-8 bg-zinc-900 text-white rounded-lg flex items-center justify-center font-bold font-outfit">L</div>
-							<span class="text-xl font-bold font-outfit text-zinc-900 tracking-tight">Lumea</span>
+							<div class="w-8 h-8 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-lg flex items-center justify-center font-bold font-outfit">L</div>
+							<span class="text-xl font-bold font-outfit text-zinc-900 dark:text-zinc-50 tracking-tight">Lumea</span>
 						</div>
-						<p class="text-zinc-500 text-sm leading-relaxed mb-6">
+						<p class="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed mb-6">
 							{t('footer.privacy.desc')}
 						</p>
-						<div class="flex items-center gap-2 text-zinc-400">
+						<div class="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
 							<ShieldCheck size={16} />
 							<span class="text-xs font-medium uppercase tracking-wider">{t('ui.privacy_first_arch')}</span>
 						</div>
 					</div>
 					
 					<div>
-						<h4 class="font-bold text-zinc-900 mb-6 uppercase tracking-widest text-xs">{t('footer.tools')}</h4>
-						<ul class="space-y-4 text-sm text-zinc-500">
-							<li><a href={getLocalizedPath('/pdf/merge', lang)} class="hover:text-zinc-900 transition-colors">{t('tool.merge.title')}</a></li>
-							<li><a href={getLocalizedPath('/image/compressor', lang)} class="hover:text-zinc-900 transition-colors">{t('tool.compressor.title')}</a></li>
-							<li><a href={getLocalizedPath('/dev/password-generator', lang)} class="hover:text-zinc-900 transition-colors">{t('tool.password-generator.title')}</a></li>
+						<h4 class="font-bold text-zinc-900 dark:text-zinc-50 mb-6 uppercase tracking-widest text-xs">{t('footer.tools')}</h4>
+						<ul class="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
+							<li><a href={getLocalizedPath('/pdf/merge', lang)} class="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">{t('tool.merge.title')}</a></li>
+							<li><a href={getLocalizedPath('/image/compressor', lang)} class="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">{t('tool.compressor.title')}</a></li>
+							<li><a href={getLocalizedPath('/dev/password-generator', lang)} class="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">{t('tool.password-generator.title')}</a></li>
 						</ul>
 					</div>
 
 					<div>
-						<h4 class="font-bold text-zinc-900 mb-6 uppercase tracking-widest text-xs">{t('footer.company')}</h4>
-						<ul class="space-y-4 text-sm text-zinc-500">
-							<li><a href={getLocalizedPath('/blog', lang)} class="hover:text-zinc-900 transition-colors">{t('nav.blog')}</a></li>
-							<li><a href="#" class="hover:text-zinc-900 transition-colors">{t('nav.about')}</a></li>
+						<h4 class="font-bold text-zinc-900 dark:text-zinc-50 mb-6 uppercase tracking-widest text-xs">{t('footer.company')}</h4>
+						<ul class="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
+							<li><a href={getLocalizedPath('/blog', lang)} class="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">{t('nav.blog')}</a></li>
+							<li><a href="#" class="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">{t('nav.about')}</a></li>
 						</ul>
 					</div>
 				</div>
 				
-				<div class="mt-12 pt-8 border-t border-zinc-100 flex flex-col md:flex-row justify-between items-center gap-4">
-					<p class="text-zinc-400 text-sm">
+				<div class="mt-12 pt-8 border-t border-zinc-100 dark:border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4">
+					<p class="text-zinc-500 dark:text-zinc-400 text-sm">
 						&copy; {new Date().getFullYear()} Lumea. {t('ui.footer_copyright')}
 					</p>
 					<div class="flex items-center gap-6">
-						<a href="mailto:wahyutgrss@gmail.com" class="text-zinc-400 hover:text-zinc-600 transition-colors">
+						<a href="mailto:wahyutgrss@gmail.com" class="text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors">
 							<span class="sr-only">Email</span>
 							<Mail size={20} />
 						</a>
-						<a href="https://github.com/WahyutegarNugroho" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-zinc-600 transition-colors">
+						<a href="https://github.com/WahyutegarNugroho" target="_blank" rel="noopener noreferrer" class="text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors">
 							<span class="sr-only">GitHub</span>
 							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
 						</a>
@@ -179,7 +204,7 @@ const canonicalURL = new URL(getLocalizedPath(cleanPath, lang), baseUrl);
 				navigator.serviceWorker.register('/sw.js');
 			}
 		</script>
-		<ToastProvider client:load />
+		<ToastProvider client:only="react" />
 	</body>
 </html>
 

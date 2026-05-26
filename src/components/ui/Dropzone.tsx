@@ -45,36 +45,37 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onFilesSelected, accept = "i
     <div 
       onDragOver={(e) => e.preventDefault()}
       onDrop={onDrop}
-      className="group relative w-full min-h-[400px] border-2 border-dashed border-zinc-200 rounded-[3rem] flex flex-col items-center justify-center p-12 transition-all hover:border-zinc-900 hover:bg-zinc-50/50 cursor-pointer overflow-hidden bg-white shadow-xl shadow-zinc-100/50"
+      className="group relative w-full min-h-[400px] border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-[3rem] flex flex-col items-center justify-center p-12 transition-all hover:border-zinc-900 dark:hover:border-zinc-100 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 cursor-pointer overflow-hidden bg-white dark:bg-zinc-950 shadow-xl shadow-zinc-100/50 dark:shadow-none"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-30 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:20px_20px] opacity-30 pointer-events-none"></div>
       
       <input 
         type="file" 
+        aria-label={dropText}
         onChange={onFileChange} 
         accept={accept} 
         multiple={multiple}
         className="absolute inset-0 opacity-0 cursor-pointer z-20"
       />
       
-      <div className="w-20 h-20 bg-zinc-50 text-zinc-400 rounded-3xl flex items-center justify-center mb-8 shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:bg-zinc-900 group-hover:text-white group-hover:rotate-6 border border-zinc-100 relative z-10">
+      <div className="w-20 h-20 bg-zinc-50 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 rounded-3xl flex items-center justify-center mb-8 shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-zinc-900 group-hover:rotate-6 border border-zinc-100 dark:border-zinc-800 relative z-10">
         <Upload size={36} strokeWidth={2.5} />
       </div>
 
-      <h3 className="text-2xl font-bold text-zinc-900 mb-3 font-outfit relative z-10 tracking-tight text-center">{dropText}</h3>
-      <p className="text-zinc-500 text-sm text-center max-w-sm font-medium relative z-10 leading-relaxed">
+      <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-3 font-outfit relative z-10 tracking-tight text-center">{dropText}</h3>
+      <p className="text-zinc-500 dark:text-zinc-400 text-sm text-center max-w-sm font-medium relative z-10 leading-relaxed">
         {privacyNote}
       </p>
 
       <div className="mt-10 flex flex-wrap justify-center gap-3 relative z-10">
         {getBadges().map(badge => (
-          <span key={badge} className="px-5 py-2 bg-zinc-900/5 text-zinc-500 border border-zinc-200 rounded-2xl text-[10px] font-black uppercase tracking-widest group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900 transition-all duration-300">
+          <span key={badge} className="px-5 py-2 bg-zinc-900/5 dark:bg-zinc-100/5 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-[10px] font-black uppercase tracking-widest group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-zinc-900 group-hover:border-zinc-900 dark:group-hover:border-white transition-all duration-300">
             {badge}
           </span>
         ))}
       </div>
 
-      <div className="absolute bottom-6 flex items-center gap-2 text-zinc-300 z-10">
+      <div className="absolute bottom-6 flex items-center gap-2 text-zinc-300 dark:text-zinc-700 dark:text-zinc-300 z-10">
         <FileText size={14} />
         <span className="text-[10px] font-bold uppercase tracking-widest">{t('ui.safe_secure_engine')}</span>
       </div>

@@ -2,6 +2,7 @@ import { withErrorBoundary } from '../ui/withErrorBoundary';
 import { useState } from 'react';
 import { Copy } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
+import toast from 'react-hot-toast';
 
 interface Props {
   lang?: string;
@@ -48,7 +49,7 @@ function ColorPicker({ lang = 'en' }: Props) {
   const [history, setHistory] = useState<string[]>([]);
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).catch(() => {});
+    navigator.clipboard.writeText(text).catch(() => toast('Failed to copy to clipboard'));
   };
 
   const addToHistory = (newColor: string) => {
@@ -63,13 +64,14 @@ function ColorPicker({ lang = 'en' }: Props) {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white border border-zinc-200 rounded-3xl p-8 shadow-sm flex flex-col items-center justify-center space-y-8">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-sm flex flex-col items-center justify-center space-y-8">
           <div 
             className="w-48 h-48 rounded-full shadow-2xl border-8 border-white group relative cursor-pointer"
             style={{ backgroundColor: color }}
           >
              <input 
                 type="color" 
+                aria-label={t('ui.color_picker') || 'Color picker'}
                 value={color}
                 onChange={(e) => {
                     setColor(e.target.value);
@@ -80,11 +82,11 @@ function ColorPicker({ lang = 'en' }: Props) {
           </div>
           
           <div className="w-full max-w-sm space-y-4">
-            <div className="flex items-center justify-between p-4 bg-zinc-50 rounded-2xl border border-zinc-200">
-               <span className="font-mono font-bold text-lg text-zinc-900 uppercase">{color}</span>
+            <div className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800">
+               <span className="font-mono font-bold text-lg text-zinc-900 dark:text-zinc-50 uppercase">{color}</span>
                 <button 
                  onClick={() => copyToClipboard(color)}
-                 className="p-2 hover:bg-zinc-200 rounded-lg transition-colors text-zinc-500"
+                 className="p-2 hover:bg-zinc-200 rounded-lg transition-colors text-zinc-500 dark:text-zinc-400"
                  aria-label={t('ui.copy')}
                 >
                   <Copy size={20} />
@@ -92,15 +94,15 @@ function ColorPicker({ lang = 'en' }: Props) {
             </div>
             
             <div className="grid grid-cols-2 gap-3">
-               <div className="p-4 bg-zinc-50 rounded-2xl border border-zinc-200 text-center">
-                  <span className="text-[10px] font-black uppercase text-zinc-400 block mb-1">RGB</span>
-                  <span className="font-mono font-bold text-sm text-zinc-700">
+               <div className="p-4 bg-zinc-50 dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 text-center">
+                  <span className="text-[10px] font-black uppercase text-zinc-500 dark:text-zinc-400 block mb-1">RGB</span>
+                  <span className="font-mono font-bold text-sm text-zinc-700 dark:text-zinc-300">
                     {`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`}
                   </span>
                </div>
-               <div className="p-4 bg-zinc-50 rounded-2xl border border-zinc-200 text-center">
-                  <span className="text-[10px] font-black uppercase text-zinc-400 block mb-1">HSL</span>
-                   <span className="font-mono font-bold text-sm text-zinc-700">
+               <div className="p-4 bg-zinc-50 dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 text-center">
+                  <span className="text-[10px] font-black uppercase text-zinc-500 dark:text-zinc-400 block mb-1">HSL</span>
+                   <span className="font-mono font-bold text-sm text-zinc-700 dark:text-zinc-300">
                     {`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`}
                   </span>
                </div>
@@ -111,7 +113,7 @@ function ColorPicker({ lang = 'en' }: Props) {
         <div className="bg-zinc-900 rounded-3xl p-8 text-white space-y-8">
            <div className="space-y-2">
               <h3 className="text-xl font-bold font-outfit">{t('ui.color_history')}</h3>
-              <p className="text-zinc-400 text-sm">{t('ui.recent_picked_colors')}</p>
+              <p className="text-zinc-500 dark:text-zinc-400 text-sm">{t('ui.recent_picked_colors')}</p>
            </div>
            
            <div className="grid grid-cols-5 gap-3">
@@ -125,12 +127,12 @@ function ColorPicker({ lang = 'en' }: Props) {
                 />
               ))}
               {Array.from({ length: Math.max(0, 10 - history.length) }).map((_, i) => (
-                <div key={i} className="w-full aspect-square rounded-xl bg-white/5 border border-white/5 dash" />
+                <div key={i} className="w-full aspect-square rounded-xl bg-white dark:bg-zinc-900/5 border border-white/5 dash" />
               ))}
            </div>
 
            <div className="pt-8 border-t border-white/10">
-              <p className="text-sm text-zinc-400 leading-relaxed italic">
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed italic">
                 {t('ui.color_picker_tip')}
               </p>
            </div>

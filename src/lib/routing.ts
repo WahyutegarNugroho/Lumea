@@ -17,7 +17,7 @@ export function getI18nPaths() {
  * Mendapatkan parameter statis untuk halaman blog/guide yang terintegrasi i18n.
  */
 export function getI18nContentPaths(slugs: string[]) {
-  const paths: any[] = [];
+  const paths: Array<{ params: { lang: string | undefined; slug: string } }> = [];
   
   slugs.forEach(slug => {
     // English (default)

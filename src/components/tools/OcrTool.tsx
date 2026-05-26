@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { Dropzone } from '../ui/Dropzone';
 import { Copy, ScanText, ShieldCheck, Languages, Zap, Check, Trash2, Wand2 } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
+import { useCopyToClipboard } from '../../lib/hooks/useCopyToClipboard';
 
 interface Props {
   lang?: string;
@@ -17,13 +18,13 @@ const OCR_LANGS = [
 
 function OcrTool({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
+  const { copied, copy } = useCopyToClipboard();
   const [file, setFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [ocrLang, setOcrLang] = useState('eng');
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState('');
-  const [copied, setCopied] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const handleFiles = (files: File[]) => {
@@ -68,24 +69,32 @@ function OcrTool({ lang = 'en' }: Props) {
     setProgress(0);
 
     try {
+      interface TesseractWorker {
+        recognize: (src: string) => Promise<{ data: { text: string } }>;
+        terminate: () => Promise<void>;
+      }
+      interface ProgressLog {
+        status: string;
+        progress: number;
+      }
       const { createWorker } = await import('tesseract.js');
       const img = new Image();
       img.src = imagePreview!;
-      await new Promise(resolve => img.onload = resolve);
+      await new Promise<void>(resolve => { img.onload = () => resolve(); });
       
       // Use pre-processed image for OCR
       const processedSrc = preprocessImage(img);
 
-      const worker = await (createWorker as any)(ocrLang, 1, {
-        logger: (m: any) => {
+      const worker = (await createWorker(ocrLang, 1, {
+        logger: (m: ProgressLog) => {
           if (m.status === 'recognizing text') {
             setProgress(Math.round(m.progress * 100));
           }
         }
-      });
+      })) as unknown as TesseractWorker;
       
-      const { data: { text } } = await (worker as any).recognize(processedSrc);
-      
+      const { data: { text } } = await worker.recognize(processedSrc);
+
       // Post-process: Clean up text
       const cleanedText = text
         .replace(/[^\x20-\x7E\n\r\t\u00A0-\u00FF\u0100-\u017F\u0180-\u024F]/g, '') // Remove weird chars
@@ -93,7 +102,7 @@ function OcrTool({ lang = 'en' }: Props) {
         .trim();
 
       setResult(cleanedText);
-      await (worker as any).terminate();
+      await worker.terminate();
     } catch (error) {
       console.error(error);
       toast(t('ui.error_ocr_failed'));
@@ -103,9 +112,7 @@ function OcrTool({ lang = 'en' }: Props) {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(result);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    copy(result);
   };
 
   if (!file) {
@@ -119,12 +126,12 @@ function OcrTool({ lang = 'en' }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Input/Preview Area */}
         <div className="space-y-6">
-          <div className="bg-zinc-50 border border-zinc-200 rounded-[2.5rem] p-4 shadow-inner overflow-hidden flex items-center justify-center min-h-[400px] relative group">
+          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] p-4 shadow-inner overflow-hidden flex items-center justify-center min-h-[400px] relative group">
             <img src={imagePreview!} alt="Preview" className="max-w-full max-h-[600px] rounded-2xl shadow-2xl transition-transform group-hover:scale-[1.01] duration-500" />
             <div className="absolute top-6 right-6 flex gap-2">
                <button 
                  onClick={() => { setFile(null); setImagePreview(null); }}
-                 className="w-10 h-10 bg-white/90 backdrop-blur text-rose-500 rounded-full flex items-center justify-center shadow-lg hover:bg-rose-500 hover:text-white transition-all"
+                 className="w-10 h-10 bg-white dark:bg-zinc-900/90 backdrop-blur text-rose-500 rounded-full flex items-center justify-center shadow-lg hover:bg--50 dark:bg--900/300 hover:text-white transition-all"
                  aria-label={t('ui.remove_file')}
                 >
                   <Trash2 size={18} />
@@ -132,22 +139,23 @@ function OcrTool({ lang = 'en' }: Props) {
             </div>
           </div>
 
-          <div className="bg-white border border-zinc-200 rounded-[2rem] p-8 space-y-6 shadow-sm">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2rem] p-8 space-y-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-zinc-900 text-white rounded-2xl flex items-center justify-center shadow-lg">
                   <Languages size={22} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-zinc-900 text-sm leading-tight">{t('ui.ocr_lang')}</h4>
-                  <p className="text-[10px] text-zinc-400 uppercase font-black tracking-widest mt-1">{t('ui.ai_lang_engine')}</p>
+                  <h4 className="font-bold text-zinc-900 dark:text-zinc-50 text-sm leading-tight">{t('ui.ocr_lang')}</h4>
+                  <p className="text-[10px] text-zinc-500 dark:text-zinc-400 uppercase font-black tracking-widest mt-1">{t('ui.ai_lang_engine')}</p>
                 </div>
               </div>
               <select 
+                aria-label={t('ui.ocr_lang')}
                 value={ocrLang}
                 onChange={(e) => setOcrLang(e.target.value)}
                 disabled={isProcessing}
-                className="bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-zinc-900 outline-none cursor-pointer"
+                className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-zinc-900 outline-none cursor-pointer"
               >
                 {OCR_LANGS.map(l => (
                   <option key={l.code} value={l.code}>{l.name}</option>
@@ -167,14 +175,14 @@ function OcrTool({ lang = 'en' }: Props) {
               </div>
             ) : (
               <div className="space-y-4 pt-2">
-                <div className="flex justify-between text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                <div className="flex justify-between text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">
                   <span className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-zinc-900 rounded-full animate-ping" />
                     {t('ui.processing_ocr')}
                   </span>
                   <span>{progress}%</span>
                 </div>
-                <div className="w-full h-3 bg-zinc-100 rounded-full overflow-hidden p-0.5 border border-zinc-200">
+                <div className="w-full h-3 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden p-0.5 border border-zinc-200 dark:border-zinc-800">
                   <div 
                     className="h-full bg-zinc-900 rounded-full transition-all duration-300 relative overflow-hidden"
                     style={{ width: `${progress}%` }}
@@ -193,16 +201,16 @@ function OcrTool({ lang = 'en' }: Props) {
              <div className="flex items-center justify-between p-8 border-b border-zinc-900 bg-zinc-950/50 backdrop-blur-xl rounded-t-[2rem]">
                 <div className="flex items-center gap-3">
                    <div className="w-10 h-10 bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-800">
-                      <ScanText size={20} className="text-zinc-500" />
+                      <ScanText size={20} className="text-zinc-500 dark:text-zinc-400" />
                    </div>
                    <h4 className="text-white font-bold font-outfit text-lg">{t('ui.ai_result')}</h4>
                 </div>
                 {result && (
                   <button 
                     onClick={copyToClipboard}
-                    className="px-6 py-2 bg-white text-zinc-900 rounded-xl transition-all flex items-center gap-2 font-bold text-xs hover:bg-zinc-200 active:scale-95"
+                    className="px-6 py-2 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 rounded-xl transition-all flex items-center gap-2 font-bold text-xs hover:bg-zinc-200 active:scale-95"
                   >
-                    {copied ? <Check size={18} className="text-emerald-600" /> : <Copy size={18} />}
+                    {copied ? <Check size={18} className="text--600 dark:text--400" /> : <Copy size={18} />}
                     {copied ? t('ui.copied') : t('ui.copy')}
                   </button>
                 )}
@@ -220,11 +228,11 @@ function OcrTool({ lang = 'en' }: Props) {
                 ) : (
                   <div className="h-full min-h-[500px] flex flex-col items-center justify-center text-center space-y-6 animate-pulse">
                     <div className="w-24 h-24 bg-zinc-900 rounded-[2.5rem] flex items-center justify-center border border-zinc-800 shadow-2xl">
-                        <Zap size={48} className="text-zinc-700" />
+                        <Zap size={48} className="text-zinc-700 dark:text-zinc-300" />
                     </div>
                     <div className="space-y-2">
-                       <p className="text-zinc-500 text-sm font-bold uppercase tracking-widest">{t('ui.ready_for_scan')}</p>
-                       <p className="text-zinc-700 text-xs max-w-[200px]">{t('ui.ocr_ready_desc')}</p>
+                       <p className="text-zinc-500 dark:text-zinc-400 text-sm font-bold uppercase tracking-widest">{t('ui.ready_for_scan')}</p>
+                       <p className="text-zinc-700 dark:text-zinc-300 text-xs max-w-[200px]">{t('ui.ocr_ready_desc')}</p>
                     </div>
                   </div>
                 )}
@@ -233,7 +241,7 @@ function OcrTool({ lang = 'en' }: Props) {
           </div>
 
           <div className="bg-emerald-50/50 border border-emerald-100/50 rounded-[2rem] p-6 flex gap-5 items-start">
-            <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-12 h-12 bg--100 dark:bg--900/40 text--600 dark:text--400 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
               <ShieldCheck size={24} />
             </div>
             <div className="space-y-1">

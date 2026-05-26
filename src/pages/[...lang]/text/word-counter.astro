@@ -18,21 +18,21 @@ const t = useTranslations(lang);
 >
 	<div class="space-y-6">
 		<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-			<div class="bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-center">
+			<div class="bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-800 rounded-2xl p-4 text-center">
 				<div class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">{t('ui.words')}</div>
-				<div id="word-count" class="text-3xl font-bold font-outfit text-zinc-900">0</div>
+				<div id="word-count" class="text-3xl font-bold font-outfit text-zinc-900 dark:text-zinc-50">0</div>
 			</div>
-			<div class="bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-center">
+			<div class="bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-800 rounded-2xl p-4 text-center">
 				<div class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">{t('ui.chars')}</div>
-				<div id="char-count" class="text-3xl font-bold font-outfit text-zinc-900">0</div>
+				<div id="char-count" class="text-3xl font-bold font-outfit text-zinc-900 dark:text-zinc-50">0</div>
 			</div>
-			<div class="bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-center">
+			<div class="bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-800 rounded-2xl p-4 text-center">
 				<div class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">{t('ui.sentences')}</div>
-				<div id="sentence-count" class="text-3xl font-bold font-outfit text-zinc-900">0</div>
+				<div id="sentence-count" class="text-3xl font-bold font-outfit text-zinc-900 dark:text-zinc-50">0</div>
 			</div>
-			<div class="bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-center">
+			<div class="bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-800 rounded-2xl p-4 text-center">
 				<div class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">{t('ui.reading_time')}</div>
-				<div id="reading-time" class="text-3xl font-bold font-outfit text-zinc-900">0m</div>
+				<div id="reading-time" class="text-3xl font-bold font-outfit text-zinc-900 dark:text-zinc-50">0m</div>
 			</div>
 		</div>
 
@@ -55,7 +55,7 @@ const t = useTranslations(lang);
 				<Copy size={18} />
 				{t('ui.copy')}
 			</button>
-			<button id="clear-btn" class="tool-button-secondary flex items-center gap-2 text-rose-600 hover:bg-rose-50 hover:border-rose-100">
+			<button id="clear-btn" class="tool-button-secondary flex items-center gap-2 text--600 dark:text--400 hover:bg--50 dark:bg--900/30 hover:border--100 dark:border--800/50">
 				<Trash2 size={18} />
 				{t('ui.clear')}
 			</button>

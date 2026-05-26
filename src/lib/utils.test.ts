@@ -7,13 +7,13 @@ describe('downloadFile', () => {
     const link = {
       href: '',
       download: '',
-      style: { display: '' },
+      style: { display: '' } as CSSStyleDeclaration,
       click: vi.fn(),
-    };
+    } as unknown as HTMLAnchorElement;
     
-    vi.spyOn(document, 'createElement').mockReturnValue(link as any);
-    vi.spyOn(document.body, 'appendChild').mockImplementation(() => ({} as any));
-    vi.spyOn(document.body, 'removeChild').mockImplementation(() => ({} as any));
+    vi.spyOn(document, 'createElement').mockReturnValue(link);
+    vi.spyOn(document.body, 'appendChild').mockImplementation((node) => node);
+    vi.spyOn(document.body, 'removeChild').mockImplementation((node) => node);
     
     const testUrl = 'blob:http://localhost:4321/123';
     const testFile = 'test.pdf';

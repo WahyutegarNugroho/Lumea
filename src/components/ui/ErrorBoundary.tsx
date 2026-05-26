@@ -41,16 +41,16 @@ export class ErrorBoundary extends Component<Props, State> {
       const buttonText = isIndonesian ? 'Muat Ulang' : isSpanish ? 'Recargar' : 'Reload Tool';
 
       return (
-        <div className="w-full rounded-[2.5rem] bg-rose-50 border-2 border-rose-100 p-8 flex flex-col items-center justify-center text-center space-y-4 shadow-sm min-h-[300px]">
-          <div className="w-16 h-16 bg-white shrink-0 flex items-center justify-center rounded-2xl text-rose-500 shadow-sm border border-rose-100">
+        <div className="w-full rounded-[2.5rem] bg--50 dark:bg--900/30 border-2 border--100 dark:border--800/50 p-8 flex flex-col items-center justify-center text-center space-y-4 shadow-sm min-h-[300px]">
+          <div className="w-16 h-16 bg-white shrink-0 flex items-center justify-center rounded-2xl text-rose-500 shadow-sm border border--100 dark:border--800/50">
             <AlertCircle size={32} />
           </div>
           <h3 className="text-xl font-bold text-rose-900 font-outfit">{title}</h3>
-          <p className="text-rose-700 max-w-sm">
+          <p className="text--700 dark:text--400 max-w-sm">
             {this.props.fallbackMessage || defaultDesc}
           </p>
           {this.state.error && process.env.NODE_ENV === 'development' && (
-            <div className="mt-4 p-4 bg-white/50 rounded-xl text-left w-full overflow-auto max-h-[150px] border border-rose-200">
+            <div className="mt-4 p-4 bg-white/50 rounded-xl text-left w-full overflow-auto max-h-[150px] border border--200 dark:border--800/50">
               <pre className="text-xs text-rose-900 font-mono">
                 {this.state.error.message}
               </pre>
@@ -61,7 +61,7 @@ export class ErrorBoundary extends Component<Props, State> {
               this.setState({ hasError: false, error: null });
               window.location.reload();
             }}
-            className="mt-6 flex items-center gap-2 px-6 py-3 bg-white text-rose-600 font-bold rounded-xl hover:bg-rose-100 transition-colors border border-rose-200"
+            className="mt-6 flex items-center gap-2 px-6 py-3 bg-white text--600 dark:text--400 font-bold rounded-xl hover:bg--100 dark:bg--900/40 transition-colors border border--200 dark:border--800/50"
           >
             <RefreshCw size={18} />
             {buttonText}

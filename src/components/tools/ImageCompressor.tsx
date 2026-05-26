@@ -5,7 +5,7 @@ import { Download, Shrink, FileImage, Loader2, X } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
 import toast from 'react-hot-toast';
 import { withErrorBoundary } from '../ui/withErrorBoundary';
-import { downloadFile } from '../../lib/utils';
+import { useDownload } from '../../lib/hooks/useDownload';
 
 interface Props {
   lang?: string;
@@ -22,6 +22,7 @@ interface CompressedFile {
 
 function ImageCompressor({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
+  const { download } = useDownload();
   const [files, setFiles] = useState<CompressedFile[]>([]);
   const [quality, setQuality] = useState(0.8);
   const [isProcessingAll, setIsProcessingAll] = useState(false);
@@ -44,7 +45,6 @@ function ImageCompressor({ lang = 'en' }: Props) {
     if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
     if (item.url) URL.revokeObjectURL(item.url);
     setFiles(prev => prev.filter((_, i) => i !== index));
-    if (item.url) URL.revokeObjectURL(item.url);
   };
 
   const clearFiles = () => {
@@ -61,7 +61,6 @@ function ImageCompressor({ lang = 'en' }: Props) {
     
     const updatedFiles = [...files];
     
-    // Gunakan toast loading
     const processingToast = toast.loading(t('ui.merging_pdfs') || "Processing images...");
     
     for (let i = 0; i < updatedFiles.length; i++) {
@@ -107,52 +106,53 @@ function ImageCompressor({ lang = 'en' }: Props) {
         <Dropzone onFilesSelected={handleFiles} accept="image/*" multiple={true} lang={lang} />
       ) : (
         <div className="space-y-6">
-          <div className="bg-zinc-50 border border-zinc-200 rounded-3xl p-6">
+          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-zinc-900 flex items-center gap-2 uppercase tracking-wider text-sm">
+              <h3 className="font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2 uppercase tracking-wider text-sm">
                 <FileImage size={18} />
                 {t('tool.compressor.title')} ({files.length})
               </h3>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-zinc-400 uppercase">{t('ui.settings')}</span>
+                  <label htmlFor="img-quality" className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase">{t('ui.settings')}</label>
                   <input 
+                    id="img-quality"
                     type="range" min="0.1" max="1" step="0.1" value={quality}
                     onChange={(e) => setQuality(parseFloat(e.target.value))}
-                    className="accent-zinc-900 w-24"
+                    className="accent-zinc-900 dark:accent-zinc-100 w-24"
                   />
-                  <span className="text-xs font-bold text-zinc-900 w-8">{Math.round(quality * 100)}%</span>
+                  <span className="text-xs font-bold text-zinc-900 dark:text-zinc-50 w-8">{Math.round(quality * 100)}%</span>
                 </div>
               </div>
             </div>
 
             <div className="space-y-3">
               {files.map((item, index) => (
-                <div key={`${item.file.name}-${index}`} className="bg-white border border-zinc-100 rounded-2xl p-4 flex items-center gap-4 group">
-                  <div className="w-12 h-12 bg-zinc-50 rounded-lg overflow-hidden flex-shrink-0 border border-zinc-100">
+                <div key={`${item.file.name}-${index}`} className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl p-4 flex items-center gap-4 group">
+                  <div className="w-12 h-12 bg-zinc-50 dark:bg-zinc-950 rounded-lg overflow-hidden flex-shrink-0 border border-zinc-100 dark:border-zinc-800">
                     <img src={item.previewUrl} className="w-full h-full object-cover" alt="Preview" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-bold text-zinc-900 truncate">{item.file.name}</div>
-                    <div className="text-[10px] text-zinc-400 font-medium">
+                    <div className="text-sm font-bold text-zinc-900 dark:text-zinc-50 truncate">{item.file.name}</div>
+                    <div className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">
                       {(item.originalSize / 1024).toFixed(1)} KB 
                       {item.compressedSize > 0 && ` → ${(item.compressedSize / 1024).toFixed(1)} KB`}
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
-                    {item.status === 'processing' && <Loader2 size={16} className="animate-spin text-zinc-400" />}
+                    {item.status === 'processing' && <Loader2 size={16} className="animate-spin text-zinc-500 dark:text-zinc-400" />}
                     {item.status === 'completed' && (
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-bold text--600 dark:text--400 bg--50 dark:bg--900/30 px-2 py-0.5 rounded-full">
                           -{Math.round((1 - item.compressedSize / item.originalSize) * 100)}%
                         </span>
                         <button 
                           onClick={() => {
-                            downloadFile(item.url, `compressed-${item.file.name}`);
+                            download(item.url, `compressed-${item.file.name}`);
                             toast.success("Download started");
                           }}
-                          className="text-zinc-400 hover:text-zinc-900 transition-colors"
+                          className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:text-zinc-50 transition-colors"
                           aria-label={t('ui.download')}
                         >
                           <Download size={18} />
@@ -179,7 +179,7 @@ function ImageCompressor({ lang = 'en' }: Props) {
             </button>
             <button 
               onClick={clearFiles}
-              className="px-8 py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-bold hover:bg-zinc-50 transition-all disabled:opacity-50"
+              className="px-8 py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 transition-all disabled:opacity-50"
             >
               {t('ui.clear')}
             </button>

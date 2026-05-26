@@ -1,5 +1,5 @@
 import { withErrorBoundary } from '../ui/withErrorBoundary';
-import { downloadFile } from '../../lib/utils';
+import { useDownload } from '../../lib/hooks/useDownload';
 import { useState, useRef } from 'react';
 import { Dropzone } from '../ui/Dropzone';
 import { Maximize, RefreshCw, Lock, Unlock } from 'lucide-react';
@@ -11,12 +11,14 @@ interface Props {
 
 function ImageResizer({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
+  const { download } = useDownload();
   const [file, setFile] = useState<File | null>(null);
   const [originalSize, setOriginalSize] = useState({ width: 0, height: 0 });
   const [newSize, setNewSize] = useState({ width: 0, height: 0 });
   const [aspectRatio, setAspectRatio] = useState(1);
   const [isLocked, setIsLocked] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [imgSrc, setImgSrc] = useState('');
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -25,15 +27,17 @@ function ImageResizer({ lang = 'en' }: Props) {
     const selectedFile = files[0];
     const reader = new FileReader();
     reader.onload = (e) => {
+      const src = e.target?.result as string;
       const img = new Image();
       img.onload = () => {
         setFile(selectedFile);
+        setImgSrc(src);
         setOriginalSize({ width: img.width, height: img.height });
         setNewSize({ width: img.width, height: img.height });
         setAspectRatio(img.width / img.height);
         imgRef.current = img;
       };
-      img.src = e.target?.result as string;
+      img.src = src;
     };
     reader.readAsDataURL(selectedFile);
   };
@@ -66,7 +70,7 @@ function ImageResizer({ lang = 'en' }: Props) {
     if (ctx) {
       ctx.drawImage(imgRef.current, 0, 0, newSize.width, newSize.height);
       const dataUrl = canvas.toDataURL(file?.type || 'image/png');
-      downloadFile(dataUrl, `resized-${file?.name || 'image'}`);
+      download(dataUrl, `resized-${file?.name || 'image'}`);
     }
     
     setIsProcessing(false);
@@ -80,38 +84,38 @@ function ImageResizer({ lang = 'en' }: Props) {
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-4">
-          <h3 className="font-bold text-zinc-900 font-outfit uppercase tracking-wider text-sm">{t('ui.image_preview')}</h3>
-          <div className="aspect-video bg-zinc-100 rounded-3xl overflow-hidden border border-zinc-200 flex items-center justify-center">
+          <h3 className="font-bold text-zinc-900 dark:text-zinc-50 font-outfit uppercase tracking-wider text-sm">{t('ui.image_preview')}</h3>
+          <div className="aspect-video bg-zinc-100 dark:bg-zinc-800 rounded-3xl overflow-hidden border border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
             <img 
-              src={imgRef.current?.src} 
+              src={imgSrc} 
               alt={t('ui.preview')} 
               className="max-w-full max-h-full object-contain" 
             />
           </div>
-          <div className="flex justify-between text-xs font-bold text-zinc-400 uppercase tracking-widest px-2">
+          <div className="flex justify-between text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest px-2">
             <span>{t('ui.original')}: {originalSize.width} × {originalSize.height} px</span>
             <span>{t('ui.type')}: {file.type.split('/')[1].toUpperCase()}</span>
           </div>
         </div>
 
         <div className="space-y-6">
-          <h3 className="font-bold text-zinc-900 font-outfit uppercase tracking-wider text-sm">{t('ui.resize_dimensions')}</h3>
-          <div className="bg-zinc-50 border border-zinc-200 rounded-3xl p-8 space-y-6">
+          <h3 className="font-bold text-zinc-900 dark:text-zinc-50 font-outfit uppercase tracking-wider text-sm">{t('ui.resize_dimensions')}</h3>
+          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 space-y-6">
             <div className="grid grid-cols-2 gap-6 relative">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('ui.width_px')}</label>
+                <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">{t('ui.width_px')}</label>
                 <input 
                   type="number" 
                   value={newSize.width} 
                   onChange={(e) => handleWidthChange(parseInt(e.target.value) || 0)}
-                  className="w-full bg-white border border-zinc-200 rounded-xl p-3 font-bold text-zinc-900 focus:ring-2 focus:ring-zinc-900/5 outline-none"
+                  className="w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3 font-bold text-zinc-900 dark:text-zinc-50 focus:ring-2 focus:ring-zinc-900/5 outline-none"
                 />
               </div>
               
               <div className="flex items-end justify-center pb-3">
                 <button 
                   onClick={() => setIsLocked(!isLocked)}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center border transition-all ${isLocked ? 'bg-zinc-900 border-zinc-900 text-white shadow-lg' : 'bg-white border-zinc-200 text-zinc-400'}`}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center border transition-all ${isLocked ? 'bg-zinc-900 border-zinc-900 text-white shadow-lg' : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400'}`}
                   aria-label={isLocked ? t('ui.aspect_ratio_unlock') : t('ui.aspect_ratio_lock')}
                 >
                   {isLocked ? <Lock size={16} /> : <Unlock size={16} />}
@@ -119,12 +123,12 @@ function ImageResizer({ lang = 'en' }: Props) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('ui.height_px')}</label>
+                <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">{t('ui.height_px')}</label>
                 <input 
                   type="number" 
                   value={newSize.height} 
                   onChange={(e) => handleHeightChange(parseInt(e.target.value) || 0)}
-                  className="w-full bg-white border border-zinc-200 rounded-xl p-3 font-bold text-zinc-900 focus:ring-2 focus:ring-zinc-900/5 outline-none"
+                  className="w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3 font-bold text-zinc-900 dark:text-zinc-50 focus:ring-2 focus:ring-zinc-900/5 outline-none"
                 />
               </div>
             </div>
@@ -140,7 +144,7 @@ function ImageResizer({ lang = 'en' }: Props) {
               </button>
               <button 
                 onClick={() => setFile(null)}
-                className="w-full py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-bold hover:bg-zinc-50 transition-all text-sm"
+                className="w-full py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 transition-all text-sm"
               >
                 {t('ui.choose_different')}
               </button>

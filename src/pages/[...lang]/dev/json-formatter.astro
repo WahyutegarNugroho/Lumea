@@ -28,7 +28,7 @@ const t = useTranslations(lang);
 			</button>
 			<div class="flex items-center gap-2 ml-auto">
 				<span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">{t('ui.indent')}:</span>
-				<select id="indent" class="bg-zinc-50 border border-zinc-200 rounded-lg px-2 py-1 text-sm outline-none">
+				<select id="indent" class="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2 py-1 text-sm outline-none">
 					<option value="2">2 {t('ui.spaces')}</option>
 					<option value="4">4 {t('ui.spaces')}</option>
 					<option value="\t">{t('ui.indent')}</option>
@@ -47,11 +47,11 @@ const t = useTranslations(lang);
 			</div>
 		</div>
 
-		<div id="error-msg" class="hidden p-4 bg-rose-50 border border-rose-100 rounded-2xl text-rose-600 text-sm font-medium">
+		<div id="error-msg" class="hidden p-4 bg--50 dark:bg--900/30 border border--100 dark:border--800/50 rounded-2xl text--600 dark:text--400 text-sm font-medium">
 			{t('ui.invalid_json')}: <span id="error-details"></span>
 		</div>
 
-		<div class="flex flex-wrap gap-4 pt-4 border-t border-zinc-100">
+		<div class="flex flex-wrap gap-4 pt-4 border-t border-zinc-100 dark:border-zinc-800">
 			<button id="copy-btn" class="tool-button-secondary flex items-center gap-2" data-copied={t('ui.copied')}>
 				<Copy size={18} />
 				{t('ui.copy')}
@@ -95,9 +95,9 @@ const t = useTranslations(lang);
 			const indent = minify ? 0 : (indentSelect.value === '\\t' ? '\t' : parseInt(indentSelect.value));
 			jsonInput.value = JSON.stringify(parsed, null, indent);
 			errorMsg?.classList.add('hidden');
-		} catch (e: any) {
+		} catch (e) {
 			errorMsg?.classList.remove('hidden');
-			if (errorDetails) errorDetails.textContent = e.message;
+			if (errorDetails) errorDetails.textContent = e instanceof Error ? e.message : String(e);
 		}
 	}
 

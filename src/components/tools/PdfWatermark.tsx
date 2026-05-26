@@ -1,10 +1,12 @@
 import { withErrorBoundary } from '../ui/withErrorBoundary';
+import { PrivacyShieldCard } from '../ui/PrivacyShieldCard';
 import toast from 'react-hot-toast';
 import { useState, useEffect, useRef } from 'react';
 import { Dropzone } from '../ui/Dropzone';
-import { Stamp, Type, Shield, Move, RotateCw, Maximize, ShieldCheck } from 'lucide-react';
+import { Stamp, Type, Shield, Move, RotateCw, Maximize } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
-import { downloadFile } from '../../lib/utils';
+import { useDownload } from '../../lib/hooks/useDownload';
+import { loadPdfDocument, renderPageToDataUrl } from '../../lib/pdfUtils';
 
 interface Props {
   lang?: string;
@@ -12,6 +14,7 @@ interface Props {
 
 function PdfWatermark({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
+  const { download } = useDownload();
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [watermarkText, setWatermarkText] = useState(t('ui.confidential'));
@@ -38,6 +41,7 @@ function PdfWatermark({ lang = 'en' }: Props) {
         b: isNaN(b) ? 0 : b 
       };
     } catch (e) {
+      console.error('Hex parse error:', e);
       return { r: 0, g: 0, b: 0 };
     }
   };
@@ -55,27 +59,17 @@ function PdfWatermark({ lang = 'en' }: Props) {
 
   const generatePreview = async (file: File) => {
     try {
-      const pdfjsLib = await import('pdfjs-dist');
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
-
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const pdf = await loadPdfDocument(file);
       const page = await pdf.getPage(1);
       const viewport = page.getViewport({ scale: 1.0 });
-      
+
       setPageSize({ width: viewport.width, height: viewport.height });
 
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-      
-      if (context) {
-        await page.render({ canvasContext: context as any, viewport } as any).promise;
-        setPreviewUrl(canvas.toDataURL());
-      }
+      const dataUrl = await renderPageToDataUrl(page, 1.0);
+      setPreviewUrl(dataUrl);
     } catch (err) {
       console.error('Preview Error:', err);
+      toast(t('ui.error_pdf_load'));
     }
   };
 
@@ -98,6 +92,7 @@ function PdfWatermark({ lang = 'en' }: Props) {
         }
       } catch (e) {
         console.error("Metrics calc error:", e);
+        if (isMounted) toast('Failed to calculate font metrics');
       }
     };
     loadMetrics();
@@ -147,15 +142,8 @@ function PdfWatermark({ lang = 'en' }: Props) {
       }
 
       const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      
-      downloadFile(url, `watermarked-${file.name}`);
-      
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-        setIsProcessing(false);
-      }, 5000);
+      const blob = new Blob([pdfBytes.buffer] as BlobPart[], { type: 'application/pdf' });
+      download(blob, `watermarked-${file.name}`);
 
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : t('ui.error_unknown');
@@ -181,9 +169,9 @@ function PdfWatermark({ lang = 'en' }: Props) {
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Preview Area */}
-        <div className="bg-zinc-100 rounded-[2.5rem] p-8 flex items-center justify-center relative overflow-hidden border border-zinc-200 shadow-inner min-h-[500px]">
+        <div className="bg-zinc-100 dark:bg-zinc-800 rounded-[2.5rem] p-8 flex items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-inner min-h-[500px]">
           {previewUrl ? (
-            <div className="relative shadow-2xl rounded-lg overflow-hidden bg-white max-w-full" style={{ width: 'fit-content' }}>
+            <div className="relative shadow-2xl rounded-lg overflow-hidden bg-white dark:bg-zinc-900 max-w-full" style={{ width: 'fit-content' }}>
               <img 
                 ref={previewImgRef}
                 src={previewUrl} 
@@ -214,8 +202,8 @@ function PdfWatermark({ lang = 'en' }: Props) {
               </svg>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-4 text-zinc-400">
-              <div className="w-12 h-12 border-4 border-zinc-200 border-t-zinc-400 rounded-full animate-spin"></div>
+            <div className="flex flex-col items-center gap-4 text-zinc-500 dark:text-zinc-400">
+              <div className="w-12 h-12 border-4 border-zinc-200 dark:border-zinc-800 border-t-zinc-400 rounded-full animate-spin"></div>
               <span className="font-bold text-sm uppercase tracking-widest">{t('ui.loading_preview')}</span>
             </div>
           )}
@@ -223,7 +211,7 @@ function PdfWatermark({ lang = 'en' }: Props) {
 
         {/* Controls Area */}
         <div className="space-y-6">
-          <div className="bg-white border border-zinc-200 rounded-3xl p-8 shadow-sm space-y-8">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-sm space-y-8">
             <div className="space-y-4">
               <label className="tool-label flex items-center gap-2">
                 <Type size={14} />
@@ -234,12 +222,12 @@ function PdfWatermark({ lang = 'en' }: Props) {
                   <button
                     key={c}
                     onClick={() => setColor(c)}
-                    className={`w-7 h-7 rounded-full border-2 transition-all ${color === c ? 'border-zinc-900 scale-110 shadow-md' : 'border-zinc-200 hover:scale-105'}`}
+                    className={`w-7 h-7 rounded-full border-2 transition-all ${color === c ? 'border-zinc-900 scale-110 shadow-md' : 'border-zinc-200 dark:border-zinc-800 hover:scale-105'}`}
                     style={{ backgroundColor: c }}
                     aria-label={c}
                   />
                 ))}
-                <div className="relative w-7 h-7 rounded-full border-2 border-zinc-200 overflow-hidden group">
+                <div className="relative w-7 h-7 rounded-full border-2 border-zinc-200 dark:border-zinc-800 overflow-hidden group">
                   <input 
                     type="color" 
                     value={color} 
@@ -252,7 +240,7 @@ function PdfWatermark({ lang = 'en' }: Props) {
                 type="text" 
                 value={watermarkText}
                 onChange={(e) => setWatermarkText(e.target.value)}
-                className="tool-input bg-zinc-50 border-zinc-200 text-lg font-bold"
+                className="tool-input bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 text-lg font-bold"
               />
             </div>
 
@@ -262,16 +250,16 @@ function PdfWatermark({ lang = 'en' }: Props) {
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <label className="tool-label m-0 flex items-center gap-2"><Move size={14} /> {t('ui.horizontal')}</label>
-                    <span className="text-xs font-bold text-zinc-900">{posX}%</span>
+                    <span className="text-xs font-bold text-zinc-900 dark:text-zinc-50">{posX}%</span>
                   </div>
-                  <input type="range" min="0" max="100" value={posX} onChange={(e) => setPosX(parseInt(e.target.value))} className="w-full accent-zinc-900" />
+                  <input type="range" min="0" max="100" value={posX} onChange={(e) => setPosX(parseInt(e.target.value))} className="w-full accent-zinc-900 dark:accent-zinc-100" />
                 </div>
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <label className="tool-label m-0 flex items-center gap-2"><Move size={14} /> {t('ui.vertical')}</label>
-                    <span className="text-xs font-bold text-zinc-900">{posY}%</span>
+                    <span className="text-xs font-bold text-zinc-900 dark:text-zinc-50">{posY}%</span>
                   </div>
-                  <input type="range" min="0" max="100" value={posY} onChange={(e) => setPosY(parseInt(e.target.value))} className="w-full accent-zinc-900" />
+                  <input type="range" min="0" max="100" value={posY} onChange={(e) => setPosY(parseInt(e.target.value))} className="w-full accent-zinc-900 dark:accent-zinc-100" />
                 </div>
               </div>
 
@@ -280,16 +268,16 @@ function PdfWatermark({ lang = 'en' }: Props) {
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <label className="tool-label m-0 flex items-center gap-2"><RotateCw size={14} /> {t('ui.rotation')}</label>
-                    <span className="text-xs font-bold text-zinc-900">{rotation}°</span>
+                    <span className="text-xs font-bold text-zinc-900 dark:text-zinc-50">{rotation}°</span>
                   </div>
-                  <input type="range" min="0" max="360" value={rotation} onChange={(e) => setRotation(parseInt(e.target.value))} className="w-full accent-zinc-900" />
+                  <input type="range" min="0" max="360" value={rotation} onChange={(e) => setRotation(parseInt(e.target.value))} className="w-full accent-zinc-900 dark:accent-zinc-100" />
                 </div>
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <label className="tool-label m-0 flex items-center gap-2"><Maximize size={14} /> {t('ui.font_size')}</label>
-                    <span className="text-xs font-bold text-zinc-900">{fontSize}px</span>
+                    <span className="text-xs font-bold text-zinc-900 dark:text-zinc-50">{fontSize}px</span>
                   </div>
-                  <input type="range" min="10" max="200" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full accent-zinc-900" />
+                  <input type="range" min="10" max="200" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full accent-zinc-900 dark:accent-zinc-100" />
                 </div>
               </div>
             </div>
@@ -297,12 +285,12 @@ function PdfWatermark({ lang = 'en' }: Props) {
             <div>
               <div className="flex justify-between items-center mb-3">
                 <label className="tool-label m-0 flex items-center gap-2"><Shield size={14} /> {t('ui.opacity')}</label>
-                <span className="text-xs font-bold text-zinc-900">{Math.round(opacity * 100)}%</span>
+                <span className="text-xs font-bold text-zinc-900 dark:text-zinc-50">{Math.round(opacity * 100)}%</span>
               </div>
-              <input type="range" min="0.05" max="1" step="0.05" value={opacity} onChange={(e) => setOpacity(parseFloat(e.target.value))} className="w-full accent-zinc-900" />
+              <input type="range" min="0.05" max="1" step="0.05" value={opacity} onChange={(e) => setOpacity(parseFloat(e.target.value))} className="w-full accent-zinc-900 dark:accent-zinc-100" />
             </div>
 
-            <div className="pt-6 space-y-3 border-t border-zinc-100">
+            <div className="pt-6 space-y-3 border-t border-zinc-100 dark:border-zinc-800">
               <button 
                 onClick={applyWatermark}
                 disabled={isProcessing || !watermarkText}
@@ -311,25 +299,13 @@ function PdfWatermark({ lang = 'en' }: Props) {
                 {isProcessing ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <Stamp size={20} />}
                 {t('ui.apply_download')}
               </button>
-              <button onClick={() => setFile(null)} className="w-full py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-bold hover:bg-zinc-50 transition-all text-sm">
+              <button onClick={() => setFile(null)} className="w-full py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 transition-all text-sm">
                 {t('ui.change_pdf')}
               </button>
             </div>
           </div>
 
-          <div className="bg-zinc-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden">
-             <div className="relative z-10 space-y-4">
-                <div className="flex items-center gap-2 text-zinc-400">
-                  <ShieldCheck size={16} className="text-emerald-400" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">{t('ui.privacy_shield')}</span>
-                </div>
-                <h4 className="text-xl font-bold font-outfit">{t('ui.pro_tip')}</h4>
-                <p className="text-zinc-400 text-sm leading-relaxed">
-                  {t('ui.watermark_privacy_desc')}
-                </p>
-             </div>
-             <Stamp className="absolute -bottom-8 -right-8 w-32 h-32 text-white/5 -rotate-12" />
-          </div>
+          <PrivacyShieldCard t={t} descKey="ui.watermark_privacy_desc" decorIcon={Stamp} />
         </div>
       </div>
     </div>

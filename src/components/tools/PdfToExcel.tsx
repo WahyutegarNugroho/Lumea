@@ -14,7 +14,7 @@ function PdfToExcel({ lang = 'en' }: Props) {
     <div className="space-y-8 animate-in fade-in duration-700">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Main Card: The Redirector */}
-        <div className="bg-white border border-zinc-200 rounded-[2.5rem] p-10 text-center flex flex-col items-center justify-center space-y-8 shadow-xl shadow-zinc-100 relative overflow-hidden group">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] p-10 text-center flex flex-col items-center justify-center space-y-8 shadow-xl shadow-zinc-100 relative overflow-hidden group">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-zinc-900 to-emerald-500"></div>
           
           <div className="w-28 h-28 bg-zinc-900 text-white rounded-[2.5rem] flex items-center justify-center shadow-2xl shadow-zinc-200 group-hover:scale-105 transition-transform duration-500">
@@ -22,10 +22,10 @@ function PdfToExcel({ lang = 'en' }: Props) {
           </div>
           
           <div className="space-y-3">
-            <h3 className="text-3xl font-black text-zinc-900 font-outfit tracking-tight">
+            <h3 className="text-3xl font-black text-zinc-900 dark:text-zinc-50 font-outfit tracking-tight">
               {t('tool.pdf-to-excel.title')}
             </h3>
-            <p className="text-zinc-500 font-medium max-w-sm mx-auto leading-relaxed">
+            <p className="text-zinc-500 dark:text-zinc-400 font-medium max-w-sm mx-auto leading-relaxed">
               {t('ui.high_fidelity_desc')}
             </p>
           </div>
@@ -40,28 +40,28 @@ function PdfToExcel({ lang = 'en' }: Props) {
             <ExternalLink size={20} className="text-emerald-400" />
           </a>
 
-          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+          <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">
             {t('ui.powered_by')}
           </p>
         </div>
 
         {/* Info & Benefits Area */}
         <div className="space-y-6 flex flex-col justify-center">
-          <div className="bg-zinc-50/50 border border-zinc-200 rounded-3xl p-8 space-y-8">
+          <div className="bg-zinc-50/50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 space-y-8">
             <div className="flex gap-5">
-              <div className="w-12 h-12 bg-white border border-zinc-200 text-zinc-900 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
+              <div className="w-12 h-12 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
                 <Zap size={24} className="text-amber-500" />
               </div>
               <div className="space-y-2">
-                <h4 className="font-bold text-zinc-900 text-lg">{t('ui.why_external')}</h4>
-                <p className="text-zinc-500 text-sm leading-relaxed">
+                <h4 className="font-bold text-zinc-900 dark:text-zinc-50 text-lg">{t('ui.why_external')}</h4>
+                <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed">
                    {t('ui.pdf_to_excel_why_desc')}
                 </p>
               </div>
             </div>
 
-            <div className="pt-8 border-t border-zinc-200 flex gap-5">
-              <div className="w-12 h-12 bg-white border border-zinc-200 text-zinc-900 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
+            <div className="pt-8 border-t border-zinc-200 dark:border-zinc-800 flex gap-5">
+              <div className="w-12 h-12 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
                 <ShieldCheck size={24} className="text-emerald-500" />
               </div>
               <div className="space-y-2">
@@ -76,10 +76,10 @@ function PdfToExcel({ lang = 'en' }: Props) {
           <div className="bg-zinc-900 rounded-3xl p-8 text-white relative overflow-hidden group cursor-pointer" onClick={() => window.open(externalLink, '_blank')}>
              <div className="relative z-10 flex items-center justify-between">
                 <div className="space-y-1">
-                  <h5 className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{t('ui.ready_to_convert')}</h5>
+                  <h5 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400">{t('ui.ready_to_convert')}</h5>
                   <p className="text-lg font-bold">{t('ui.start_high_quality')}</p>
                 </div>
-                <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                <div className="w-10 h-10 bg-white dark:bg-zinc-900/10 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
                   <ArrowRight size={20} />
                 </div>
              </div>

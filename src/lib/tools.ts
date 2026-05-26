@@ -1,4 +1,5 @@
 import { 
+	type LucideIcon,
 	Combine, 
 	Scissors, 
 	RotateCw, 
@@ -31,7 +32,17 @@ import {
 	Barcode
 } from 'lucide-react';
 
-export const ALL_TOOLS = [
+export interface ToolDefinition {
+	id: string;
+	title: string;
+	description: string;
+	href: string;
+	category: 'pdf' | 'image' | 'text' | 'dev';
+	icon: LucideIcon;
+	isExternal?: boolean;
+}
+
+export const ALL_TOOLS: ToolDefinition[] = [
 	// PDF
 	{ id: 'organize', title: 'Organize PDF', description: 'Reorder or delete PDF pages.', href: '/pdf/organize', category: 'pdf', icon: LayoutGrid },
 	{ id: 'merge', title: 'Merge PDF', description: 'Combine multiple PDF files into one.', href: '/pdf/merge', category: 'pdf', icon: Combine },

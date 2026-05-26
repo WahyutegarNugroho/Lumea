@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Dropzone } from '../ui/Dropzone';
 import { Crop as CropIcon, RefreshCw, Maximize, RotateCcw, Check } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
-import { downloadFile } from '../../lib/utils';
+import { useDownload } from '../../lib/hooks/useDownload';
 
 interface Props {
   lang?: string;
@@ -13,6 +13,7 @@ type AspectRatio = 'free' | '1:1' | '4:3' | '16:9';
 
 function ImageCropper({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
+  const { download } = useDownload();
   const [file, setFile] = useState<File | null>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>('free');
@@ -53,46 +54,50 @@ function ImageCropper({ lang = 'en' }: Props) {
     setDragStart({ x: coords.x - crop.x, y: coords.y - crop.y });
   };
 
+  const rafRef = useRef<number | null>(null);
+
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging || !dragType) return;
-
-    const coords = {
-        x: 0,
-        y: 0,
-    };
-    if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        coords.x = ((e.clientX - rect.left) / rect.width) * 100;
-        coords.y = ((e.clientY - rect.top) / rect.height) * 100;
-    }
-
-    setCrop(prev => {
-      let { x, y, width, height } = { ...prev };
-
-      if (dragType === 'move') {
-        x = coords.x - dragStart.x;
-        y = coords.y - dragStart.y;
-      } else if (dragType === 'se') {
-        width = Math.max(5, coords.x - x);
-        height = Math.max(5, coords.y - y);
-      } else if (dragType === 'nw') {
-        const dx = x - coords.x;
-        const dy = y - coords.y;
-        x = coords.x;
-        y = coords.y;
-        width += dx;
-        height += dy;
-      } else if (dragType === 'ne') {
-        const dy = y - coords.y;
-        y = coords.y;
-        width = Math.max(5, coords.x - x);
-        height += dy;
-      } else if (dragType === 'sw') {
-        const dx = x - coords.x;
-        x = coords.x;
-        width += dx;
-        height = Math.max(5, coords.y - y);
+    if (rafRef.current != null) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      const coords = {
+          x: 0,
+          y: 0,
+      };
+      if (containerRef.current) {
+          const rect = containerRef.current.getBoundingClientRect();
+          coords.x = ((e.clientX - rect.left) / rect.width) * 100;
+          coords.y = ((e.clientY - rect.top) / rect.height) * 100;
       }
+
+      setCrop(prev => {
+        let { x, y, width, height } = { ...prev };
+
+        if (dragType === 'move') {
+          x = coords.x - dragStart.x;
+          y = coords.y - dragStart.y;
+        } else if (dragType === 'se') {
+          width = Math.max(5, coords.x - x);
+          height = Math.max(5, coords.y - y);
+        } else if (dragType === 'nw') {
+          const dx = x - coords.x;
+          const dy = y - coords.y;
+          x = coords.x;
+          y = coords.y;
+          width += dx;
+          height += dy;
+        } else if (dragType === 'ne') {
+          const dy = y - coords.y;
+          y = coords.y;
+          width = Math.max(5, coords.x - x);
+          height += dy;
+        } else if (dragType === 'sw') {
+          const dx = x - coords.x;
+          x = coords.x;
+          width += dx;
+          height = Math.max(5, coords.y - y);
+        }
 
       // Maintain Aspect Ratio if not free
       if (aspectRatio !== 'free' && dragType !== 'move') {
@@ -114,6 +119,7 @@ function ImageCropper({ lang = 'en' }: Props) {
 
       return { x, y, width, height };
     });
+    });
   }, [isDragging, dragType, dragStart, aspectRatio]);
 
   const stopDragging = useCallback(() => {
@@ -127,6 +133,7 @@ function ImageCropper({ lang = 'en' }: Props) {
       window.addEventListener('mouseup', stopDragging);
     }
     return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', stopDragging);
     };
@@ -147,7 +154,7 @@ function ImageCropper({ lang = 'en' }: Props) {
     ctx.drawImage(image, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
     
     const dataUrl = canvas.toDataURL('image/png');
-    downloadFile(dataUrl, `cropped-${file?.name || 'image'}.png`);
+    download(dataUrl, `cropped-${file?.name || 'image'}.png`);
   };
 
   if (!file) {
@@ -203,10 +210,10 @@ function ImageCropper({ lang = 'en' }: Props) {
                 </div>
 
                 {/* Resizing Handles */}
-                <div className="absolute -top-2 -left-2 w-4 h-4 bg-white rounded-full cursor-nw-resize" onMouseDown={(e) => { e.stopPropagation(); startDragging('nw', e); }}></div>
-                <div className="absolute -top-2 -right-2 w-4 h-4 bg-white rounded-full cursor-ne-resize" onMouseDown={(e) => { e.stopPropagation(); startDragging('ne', e); }}></div>
-                <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-white rounded-full cursor-sw-resize" onMouseDown={(e) => { e.stopPropagation(); startDragging('sw', e); }}></div>
-                <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-white rounded-full cursor-se-resize" onMouseDown={(e) => { e.stopPropagation(); startDragging('se', e); }}></div>
+                <div className="absolute -top-2 -left-2 w-4 h-4 bg-white dark:bg-zinc-900 rounded-full cursor-nw-resize" onMouseDown={(e) => { e.stopPropagation(); startDragging('nw', e); }}></div>
+                <div className="absolute -top-2 -right-2 w-4 h-4 bg-white dark:bg-zinc-900 rounded-full cursor-ne-resize" onMouseDown={(e) => { e.stopPropagation(); startDragging('ne', e); }}></div>
+                <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-white dark:bg-zinc-900 rounded-full cursor-sw-resize" onMouseDown={(e) => { e.stopPropagation(); startDragging('sw', e); }}></div>
+                <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-white dark:bg-zinc-900 rounded-full cursor-se-resize" onMouseDown={(e) => { e.stopPropagation(); startDragging('se', e); }}></div>
                 
                 {/* Rule of thirds grid */}
                 <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none">
@@ -227,19 +234,19 @@ function ImageCropper({ lang = 'en' }: Props) {
 
         {/* Controls Area */}
         <div className="space-y-6">
-          <div className="bg-white border border-zinc-200 rounded-3xl p-8 shadow-sm space-y-8">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-sm space-y-8">
             <div className="space-y-4">
-              <h3 className="text-xl font-bold text-zinc-900 font-outfit flex items-center gap-2">
-                <CropIcon className="text-zinc-400" size={20} />
+              <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 font-outfit flex items-center gap-2">
+                <CropIcon className="text-zinc-500 dark:text-zinc-400" size={20} />
                 {t('tool.cropper.title')}
               </h3>
-              <p className="text-zinc-500 text-sm">
+              <p className="text-zinc-500 dark:text-zinc-400 text-sm">
                 {t('ui.cropper_desc')}
               </p>
             </div>
 
             <div className="space-y-4">
-              <label className="text-xs font-black uppercase tracking-widest text-zinc-400">{t('ui.aspect_ratio')}</label>
+              <label className="text-xs font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400">{t('ui.aspect_ratio')}</label>
               <div className="grid grid-cols-2 gap-2">
                 {(['free', '1:1', '4:3', '16:9'] as AspectRatio[]).map((ratio) => (
                   <button
@@ -248,7 +255,7 @@ function ImageCropper({ lang = 'en' }: Props) {
                     className={`py-3 px-4 rounded-xl text-sm font-bold border-2 transition-all ${
                       aspectRatio === ratio 
                         ? 'border-zinc-900 bg-zinc-900 text-white shadow-lg' 
-                        : 'border-zinc-100 text-zinc-500 hover:border-zinc-200'
+                        : 'border-zinc-100 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-zinc-200 dark:hover:border-zinc-700 dark:border-zinc-800'
                     }`}
                   >
                     {ratio === 'free' ? <><Maximize size={14} className="inline mr-2" />{t('ui.free')}</> : ratio.toUpperCase()}
@@ -257,7 +264,7 @@ function ImageCropper({ lang = 'en' }: Props) {
               </div>
             </div>
 
-            <div className="pt-6 border-t border-zinc-100 space-y-3">
+            <div className="pt-6 border-t border-zinc-100 dark:border-zinc-800 space-y-3">
               <button 
                 onClick={handleDownload}
                 className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-200"
@@ -267,7 +274,7 @@ function ImageCropper({ lang = 'en' }: Props) {
               </button>
               <button 
                 onClick={() => setFile(null)}
-                className="w-full py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-bold hover:bg-zinc-50 transition-all"
+                className="w-full py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 transition-all"
               >
                 <RotateCcw size={18} className="inline mr-2" />
                 {t('ui.change_file')}
@@ -275,14 +282,14 @@ function ImageCropper({ lang = 'en' }: Props) {
             </div>
           </div>
 
-          <div className="bg-zinc-50 rounded-2xl p-6 border border-zinc-100">
+          <div className="bg-zinc-50 dark:bg-zinc-950 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800">
              <div className="flex items-start gap-3">
-                <div className="p-2 bg-white rounded-lg border border-zinc-200">
-                   <RefreshCw size={16} className="text-zinc-400" />
+                <div className="p-2 bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
+                   <RefreshCw size={16} className="text-zinc-500 dark:text-zinc-400" />
                 </div>
                 <div>
-                   <h4 className="text-sm font-bold text-zinc-900">{t('ui.pro_tip')}</h4>
-                   <p className="text-xs text-zinc-500 mt-1">{t('ui.cropper_tip')}</p>
+                   <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">{t('ui.pro_tip')}</h4>
+                   <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{t('ui.cropper_tip')}</p>
                 </div>
              </div>
           </div>

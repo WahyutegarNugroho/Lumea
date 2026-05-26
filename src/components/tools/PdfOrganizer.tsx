@@ -24,7 +24,8 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { Dropzone } from '../ui/Dropzone';
 import { Download, Trash2, GripVertical, FileText, ShieldCheck, RotateCw, LayoutGrid } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
-import { downloadFile } from '../../lib/utils';
+import { useDownload } from '../../lib/hooks/useDownload';
+import { loadPdfjs } from '../../lib/pdfUtils';
 
 interface Props {
   lang?: string;
@@ -37,7 +38,9 @@ interface PageItem {
 }
 
 // Sortable Item Component
-function SortablePage({ id, page, onDelete, index, t }: { id: string, page: PageItem, onDelete: (id: string) => void, index: number, t: any }) {
+import { renderPageToDataUrl } from '../../lib/pdfUtils';
+
+function SortablePage({ id, page, onDelete, index, t }: { id: string; page: PageItem; onDelete: (id: string) => void; index: number; t: ReturnType<typeof useTranslations> }) {
   const {
     attributes,
     listeners,
@@ -58,9 +61,9 @@ function SortablePage({ id, page, onDelete, index, t }: { id: string, page: Page
     <div 
       ref={setNodeRef} 
       style={style} 
-      className={`relative group bg-white border-2 rounded-3xl p-2 transition-colors ${isDragging ? 'border-zinc-900 shadow-2xl' : 'border-zinc-100 shadow-sm hover:border-zinc-300'}`}
+      className={`relative group bg-white dark:bg-zinc-900 border-2 rounded-3xl p-2 transition-colors ${isDragging ? 'border-zinc-900 shadow-2xl' : 'border-zinc-100 dark:border-zinc-800 shadow-sm hover:border-zinc-300 dark:border-zinc-700'}`}
     >
-      <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-50 border border-zinc-100">
+      <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-800">
         <img src={page.preview} alt={`Page`} className="w-full h-full object-contain pointer-events-none" />
         
         {/* Drag Handle Overlay */}
@@ -69,7 +72,7 @@ function SortablePage({ id, page, onDelete, index, t }: { id: string, page: Page
           {...listeners}
           className="absolute inset-0 cursor-grab active:cursor-grabbing flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5"
         >
-          <div className="bg-white/90 p-2 rounded-xl shadow-lg text-zinc-900 backdrop-blur-sm">
+          <div className="bg-white dark:bg-zinc-900/90 p-2 rounded-xl shadow-lg text-zinc-900 dark:text-zinc-50 backdrop-blur-sm">
             <GripVertical size={20} />
           </div>
         </div>
@@ -77,12 +80,12 @@ function SortablePage({ id, page, onDelete, index, t }: { id: string, page: Page
       
       <div className="mt-3 flex items-center justify-between px-1">
         <div className="flex flex-col">
-          <span className="text-[10px] font-black text-zinc-900">{t('ui.page_label')} {index + 1}</span>
-          <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-tighter">{t('ui.original_label')}: {page.index + 1}</span>
+          <span className="text-[10px] font-black text-zinc-900 dark:text-zinc-50">{t('ui.page_label')} {index + 1}</span>
+          <span className="text-[8px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-tighter">{t('ui.original_label')}: {page.index + 1}</span>
         </div>
         <button 
           onClick={() => onDelete(id)}
-          className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-all"
+          className="p-2 text-rose-500 hover:bg--50 dark:bg--900/30 rounded-xl transition-all"
           aria-label={t('ui.remove_file')}
         >
           <Trash2 size={16} />
@@ -94,6 +97,7 @@ function SortablePage({ id, page, onDelete, index, t }: { id: string, page: Page
 
 function PdfOrganizer({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
+  const { download } = useDownload();
   const [file, setFile] = useState<File | null>(null);
   const [pages, setPages] = useState<PageItem[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -112,8 +116,7 @@ function PdfOrganizer({ lang = 'en' }: Props) {
     setStatus(t('ui.generating_previews'));
 
     try {
-      const pdfjsLib = await import('pdfjs-dist');
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+      const pdfjsLib = await loadPdfjs();
 
       const arrayBuffer = await selectedFile.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -122,22 +125,16 @@ function PdfOrganizer({ lang = 'en' }: Props) {
 
       for (let i = 1; i <= totalPages; i++) {
         const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 0.8 });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        if (context) {
-          await page.render({ canvasContext: context as any, viewport } as any).promise;
-          newPages.push({
-            id: `page-${i}-${Math.random().toString(36).substring(2, 9)}`,
-            index: i - 1,
-            preview: canvas.toDataURL()
-          });
+        const preview = await renderPageToDataUrl(page, 0.8, { type: 'image/webp', quality: 0.6 });
+        newPages.push({
+          id: `page-${i}-${Math.random().toString(36).substring(2, 9)}`,
+          index: i - 1,
+          preview
+        });
+        if (i % 5 === 0 || i === totalPages) {
+          setPages([...newPages]);
         }
       }
-      setPages(newPages);
     } catch (error) {
       console.error(error);
       toast(t('ui.error_pdf_load'));
@@ -185,17 +182,9 @@ function PdfOrganizer({ lang = 'en' }: Props) {
       }
 
       const pdfBytes = await outDoc.save();
-      const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      
-      // Ensure the filename has .pdf extension and use shared utility
-      let safeName = file.name.toLowerCase().endsWith('.pdf') ? file.name : `${file.name}.pdf`;
-      downloadFile(url, `organized-${safeName}`);
-      
-      // Cleanup will be handled by downloadFile utility (via timeout)
-      // but we should revoke the URL after use. downloadFile handles deletion of the element.
-      // We manually revoke after the download is likely triggered.
-      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      const blob = new Blob([pdfBytes.buffer] as BlobPart[], { type: 'application/pdf' });
+      const safeName = file.name.toLowerCase().endsWith('.pdf') ? file.name : `${file.name}.pdf`;
+      download(blob, `organized-${safeName}`);
     } catch (error) {
       console.error(error);
       toast(t('ui.error_pdf_save'));
@@ -215,21 +204,21 @@ function PdfOrganizer({ lang = 'en' }: Props) {
   return (
     <div className="space-y-8">
       {/* Header Actions */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white/80 backdrop-blur-md p-6 rounded-[2.5rem] border border-zinc-200 shadow-sm sticky top-4 z-40">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white dark:bg-zinc-900/80 backdrop-blur-md p-6 rounded-[2.5rem] border border-zinc-200 dark:border-zinc-800 shadow-sm sticky top-4 z-40">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-zinc-900 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-zinc-200">
             <FileText size={24} />
           </div>
           <div>
-            <h3 className="font-bold text-zinc-900 truncate max-w-[150px] md:max-w-[300px]">{file.name}</h3>
-            <p className="text-[10px] text-zinc-400 font-black uppercase tracking-widest">{pages.length} {t('ui.pages')}</p>
+            <h3 className="font-bold text-zinc-900 dark:text-zinc-50 truncate max-w-[150px] md:max-w-[300px]">{file.name}</h3>
+            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-black uppercase tracking-widest">{pages.length} {t('ui.pages')}</p>
           </div>
         </div>
 
         <div className="flex gap-3 w-full md:w-auto">
           <button 
             onClick={() => { setFile(null); setPages([]); }}
-            className="flex-1 md:flex-none px-6 py-3 bg-zinc-100 text-zinc-600 rounded-xl font-bold text-sm hover:bg-zinc-200 transition-all"
+            className="flex-1 md:flex-none px-6 py-3 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl font-bold text-sm hover:bg-zinc-200 transition-all"
             disabled={isProcessing}
           >
             {t('ui.cancel')}
@@ -247,8 +236,8 @@ function PdfOrganizer({ lang = 'en' }: Props) {
 
       {isProcessing && !pages.length ? (
         <div className="flex flex-col items-center justify-center py-32 space-y-4">
-          <div className="w-16 h-16 border-4 border-zinc-100 border-t-zinc-900 rounded-full animate-spin"></div>
-          <p className="text-zinc-500 font-bold text-sm animate-pulse">{status}</p>
+          <div className="w-16 h-16 border-4 border-zinc-100 dark:border-zinc-800 border-t-zinc-900 rounded-full animate-spin"></div>
+          <p className="text-zinc-500 dark:text-zinc-400 font-bold text-sm animate-pulse">{status}</p>
         </div>
       ) : (
         <div className="space-y-12">
@@ -287,12 +276,12 @@ function PdfOrganizer({ lang = 'en' }: Props) {
               }),
             }}>
               {activeId ? (
-                <div className="bg-white border-2 border-zinc-900 rounded-3xl p-2 shadow-2xl scale-105 opacity-90 cursor-grabbing">
-                   <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-50 border border-zinc-100">
+                <div className="bg-white dark:bg-zinc-900 border-2 border-zinc-900 rounded-3xl p-2 shadow-2xl scale-105 opacity-90 cursor-grabbing">
+                   <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-800">
                     <img src={activePage?.preview} alt="Dragging" className="w-full h-full object-contain" />
                   </div>
                   <div className="mt-3 flex items-center justify-between px-1">
-                    <span className="text-[10px] font-black text-zinc-900 uppercase">{t('ui.moving_label')}</span>
+                    <span className="text-[10px] font-black text-zinc-900 dark:text-zinc-50 uppercase">{t('ui.moving_label')}</span>
                   </div>
                 </div>
               ) : null}
@@ -300,21 +289,21 @@ function PdfOrganizer({ lang = 'en' }: Props) {
           </DndContext>
 
           {/* Info Panels */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-zinc-100">
-            <div className="bg-zinc-50 border border-zinc-200 rounded-[2.5rem] p-8 flex gap-6 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-zinc-100 dark:border-zinc-800">
+            <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] p-8 flex gap-6 items-start">
               <div className="w-14 h-14 bg-zinc-900 text-white rounded-[1.25rem] flex items-center justify-center shrink-0 shadow-lg shadow-zinc-200">
                 <LayoutGrid size={28} />
               </div>
               <div className="space-y-2">
-                <h4 className="font-bold text-zinc-900 text-lg">{t('ui.2d_reorder_title')}</h4>
-                <p className="text-zinc-500 text-sm leading-relaxed">
+                <h4 className="font-bold text-zinc-900 dark:text-zinc-50 text-lg">{t('ui.2d_reorder_title')}</h4>
+                <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed">
                   {t('ui.2d_reorder_desc')}
                 </p>
               </div>
             </div>
 
-            <div className="bg-emerald-50 border border-emerald-100 rounded-[2.5rem] p-8 flex gap-6 items-start">
-              <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-[1.25rem] flex items-center justify-center shrink-0">
+            <div className="bg--50 dark:bg--900/30 border border--100 dark:border--800/50 rounded-[2.5rem] p-8 flex gap-6 items-start">
+              <div className="w-14 h-14 bg--100 dark:bg--900/40 text--600 dark:text--400 rounded-[1.25rem] flex items-center justify-center shrink-0">
                 <ShieldCheck size={28} />
               </div>
               <div className="space-y-2">

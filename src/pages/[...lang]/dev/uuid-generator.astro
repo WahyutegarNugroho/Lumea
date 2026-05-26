@@ -31,12 +31,12 @@ const t = useTranslations(lang);
 			<label class="tool-label" for="uuid-output">{t('ui.generated_uuids')}</label>
 			<textarea 
 				id="uuid-output" 
-			 class="tool-input min-h-[300px] font-mono text-base tracking-tight leading-relaxed bg-zinc-50" 
+			 class="tool-input min-h-[300px] font-mono text-base tracking-tight leading-relaxed bg-zinc-50 dark:bg-zinc-950" 
 				readonly
 			></textarea>
 		</div>
 
-		<div class="flex flex-wrap gap-4 pt-4 border-t border-zinc-100">
+		<div class="flex flex-wrap gap-4 pt-4 border-t border-zinc-100 dark:border-zinc-800">
 			<button id="copy-btn" class="tool-button-secondary flex items-center gap-2" data-copied={t('ui.copied')}>
 				<Copy size={18} />
 				{t('ui.copy_all')}
@@ -67,14 +67,16 @@ const t = useTranslations(lang);
 
 	function generateUUID() {
 		// Crypto-safe UUID v4
-		return (([1e7] as any)+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, (c: any) =>
-			(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-		);
+		const bytes = crypto.getRandomValues(new Uint8Array(16));
+		bytes[6] = (bytes[6] & 0x0f) | 0x40;
+		bytes[8] = (bytes[8] & 0x3f) | 0x80;
+		const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+		return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
 	}
 
 	function generateBatch() {
 		const qty = Math.min(Math.max(parseInt(quantityInput.value) || 1, 1), 100);
-		let uuids = [];
+		const uuids = [];
 		for (let i = 0; i < qty; i++) {
 			uuids.push(generateUUID());
 		}

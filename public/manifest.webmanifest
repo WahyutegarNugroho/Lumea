@@ -17,21 +17,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "share_target": {
-    "action": "/pdf/merge",
-    "method": "POST",
-    "enctype": "multipart/form-data",
-    "params": {
-      "files": [
-        {
-          "name": "files",
-          "accept": [
-            "application/pdf",
-            "image/*"
-          ]
-        }
-      ]
-    }
-  }
+  ]
 }

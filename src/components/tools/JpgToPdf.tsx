@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Dropzone } from '../ui/Dropzone';
 import { FileImage, FileText, X, Plus } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
-import { downloadFile } from '../../lib/utils';
+import { useDownload } from '../../lib/hooks/useDownload';
 
 interface Props {
   lang?: string;
@@ -12,6 +12,7 @@ interface Props {
 
 function JpgToPdf({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
+  const { download } = useDownload();
   const [images, setImages] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -53,11 +54,8 @@ function JpgToPdf({ lang = 'en' }: Props) {
       }
 
       const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      
-      downloadFile(url, `lumea-images-to-${Date.now()}.pdf`);
-      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      const blob = new Blob([pdfBytes.buffer] as BlobPart[], { type: 'application/pdf' });
+      download(blob, `lumea-images-to-${Date.now()}.pdf`);
     } catch (error) {
       console.error(error);
       toast(t('ui.error_jpg_to_pdf_failed'));
@@ -72,15 +70,15 @@ function JpgToPdf({ lang = 'en' }: Props) {
         <Dropzone onFilesSelected={handleFiles} accept="image/jpeg,image/png" multiple={true} lang={lang} />
       ) : (
         <div className="space-y-6">
-          <div className="bg-zinc-50 border border-zinc-200 rounded-3xl p-6">
-            <h3 className="font-bold text-zinc-900 mb-6 flex items-center gap-2 uppercase tracking-wider text-sm">
+          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6">
+            <h3 className="font-bold text-zinc-900 dark:text-zinc-50 mb-6 flex items-center gap-2 uppercase tracking-wider text-sm">
               <FileImage size={18} />
               {t('ui.images_to_convert')} ({images.length})
             </h3>
             
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {images.map((file, index) => (
-                <div key={`${file.name}-${index}`} className="relative aspect-square bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden group hover:border-zinc-300 transition-all">
+                <div key={`${file.name}-${index}`} className="relative aspect-square bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 shadow-sm overflow-hidden group hover:border-zinc-300 dark:border-zinc-700 transition-all">
                   <img 
                     src={URL.createObjectURL(file)} 
                     alt="Preview" 
@@ -89,13 +87,13 @@ function JpgToPdf({ lang = 'en' }: Props) {
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none"></div>
                   <button 
                     onClick={() => removeImage(index)}
-                    className="absolute top-2 right-2 w-7 h-7 bg-white/90 text-zinc-500 rounded-full flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                    className="absolute top-2 right-2 w-7 h-7 bg-white dark:bg-zinc-900/90 text-zinc-500 dark:text-zinc-400 rounded-full flex items-center justify-center hover:bg--50 dark:bg--900/300 hover:text-white transition-all shadow-sm"
                     aria-label={t('ui.remove_file')}
                   >
                     <X size={14} />
                   </button>
-                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-white/90 backdrop-blur-sm border-t border-zinc-100">
-                    <p className="text-[10px] font-bold text-zinc-900 truncate">{file.name}</p>
+                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-white dark:bg-zinc-900/90 backdrop-blur-sm border-t border-zinc-100 dark:border-zinc-800">
+                    <p className="text-[10px] font-bold text-zinc-900 dark:text-zinc-50 truncate">{file.name}</p>
                   </div>
                 </div>
               ))}
@@ -112,7 +110,7 @@ function JpgToPdf({ lang = 'en' }: Props) {
                   };
                   input.click();
                 }}
-                className="aspect-square border-2 border-dashed border-zinc-200 rounded-2xl flex flex-col items-center justify-center text-zinc-400 hover:bg-zinc-100 hover:border-zinc-300 transition-all gap-2"
+                className="aspect-square border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-800 hover:border-zinc-300 dark:border-zinc-700 transition-all gap-2"
               >
                 <Plus size={24} />
                 <span className="text-[10px] font-bold uppercase tracking-widest">{t('ui.add_more')}</span>
@@ -131,7 +129,7 @@ function JpgToPdf({ lang = 'en' }: Props) {
             </button>
             <button 
               onClick={() => setImages([])}
-              className="px-8 py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-bold hover:bg-zinc-50 transition-all"
+              className="px-8 py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 transition-all"
             >
               {t('ui.clear')}
             </button>

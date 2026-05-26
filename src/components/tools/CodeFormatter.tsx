@@ -1,18 +1,15 @@
 import { withErrorBoundary } from '../ui/withErrorBoundary';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
-import * as prettier from 'prettier/standalone';
-import * as parserBabel from 'prettier/parser-babel';
-import * as parserHtml from 'prettier/parser-html';
-import * as parserPostcss from 'prettier/parser-postcss';
 import { Copy, Braces, ShieldCheck, Zap, Check, RefreshCw } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
+import { useCopyToClipboard } from '../../lib/hooks/useCopyToClipboard';
 
 interface Props {
   lang?: string;
 }
 
-const LANGUAGES = [
+const LANGUAGES: Array<{ id: string; name: string }> = [
   { id: 'babel', name: 'ui.lang_js_json' },
   { id: 'html', name: 'ui.lang_html' },
   { id: 'css', name: 'ui.lang_css' },
@@ -20,17 +17,23 @@ const LANGUAGES = [
 
 function CodeFormatter({ lang = 'en' }: Props) {
   const t = useTranslations(lang);
+  const { copied, copy } = useCopyToClipboard();
   const [code, setCode] = useState('');
   const [selectedLang, setSelectedLang] = useState('babel');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   const formatCode = async () => {
     if (!code.trim()) return;
     setIsProcessing(true);
 
     try {
-      const formatted = await prettier.format(code, {
+      const [{ format }, { default: parserBabel }, { default: parserHtml }, { default: parserPostcss }] = await Promise.all([
+        import('prettier/standalone'),
+        import('prettier/parser-babel'),
+        import('prettier/parser-html'),
+        import('prettier/parser-postcss'),
+      ]);
+      const formatted = await format(code, {
         parser: selectedLang,
         plugins: [parserBabel, parserHtml, parserPostcss],
         semi: true,
@@ -47,9 +50,7 @@ function CodeFormatter({ lang = 'en' }: Props) {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    copy(code);
   };
 
   return (
@@ -60,16 +61,16 @@ function CodeFormatter({ lang = 'en' }: Props) {
           <div className="bg-zinc-900 rounded-[2.5rem] p-6 shadow-2xl relative overflow-hidden group min-h-[600px] flex flex-col border border-white/5">
             <div className="flex items-center justify-between mb-6 relative z-10">
               <div className="flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-rose-500/80 shadow-[0_0_8px_rgba(244,63,94,0.4)]"></div>
-                <div className="w-3 h-3 rounded-full bg-amber-500/80 shadow-[0_0_8px_rgba(245,158,11,0.4)]"></div>
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
+                <div className="w-3 h-3 rounded-full bg--50 dark:bg--900/300/80 shadow-[0_0_8px_rgba(244,63,94,0.4)]"></div>
+                <div className="w-3 h-3 rounded-full bg--50 dark:bg--900/300/80 shadow-[0_0_8px_rgba(245,158,11,0.4)]"></div>
+                <div className="w-3 h-3 rounded-full bg--50 dark:bg--900/300/80 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
               </div>
               <div className="flex items-center gap-3">
                 <button 
                   onClick={copyToClipboard}
-                  className="px-6 py-2 bg-white text-zinc-900 rounded-xl transition-all flex items-center gap-2 font-bold text-xs hover:bg-zinc-200 active:scale-95"
+                  className="px-6 py-2 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 rounded-xl transition-all flex items-center gap-2 font-bold text-xs hover:bg-zinc-200 active:scale-95"
                 >
-                  {copied ? <Check size={16} className="text-emerald-600" /> : <Copy size={16} />}
+                  {copied ? <Check size={16} className="text--600 dark:text--400" /> : <Copy size={16} />}
                   <span>{copied ? t('ui.copied') : t('ui.copy')}</span>
                 </button>
               </div>
@@ -79,7 +80,7 @@ function CodeFormatter({ lang = 'en' }: Props) {
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder={t('ui.paste_messy_code')}
-              className="flex-1 bg-transparent border-none text-zinc-300 font-mono text-sm leading-relaxed focus:ring-0 resize-none placeholder:text-zinc-700 relative z-10 custom-scrollbar selection:bg-zinc-700"
+              className="flex-1 bg-transparent border-none text-zinc-300 font-mono text-sm leading-relaxed focus:ring-0 resize-none placeholder:text-zinc-700 dark:text-zinc-300 relative z-10 custom-scrollbar selection:bg-zinc-700"
             />
             
             <Braces className="absolute -bottom-10 -right-10 w-48 h-48 text-white/5 -rotate-12 group-hover:rotate-0 transition-all duration-1000 pointer-events-none" />
@@ -88,20 +89,20 @@ function CodeFormatter({ lang = 'en' }: Props) {
 
         {/* Controls Area */}
         <div className="space-y-6 flex flex-col justify-center">
-          <div className="bg-white border border-zinc-200 rounded-[2rem] p-8 shadow-sm space-y-8">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2rem] p-8 shadow-sm space-y-8">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-zinc-900 rounded-full"></div>
-                <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{t('ui.select_lang')}</label>
+                <label className="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">{t('ui.select_lang')}</label>
               </div>
               <div className="grid grid-cols-1 gap-3">
                 {LANGUAGES.map(l => (
                   <button 
                     key={l.id}
                     onClick={() => setSelectedLang(l.id)}
-                    className={`w-full py-4 px-5 rounded-2xl text-sm font-bold text-left transition-all border ${selectedLang === l.id ? 'bg-zinc-900 text-white border-zinc-900 shadow-xl shadow-zinc-200' : 'bg-white text-zinc-500 border-zinc-100 hover:bg-zinc-50 hover:border-zinc-200'}`}
+                    className={`w-full py-4 px-5 rounded-2xl text-sm font-bold text-left transition-all border ${selectedLang === l.id ? 'bg-zinc-900 text-white border-zinc-900 shadow-xl shadow-zinc-200' : 'bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 hover:border-zinc-200 dark:hover:border-zinc-700 dark:border-zinc-800'}`}
                   >
-                    {t(l.name as any)}
+                    {t(l.name)}
                   </button>
                 ))}
               </div>
@@ -118,8 +119,8 @@ function CodeFormatter({ lang = 'en' }: Props) {
           </div>
 
 
-          <div className="bg-blue-50 border border-blue-100 rounded-3xl p-6 flex gap-4 items-start">
-            <div className="p-2 bg-blue-100 text-blue-600 rounded-xl">
+          <div className="bg--50 dark:bg--900/30 border border--100 dark:border--800/50 rounded-3xl p-6 flex gap-4 items-start">
+            <div className="p-2 bg--100 dark:bg--900/40 text--600 dark:text--400 rounded-xl">
               <ShieldCheck size={20} />
             </div>
             <div>
