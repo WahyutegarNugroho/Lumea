@@ -1,67 +1,83 @@
-# Lumea App
+# Lumea App — The Ultimate Client-Side Web Utilities
+Astro v6 | React 19 | Tailwind CSS v4 | 100% Client-Side | Vercel Ready | MIT License
 
-## Nama project:
-Lumea App
+## Nama Project
+Lumea App — Platform Utilitas Web Berbasis Klien (Client-Side)
 
-## Deskripsi singkat:
-Lumea adalah aplikasi _all-in-one web utility_ yang menyediakan lebih dari 30+ alat (seperti pemroses PDF, editor gambar, pengubah teks, dan alat developer) yang 100% berjalan di sisi klien (browser) tanpa perlu mengunggah data apa pun ke server jarak jauh.
+## Deskripsi Singkat
+Lumea App menjembatani kebutuhan alat utilitas digital sehari-hari dengan privasi dan keamanan tingkat tinggi. Platform ini menyediakan lebih dari 30 alat untuk manipulasi PDF, pemrosesan gambar, utilitas pengembang (developer tools), hingga pemformatan teks. Seluruh proses komputasi terjadi 100% di browser pengguna tanpa melibatkan unggahan file ke server eksternal, menjadikannya platform yang aman, rahasia, cepat, dan modern.
 
-## Problem yang diselesaikan:
-Banyak pengguna yang membutuhkan alat untuk mengedit dokumen (misal: PDF, Image, Code) secara cepat namun terhalang oleh privasi. Banyak alat utilitas *online* pihak ketiga mewajibkan pengguna untuk mengunggah (_upload_) dokumen sensitif atau rahasia perusahaan ke server mereka, menimbulkan risiko kebocoran data. Selain itu, banyak dari layanan tersebut yang menerapkan sistem berbayar atau batasan penggunaan (paywalls/limits). Lumea menyelesaikan masalah privasi ini dengan memproses segala hal di komputer pengguna itu sendiri (Client-Side Processing).
+## Problem yang Diselesaikan
+- **Privasi & Keamanan Data** — Banyak pengguna enggan menggunakan alat online untuk mengedit dokumen rahasia (seperti laporan keuangan atau kartu identitas) karena risiko file tersebut disimpan atau disalahgunakan di server pihak ketiga.
+- **Ketergantungan Server & Latensi** — Alat tradisional membutuhkan waktu lama untuk proses _upload_ dan _download_, terutama untuk file berukuran besar.
+- **Paywalls & Batasan Penggunaan** — Banyak layanan membatasi jumlah konversi harian atau ukuran maksimal file secara sepihak dan memaksa pengguna untuk membayar langganan.
+- **UI/UX Usang** — Banyak situs penyedia alat gratis dipenuhi iklan yang mengganggu dan memiliki antarmuka yang membingungkan.
 
-## Fitur utama:
-- **30+ Premium Tools:** Meliputi penggabungan PDF, kompresi gambar, penghapus background berbasis AI, pembuat QR code, pembentuk Markdown, formatter JSON, dll.
-- **Privacy-First Architecture (100% Client-Side):** Tidak ada data atau file yang dikirim ke server jarak jauh. Semua proses enkripsi, manipulasi file, dan kompresi terjadi di browser lokal menggunakan WebAssembly dan API modern.
-- **Dukungan Multi-Bahasa (i18n):** Tersedia secara native dalam bahasa Inggris (en), Indonesia (id), dan Spanyol (es).
-- **Smart Dark Mode:** Tampilan antar muka mode gelap dan terang yang diatur dengan presisi menggunakan Tailwind CSS v4.
-- **Favorite Tools System:** Menyematkan alat yang paling sering digunakan langsung ke beranda dengan data yang disimpan secara lokal (`localStorage`).
-- **Progressive Web App (PWA):** Dapat diinstal secara langsung (installable) di desktop maupun perangkat mobile layaknya aplikasi _native_.
+Lumea App menyelesaikan semua ini dengan mengubah browser pengguna menjadi mesin pemroses utama (Zero-Uploads), 100% gratis tanpa batasan server, serta dirancang dengan desain premium bergaya modern.
 
-## Kelebihan/Kekurangan:
-**Kelebihan:**
-- Tingkat keamanan dan privasi maksimal karena nihilnya transfer data keluar.
-- Sangat cepat dan responsif (Zero Latency Uploads) berkat ketiadaan waktu tunggu unggah/unduh jaringan.
-- Gratis dan tidak ada batasan ukuran file yang kaku dari sisi server.
-- Desain UI/UX modern, premium, dan sangat hidup dengan menggunakan _Micro-animations_.
+## Fitur Utama
+**1. Privasi Mutlak (Zero-Server Architecture)**
+Semua operasi, mulai dari pemotongan PDF, kompresi gambar, hingga pemindaian AI (OCR), diproses secara langsung oleh CPU/GPU perangkat keras Anda. Sama sekali tidak ada dokumen yang singgah di server jarak jauh.
 
-**Kekurangan:**
-- Performa aplikasi sangat bergantung pada spesifikasi CPU dan RAM perangkat klien (misal: melakukan _Background Removal AI_ atau kompresi file besar bisa jadi lambat di _smartphone_ tua).
-- Tidak bisa digunakan di peramban (browser) usang yang tidak mendukung modul JavaScript modern (ESM) atau WebAssembly.
+**2. 30+ Alat Premium Terintegrasi**
+- **PDF Tools:** Merge, Split, Rotate, Compress, Watermark, PDF to Word, PDF to Excel, PDF to JPG, dll.
+- **Image Tools:** Background Remover AI, Image Compressor, Resizer, SVG to PNG, Cropper, Barcode & QR Generator.
+- **Dev Tools:** JSON Formatter, Base64 Encoder/Decoder, Code Beautifier, Password & UUID Generator.
+- **Text Tools:** Diff Checker, Markdown Editor interaktif, Word Counter, Lorem Ipsum, dll.
 
-## Tech stack
-- **Astro (v6):** Dipilih sebagai pondasi framework berkat kemampuan _View Transitions_-nya yang membuat situs terasa seperti SPA yang sangat cepat, serta kapabilitas integrasi komponen yang fleksibel dan manajemen routing bahasa yang rapi.
-- **React (19):** Digunakan untuk mengelola _state_ komponen utilitas interaktif tingkat lanjut yang kompleks di sisi klien.
-- **Tailwind CSS (v4):** Memberikan _utility classes_ yang ringan, efisien, dan mendukung variasi tema khusus (_custom variants_ seperti `dark:` via WebMedia) tanpa perlu memuat stylesheet eksternal yang besar.
-- **Vitest & JSDOM:** Ekosistem testing modern yang cepat dan sejalan dengan Vite (bundler bawaan Astro) untuk memvalidasi fungsi murni TypeScript.
+**3. Dukungan Multi-Bahasa (i18n)**
+Sistem _routing_ pintar secara bawaan mendukung Bahasa Inggris (`en`), Indonesia (`id`), dan Spanyol (`es`), dirancang khusus untuk lokalisasi SEO global.
 
-## Cara install/run:
+**4. Dark Mode & Favorite Tools Terintegrasi**
+Tema _Dark Mode_ sejati dan adaptif untuk setiap halaman. Terdapat juga sistem "Favorites" yang memungkinkan pengguna menyematkan alat favorit ke daftar teratas Beranda secara instan.
 
-Pastikan Anda memiliki **Node.js (v22.12.0 atau lebih baru)** terinstal di sistem Anda.
+**5. Progressive Web App (PWA)**
+Lumea dapat diinstal ke layar Desktop (Windows/Mac) maupun perangkat Mobile (Android/iOS) layaknya aplikasi mandiri (Native App).
 
-1. **Clone repository & masuk ke direktori proyek:**
-   ```bash
-   git clone <repository_url>
-   cd lumea-app
-   ```
+## Kelebihan & Kekurangan
+**Kelebihan**
+- **Keamanan Tanpa Kompromi:** Mustahil terjadi kebocoran data karena pemrosesan berjalan di _sandbox_ peramban pengguna.
+- **Kecepatan Instan:** Menghilangkan batasan ping (latensi) internet untuk transfer file besar.
+- **UI/UX Memukau:** Dirancang teliti dengan Tailwind v4 menggunakan mikro-animasi elegan, Glassmorphism, dan palet warna hidup (Gaya Apple/Vercel).
+- **Skor Performa Sempurna:** Arsitektur Astro menghasilkan skor Lighthouse nyaris 100/100, ditambah fitur _View Transitions_ untuk perpindahan halaman (navigasi SPA) tanpa layar berkedip.
 
-2. **Install dependensi:**
-   ```bash
-   npm install
-   ```
+**Kekurangan**
+- **Spesifikasi Perangkat Sangat Berpengaruh:** Karena diproses murni oleh perangkat keras Anda, fitur berat (seperti _AI Background Removal_ atau konversi PDF raksasa) bisa saja melambat di perangkat _smartphone_ tua atau PC spesifikasi rendah.
+- **Browser Modern Wajib:** Memerlukan browser yang mendukung arsitektur *WebAssembly* dan JavaScript versi terbaru.
 
-3. **Jalankan _development server_:**
-   ```bash
-   npm run dev
-   ```
-   Aplikasi akan berjalan di `http://localhost:4321`.
+## Tech Stack
+| Teknologi | Peran | Alasan |
+|-----------|-------|--------|
+| **Astro v6** | Framework Web | Memberikan pondasi situs secepat kilat dengan konsep Island Architecture. Menghapus JavaScript tak berguna dan memprioritaskan performa awal. |
+| **React 19** | Frontend Engine | Menyediakan arsitektur komponen UI yang sangat stabil dan mutakhir untuk modul alat yang interaktif. Di-eksekusi secara `client:only`. |
+| **Tailwind CSS v4** | Styling | *Utility-first* CSS generasi terbaru yang tidak membutuhkan konfigurasi rumit. Sangat ampuh untuk manajemen *Dark Mode* adaptif tanpa file CSS jumbo. |
+| **Vite** | Bundler | Disematkan bawaan dengan Astro untuk mendukung pergantian modul panas (HMR) secepat kilat dalam fase _development_. |
+| **Vitest & JSDOM** | Testing Framework | Pengecekan unit _client-side_ yang terintegrasi secara _native_ dengan Vite, mengamankan keandalan _build_ ke produksi. |
 
-4. **Verifikasi Tipe (Opsional):**
-   ```bash
-   npx astro check
-   ```
+## Cara Install / Run
+**Prasyarat**
+- Node.js v22.12.0 atau lebih tinggi
+- npm, pnpm, atau yarn
 
-5. **Build untuk Produksi:**
-   ```bash
-   npm run build
-   ```
-   Hasil _build_ akan tersedia di folder `dist/` atau `.vercel/output/` tergantung adapter yang digunakan.
+**Langkah-Langkah**
+```bash
+# 1. Clone repositori
+git clone https://github.com/WahyutegarNugroho/Lumea.git
+cd Lumea
+
+# 2. Install dependencies
+npm install
+
+# 3. Jalankan development server
+npm run dev
+# Buka http://localhost:4321 di browser Anda
+
+# 4. Verifikasi Tipe (CI)
+npx astro check
+
+# 5. Build untuk Production
+npm run build
+```
+
+## Lisensi
+MIT License — © 2026 whtsn dev.
