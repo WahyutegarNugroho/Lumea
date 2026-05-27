@@ -118,7 +118,7 @@ Lumea App adalah platform web progresif (PWA) yang menghadirkan lebih dari 34 al
 
 ---
 
-## Tech Stack + Alasan
+## Tech Stack
 
 ### Framework & Bahasa
 | Teknologi | Peran | Alasan |
