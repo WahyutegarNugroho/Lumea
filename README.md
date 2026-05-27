@@ -243,4 +243,3 @@ npm run preview
 ## Lisensi
 
 MIT License — © 2026 whtsn dev.
-Dibangun dengan ❤️ menggunakan Astro, React, dan Tailwind CSS.
