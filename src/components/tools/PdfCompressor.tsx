@@ -78,9 +78,9 @@ function PdfCompressor({ lang = 'en' }: Props) {
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr,350px] gap-8">
         {/* Preview / Status Area */}
-        <div className="bg-zinc-50 dark:bg-zinc-950 rounded-[2.5rem] p-8 flex flex-col items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-inner min-h-[400px]">
-          <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2rem] shadow-xl border border-zinc-100 dark:border-zinc-800 flex flex-col items-center gap-6 max-w-sm w-full transition-all hover:scale-[1.02]">
-            <div className="w-20 h-20 bg--50 dark:bg--900/30 rounded-2xl flex items-center justify-center text-emerald-500">
+        <div className="bg-zinc-50 dark:bg-zinc-950 rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-inner min-h-[400px]">
+          <div className="bg-white dark:bg-zinc-900 p-8 rounded-2xl shadow-xl border border-zinc-100 dark:border-zinc-800 flex flex-col items-center gap-6 max-w-sm w-full transition-all hover:scale-[1.02]">
+            <div className="w-20 h-20 bg-emerald-50 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center text-emerald-500">
               <FileText size={40} />
             </div>
             <div className="text-center">
@@ -102,7 +102,7 @@ function PdfCompressor({ lang = 'en' }: Props) {
               <Loader2 size={40} className="text-zinc-900 dark:text-zinc-50 animate-spin" />
               <div className="text-center">
                 <p className="font-bold text-zinc-900 dark:text-zinc-50">{t('ui.compressing')}</p>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">{progress}% {lang === 'id' ? 'selesai' : lang === 'es' ? 'completado' : 'complete'}</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">{progress}% {t('ui.complete')}</p>
               </div>
             </div>
           )}
@@ -157,7 +157,7 @@ function PdfCompressor({ lang = 'en' }: Props) {
                     const safeName = file.name.toLowerCase().endsWith('.pdf') ? file.name : `${file.name}.pdf`;
                     download(result.blob, `lumea-compressed-${safeName}`);
                   }}
-                  className="w-full py-4 bg--50 dark:bg--900/300 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-200"
+                  className="w-full py-4 bg-emerald-500 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-200"
                 >
                   <Download size={20} />
                   {t('ui.download')} PDF

@@ -118,12 +118,12 @@ function DiffChecker({ lang = 'en' }: Props) {
             <div className="flex items-center justify-between px-2">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">{t('ui.original_text')}</label>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg--50 dark:bg--900/300 rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-zinc-50 dark:bg-zinc-900/30 rounded-full animate-pulse"></div>
                 <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-tighter">{t('ui.original')}</span>
               </div>
             </div>
             <textarea
-              className="tool-input min-h-[600px] font-mono text-sm p-8 leading-relaxed bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 focus:bg-white dark:bg-zinc-900 transition-all shadow-inner rounded-[2.5rem]"
+              className="tool-input min-h-[600px] font-mono text-sm p-8 leading-relaxed bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 focus:bg-white dark:bg-zinc-900 transition-all shadow-inner rounded-3xl"
               placeholder={t('ui.paste_original')}
               value={text1}
               onChange={(e) => setText1(e.target.value)}
@@ -133,12 +133,12 @@ function DiffChecker({ lang = 'en' }: Props) {
             <div className="flex items-center justify-between px-2">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">{t('ui.changed_text')}</label>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg--50 dark:bg--900/300 rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-zinc-50 dark:bg-zinc-900/30 rounded-full animate-pulse"></div>
                 <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-tighter">{t('ui.modified')}</span>
               </div>
             </div>
             <textarea
-              className="tool-input min-h-[600px] font-mono text-sm p-8 leading-relaxed bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 focus:bg-white dark:bg-zinc-900 transition-all shadow-inner rounded-[2rem]"
+              className="tool-input min-h-[600px] font-mono text-sm p-8 leading-relaxed bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 focus:bg-white dark:bg-zinc-900 transition-all shadow-inner rounded-2xl"
               placeholder={t('ui.paste_modified')}
               value={text2}
               onChange={(e) => setText2(e.target.value)}
@@ -146,7 +146,7 @@ function DiffChecker({ lang = 'en' }: Props) {
           </div>
         </div>
       ) : (
-        <div className="bg-zinc-950 rounded-[2rem] border border-zinc-800 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+        <div className="bg-zinc-950 rounded-2xl border border-zinc-800 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
           <div className="flex items-center justify-between p-8 border-b border-zinc-900 bg-zinc-950/50 backdrop-blur-xl rounded-t-[2rem]">
             <h3 className="text-white font-bold font-outfit text-xl flex items-center gap-3">
               <div className="w-10 h-10 bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-800">
@@ -163,7 +163,7 @@ function DiffChecker({ lang = 'en' }: Props) {
               </button>
               <button 
                 onClick={clear}
-                className="px-6 py-2 bg--50 dark:bg--900/300/10 text-rose-400 hover:bg--50 dark:bg--900/300/20 rounded-xl text-xs font-bold transition-all active:scale-95"
+                className="px-6 py-2 bg-zinc-50 dark:bg-zinc-900/10 text-rose-400 hover:bg-zinc-50 dark:bg-zinc-900/20 rounded-xl text-xs font-bold transition-all active:scale-95"
               >
                 {t('ui.clear')}
               </button>
@@ -181,13 +181,13 @@ function DiffChecker({ lang = 'en' }: Props) {
                 <div 
                   key={idx}
                   className={`group flex items-start gap-4 min-h-[1.5rem] ${
-                    line.type === 'added' ? 'bg--50 dark:bg--900/300/5' :
-                    line.type === 'removed' ? 'bg--50 dark:bg--900/300/5' : ''
+                    line.type === 'added' ? 'bg-zinc-50 dark:bg-zinc-900/5' :
+                    line.type === 'removed' ? 'bg-zinc-50 dark:bg-zinc-900/5' : ''
                   }`}
                 >
                   <div className={`w-12 shrink-0 select-none text-[10px] font-bold text-center py-1 rounded-md transition-colors ${
-                    line.type === 'added' ? 'text-emerald-500/40 bg--50 dark:bg--900/300/10' :
-                    line.type === 'removed' ? 'text-rose-500/40 bg--50 dark:bg--900/300/10' :
+                    line.type === 'added' ? 'text-emerald-500/40 bg-zinc-50 dark:bg-zinc-900/10' :
+                    line.type === 'removed' ? 'text-rose-500/40 bg-zinc-50 dark:bg-zinc-900/10' :
                     'text-zinc-800'
                   }`}>
                     {idx + 1}
@@ -211,8 +211,8 @@ function DiffChecker({ lang = 'en' }: Props) {
                         <span 
                           key={pIdx} 
                           className={
-                            part.type === 'added' ? 'bg--50 dark:bg--900/300/40 text-white font-bold px-0.5 rounded shadow-[0_0_10px_rgba(16,185,129,0.3)]' :
-                            part.type === 'removed' ? 'bg--50 dark:bg--900/300/40 text-white font-bold px-0.5 rounded shadow-[0_0_10px_rgba(244,63,94,0.3)]' :
+                            part.type === 'added' ? 'bg-zinc-50 dark:bg-zinc-900/40 text-white font-bold px-0.5 rounded shadow-[0_0_10px_rgba(16,185,129,0.3)]' :
+                            part.type === 'removed' ? 'bg-zinc-50 dark:bg-zinc-900/40 text-white font-bold px-0.5 rounded shadow-[0_0_10px_rgba(244,63,94,0.3)]' :
                             ''
                           }
                         >
@@ -236,7 +236,7 @@ function DiffChecker({ lang = 'en' }: Props) {
           <button 
             onClick={compareTexts}
             disabled={isProcessing}
-            className={`group relative px-12 py-6 bg-zinc-900 text-white rounded-3xl font-black text-lg overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-zinc-200 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`group relative px-12 py-6 bg-zinc-900 text-white rounded-3xl font-black text-lg overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-2xl shadow-zinc-200 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative z-10 flex items-center gap-3">
@@ -252,7 +252,7 @@ function DiffChecker({ lang = 'en' }: Props) {
       )}
 
       {/* Guide Area */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-[2.5rem] p-10 shadow-sm flex items-start gap-8">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-3xl p-10 shadow-sm flex items-start gap-8">
         <div className="w-16 h-16 bg-zinc-50 dark:bg-zinc-950 rounded-2xl flex items-center justify-center shrink-0">
           <Info className="text-zinc-500 dark:text-zinc-400" />
         </div>

@@ -165,7 +165,7 @@ function ImageCropper({ lang = 'en' }: Props) {
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr,350px] gap-8">
         {/* Editor Area */}
-        <div className="bg-zinc-950 rounded-[2.5rem] p-4 flex items-center justify-center relative overflow-hidden border border-zinc-800 shadow-2xl min-h-[600px]">
+        <div className="bg-zinc-950 rounded-3xl p-4 flex items-center justify-center relative overflow-hidden border border-zinc-800 shadow-2xl min-h-[600px]">
           {image && (
             <div 
               ref={containerRef}

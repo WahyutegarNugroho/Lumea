@@ -1,6 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import { ShieldCheck, Info, ArrowLeft } from 'lucide-react';
+import { Info, ArrowLeft } from 'lucide-react';
 
 interface Props {
 	title: string;
@@ -66,12 +66,7 @@ const Content = rendered?.Content;
 				</div>
 				<p class="text-lg text-zinc-500 dark:text-zinc-400 max-w-2xl">{t(`tool.${toolId}.desc`) || description}</p>
 				
-				<div class="mt-6 flex flex-wrap gap-4 justify-center md:justify-start">
-					<div class="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full border border-emerald-100 dark:border-emerald-800 text-xs font-medium">
-						<ShieldCheck size={14} />
-						{t('ui.secure')}
-					</div>
-				</div>
+				
 			</div>
 
 			<!-- Tool Interface -->

@@ -85,9 +85,9 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Input Area */}
         <div className="space-y-6 flex flex-col justify-center">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2rem] p-8 shadow-sm space-y-8">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 shadow-sm space-y-8">
             <div className="flex items-center gap-5">
-               <div className="w-14 h-14 bg-zinc-900 text-white rounded-[1.2rem] flex items-center justify-center shadow-xl shadow-zinc-200">
+               <div className="w-14 h-14 bg-zinc-900 text-white rounded-xl flex items-center justify-center shadow-xl shadow-zinc-200">
                   <Barcode size={28} />
                </div>
                <div>
@@ -134,12 +134,12 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
                 />
                 
                 {error ? (
-                  <div className="flex items-center gap-2 text-rose-500 bg--50 dark:bg--900/300/5 p-3 rounded-xl border border-rose-500/20 animate-in slide-in-from-top-2">
+                  <div className="flex items-center gap-2 text-rose-500 bg-zinc-50 dark:bg-zinc-900/5 p-3 rounded-xl border border-rose-500/20 animate-in slide-in-from-top-2">
                     <AlertCircle size={16} className="shrink-0" />
                     <p className="text-[11px] font-bold tracking-tight">{error}</p>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 text--600 dark:text--400 bg--50 dark:bg--900/300/5 p-3 rounded-xl border border-emerald-500/20">
+                  <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-900/5 p-3 rounded-xl border border-emerald-500/20">
                     <CheckCircle2 size={16} className="shrink-0" />
                     <p className="text-[11px] font-bold tracking-tight">{t('ui.format_correct')}</p>
                   </div>
@@ -162,7 +162,7 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
           </div>
 
           <div className="bg-emerald-50/50 border border-emerald-100/50 rounded-3xl p-6 flex gap-5 items-start">
-            <div className="w-12 h-12 bg--100 dark:bg--900/40 text--600 dark:text--400 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-12 h-12 bg-zinc-100 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
               <ShieldCheck size={24} />
             </div>
             <div className="space-y-1">
@@ -176,7 +176,7 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
 
         {/* Preview Area */}
         <div className="space-y-6">
-          <div className="bg-zinc-950 rounded-[2rem] border border-zinc-800 shadow-2xl overflow-hidden min-h-[500px] flex flex-col group relative">
+          <div className="bg-zinc-950 rounded-2xl border border-zinc-800 shadow-2xl overflow-hidden min-h-[500px] flex flex-col group relative">
              <div className="flex items-center justify-between p-8 border-b border-zinc-900 bg-zinc-950/50 backdrop-blur-xl rounded-t-[2rem]">
                 <div className="flex items-center gap-3">
                    <div className="w-10 h-10 bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-800">
@@ -189,15 +189,15 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
              <div className="flex-1 p-12 flex flex-col items-center justify-center relative overflow-hidden bg-zinc-900/30">
                 <div className="absolute top-0 right-0 w-8 h-8 bg-gradient-to-bl from-zinc-950 to-transparent pointer-events-none z-10 rounded-tr-[2rem]"></div>
                 
-                <div className={`bg-white dark:bg-zinc-900 p-12 rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] transform transition-all duration-700 relative z-10 border border-white/10 ${
-                  error ? 'opacity-20 scale-95 grayscale blur-[2px]' : 'group-hover:scale-105'
+                <div className={`bg-white dark:bg-zinc-900 p-12 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] transform transition-all duration-700 relative z-10 border border-white/10 ${
+                  error ? 'opacity-20 scale-95 grayscale blur-[2px]' : 'group-hover:scale-110'
                 }`}>
                    <canvas ref={canvasRef} className="max-w-full h-auto"></canvas>
                 </div>
                 
                 {error && (
                   <div className="absolute inset-0 z-20 flex flex-col items-center justify-center space-y-4 p-12 text-center animate-in fade-in duration-500">
-                     <div className="w-20 h-20 bg--50 dark:bg--900/300/20 text-rose-500 rounded-[2.5rem] flex items-center justify-center border border-rose-500/20 shadow-2xl">
+                     <div className="w-20 h-20 bg-zinc-50 dark:bg-zinc-900/20 text-rose-500 rounded-3xl flex items-center justify-center border border-rose-500/20 shadow-2xl">
                         <AlertCircle size={40} />
                      </div>
                      <div className="space-y-1">
@@ -210,7 +210,7 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
                 {!error && (
                   <div className="mt-12 text-center relative z-10">
                     <div className="px-4 py-2 bg-zinc-900/50 backdrop-blur-md rounded-full border border-zinc-800 flex items-center gap-2">
-                        <div className="w-2 h-2 bg--50 dark:bg--900/300 rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-zinc-50 dark:bg-zinc-900/30 rounded-full animate-pulse"></div>
                         <p className="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">{t('ui.engine_active')}</p>
                     </div>
                   </div>

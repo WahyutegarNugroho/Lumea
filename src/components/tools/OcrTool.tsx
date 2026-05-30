@@ -126,12 +126,12 @@ function OcrTool({ lang = 'en' }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Input/Preview Area */}
         <div className="space-y-6">
-          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] p-4 shadow-inner overflow-hidden flex items-center justify-center min-h-[400px] relative group">
-            <img src={imagePreview!} alt="Preview" className="max-w-full max-h-[600px] rounded-2xl shadow-2xl transition-transform group-hover:scale-[1.01] duration-500" />
+          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-4 shadow-inner overflow-hidden flex items-center justify-center min-h-[400px] relative group">
+            <img src={imagePreview!} alt="Preview" className="max-w-full max-h-[600px] rounded-2xl shadow-2xl transition-transform group-hover:scale-110 duration-500" />
             <div className="absolute top-6 right-6 flex gap-2">
                <button 
                  onClick={() => { setFile(null); setImagePreview(null); }}
-                 className="w-10 h-10 bg-white dark:bg-zinc-900/90 backdrop-blur text-rose-500 rounded-full flex items-center justify-center shadow-lg hover:bg--50 dark:bg--900/300 hover:text-white transition-all"
+                 className="w-10 h-10 bg-white dark:bg-zinc-900/90 backdrop-blur text-rose-500 rounded-full flex items-center justify-center shadow-lg hover:bg-zinc-50 dark:bg-zinc-900/30 hover:text-white transition-all"
                  aria-label={t('ui.remove_file')}
                 >
                   <Trash2 size={18} />
@@ -139,7 +139,7 @@ function OcrTool({ lang = 'en' }: Props) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2rem] p-8 space-y-6 shadow-sm">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 space-y-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-zinc-900 text-white rounded-2xl flex items-center justify-center shadow-lg">
@@ -197,7 +197,7 @@ function OcrTool({ lang = 'en' }: Props) {
 
         {/* Result Area */}
         <div className="space-y-6">
-          <div className="bg-zinc-950 rounded-[2rem] border border-zinc-800 shadow-2xl overflow-hidden min-h-[650px] flex flex-col group animate-in zoom-in-95 duration-300">
+          <div className="bg-zinc-950 rounded-2xl border border-zinc-800 shadow-2xl overflow-hidden min-h-[650px] flex flex-col group animate-in zoom-in-95 duration-300">
              <div className="flex items-center justify-between p-8 border-b border-zinc-900 bg-zinc-950/50 backdrop-blur-xl rounded-t-[2rem]">
                 <div className="flex items-center gap-3">
                    <div className="w-10 h-10 bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-800">
@@ -210,7 +210,7 @@ function OcrTool({ lang = 'en' }: Props) {
                     onClick={copyToClipboard}
                     className="px-6 py-2 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 rounded-xl transition-all flex items-center gap-2 font-bold text-xs hover:bg-zinc-200 active:scale-95"
                   >
-                    {copied ? <Check size={18} className="text--600 dark:text--400" /> : <Copy size={18} />}
+                    {copied ? <Check size={18} className="text-zinc-600 dark:text-zinc-400" /> : <Copy size={18} />}
                     {copied ? t('ui.copied') : t('ui.copy')}
                   </button>
                 )}
@@ -227,7 +227,7 @@ function OcrTool({ lang = 'en' }: Props) {
                   />
                 ) : (
                   <div className="h-full min-h-[500px] flex flex-col items-center justify-center text-center space-y-6 animate-pulse">
-                    <div className="w-24 h-24 bg-zinc-900 rounded-[2.5rem] flex items-center justify-center border border-zinc-800 shadow-2xl">
+                    <div className="w-24 h-24 bg-zinc-900 rounded-3xl flex items-center justify-center border border-zinc-800 shadow-2xl">
                         <Zap size={48} className="text-zinc-700 dark:text-zinc-300" />
                     </div>
                     <div className="space-y-2">
@@ -240,8 +240,8 @@ function OcrTool({ lang = 'en' }: Props) {
              </div>
           </div>
 
-          <div className="bg-emerald-50/50 border border-emerald-100/50 rounded-[2rem] p-6 flex gap-5 items-start">
-            <div className="w-12 h-12 bg--100 dark:bg--900/40 text--600 dark:text--400 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
+          <div className="bg-emerald-50/50 border border-emerald-100/50 rounded-2xl p-6 flex gap-5 items-start">
+            <div className="w-12 h-12 bg-zinc-100 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
               <ShieldCheck size={24} />
             </div>
             <div className="space-y-1">

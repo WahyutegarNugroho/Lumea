@@ -111,7 +111,7 @@ function SvgToPng({ lang = 'en' }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Preview Area */}
         <div className="space-y-6">
-          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] p-8 shadow-inner flex items-center justify-center min-h-[400px] overflow-hidden">
+          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-inner flex items-center justify-center min-h-[400px] overflow-hidden">
             {svgContent ? (
               <div 
                 className="max-w-full max-h-[400px] shadow-2xl bg-white dark:bg-zinc-900 rounded-lg p-4"
@@ -190,8 +190,8 @@ function SvgToPng({ lang = 'en' }: Props) {
             </button>
           </div>
 
-          <div className="bg--50 dark:bg--900/30 border border--100 dark:border--800/50 rounded-3xl p-6 flex gap-4 items-start">
-            <div className="p-2 bg--100 dark:bg--900/40 text--600 dark:text--400 rounded-xl">
+          <div className="bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-100 dark:border-zinc-800/50 rounded-3xl p-6 flex gap-4 items-start">
+            <div className="p-2 bg-zinc-100 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 rounded-xl">
                <ShieldCheck size={20} />
             </div>
             <div>

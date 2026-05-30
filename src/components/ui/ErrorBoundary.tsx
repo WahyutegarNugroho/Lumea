@@ -28,29 +28,26 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
-      const isIndonesian = this.props.lang === 'id';
-      const isSpanish = this.props.lang === 'es';
-      
-      const title = isIndonesian ? 'Terjadi Kesalahan' : isSpanish ? 'Ocurrió un Error' : 'Something went wrong';
-      const defaultDesc = isIndonesian 
-        ? 'Maaf, komponen ini mengalami masalah saat dimuat. Silakan muat ulang halaman.'
-        : isSpanish 
-        ? 'Lo sentimos, este componente encontró un problema. Por favor recarga la página.'
-        : 'Sorry, this component encountered a problem while loading. Please refresh the page.';
-        
-      const buttonText = isIndonesian ? 'Muat Ulang' : isSpanish ? 'Recargar' : 'Reload Tool';
+      const ERRORS: Record<string, { title: string; desc: string; btn: string }> = {
+        en: { title: 'Something went wrong', desc: 'Sorry, this component encountered a problem. Please refresh the page.', btn: 'Reload Tool' },
+        id: { title: 'Terjadi Kesalahan', desc: 'Maaf, komponen ini mengalami masalah. Silakan muat ulang halaman.', btn: 'Muat Ulang' },
+        es: { title: 'Ocurrió un Error', desc: 'Lo sentimos, este componente encontró un problema. Por favor recarga la página.', btn: 'Recargar' },
+      };
+      const lang = this.props.lang as string;
+      const error = ERRORS[lang] || ERRORS.en;
+      const { title, desc: defaultDesc, btn: buttonText } = error;
 
       return (
-        <div className="w-full rounded-[2.5rem] bg--50 dark:bg--900/30 border-2 border--100 dark:border--800/50 p-8 flex flex-col items-center justify-center text-center space-y-4 shadow-sm min-h-[300px]">
-          <div className="w-16 h-16 bg-white shrink-0 flex items-center justify-center rounded-2xl text-rose-500 shadow-sm border border--100 dark:border--800/50">
+        <div className="w-full rounded-3xl bg-rose-50 dark:bg-rose-900/30 border-2 border-rose-100 dark:border-rose-800/50 p-8 flex flex-col items-center justify-center text-center space-y-4 shadow-sm min-h-[300px]">
+          <div className="w-16 h-16 bg-white shrink-0 flex items-center justify-center rounded-2xl text-rose-500 shadow-sm border border-rose-100 dark:border-rose-800/50">
             <AlertCircle size={32} />
           </div>
           <h3 className="text-xl font-bold text-rose-900 font-outfit">{title}</h3>
-          <p className="text--700 dark:text--400 max-w-sm">
+          <p className="text-rose-700 dark:text-rose-400 max-w-sm">
             {this.props.fallbackMessage || defaultDesc}
           </p>
           {this.state.error && process.env.NODE_ENV === 'development' && (
-            <div className="mt-4 p-4 bg-white/50 rounded-xl text-left w-full overflow-auto max-h-[150px] border border--200 dark:border--800/50">
+            <div className="mt-4 p-4 bg-white/50 rounded-xl text-left w-full overflow-auto max-h-[150px] border border-rose-200 dark:border-rose-800/50">
               <pre className="text-xs text-rose-900 font-mono">
                 {this.state.error.message}
               </pre>
@@ -61,7 +58,7 @@ export class ErrorBoundary extends Component<Props, State> {
               this.setState({ hasError: false, error: null });
               window.location.reload();
             }}
-            className="mt-6 flex items-center gap-2 px-6 py-3 bg-white text--600 dark:text--400 font-bold rounded-xl hover:bg--100 dark:bg--900/40 transition-colors border border--200 dark:border--800/50"
+            className="mt-6 flex items-center gap-2 px-6 py-3 bg-white text-rose-600 dark:text-rose-400 font-bold rounded-xl hover:bg-rose-50 dark:bg-rose-900/40 transition-colors border border-rose-200 dark:border-rose-800/50"
           >
             <RefreshCw size={18} />
             {buttonText}

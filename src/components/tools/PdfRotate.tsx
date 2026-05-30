@@ -57,7 +57,7 @@ function PdfRotate({ lang = 'en' }: Props) {
       <div className="max-w-md mx-auto text-center space-y-8">
         <div className="relative inline-block transition-transform duration-500" style={{ transform: `rotate(${rotation}deg)` }}>
           <div className="w-48 h-64 bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl flex flex-col items-center justify-center p-6">
-            <div className="w-12 h-12 bg--50 dark:bg--900/30 text--600 dark:text--400 rounded-xl flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-zinc-50 dark:bg-zinc-900/30 text-zinc-600 dark:text-zinc-400 rounded-xl flex items-center justify-center mb-4">
               <FileText size={24} />
             </div>
             <div className="text-sm font-bold text-zinc-900 dark:text-zinc-50 truncate w-full">{file.name}</div>

@@ -132,7 +132,7 @@ function BackgroundRemover({ lang = 'en' }: Props) {
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Preview Area */}
-        <div className="bg-zinc-100 dark:bg-zinc-800 rounded-[2.5rem] p-8 flex items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-inner min-h-[500px]">
+        <div className="bg-zinc-100 dark:bg-zinc-800 rounded-3xl p-8 flex items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-inner min-h-[500px]">
           {!resultUrl ? (
             <div className="relative group">
               <img src={URL.createObjectURL(file)} className="max-h-[500px] w-auto rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]" alt="Original" />

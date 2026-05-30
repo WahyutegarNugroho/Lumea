@@ -1,10 +1,9 @@
 import { withErrorBoundary } from '../ui/withErrorBoundary';
-import { PrivacyShieldCard } from '../ui/PrivacyShieldCard';
 import { useState, useEffect } from 'react';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import {
-  FileText, Eye, Code, Copy, Download, Check, RotateCcw, Type
+  FileText, Eye, Code, Copy, Download, Check, RotateCcw
 } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
 import { useDownload } from '../../lib/hooks/useDownload';
@@ -77,7 +76,7 @@ function MarkdownEditor({ lang = 'en' }: Props) {
             onClick={copyHtml}
             className="flex items-center gap-2 px-4 py-2.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 text-zinc-900 dark:text-zinc-50 rounded-xl text-xs font-bold transition-all"
           >
-            {copied ? <Check size={14} className="text--600 dark:text--400" /> : <Copy size={14} />}
+            {copied ? <Check size={14} className="text-zinc-600 dark:text-zinc-400" /> : <Copy size={14} />}
             {t('ui.copy_html')}
           </button>
           <button 
@@ -94,7 +93,7 @@ function MarkdownEditor({ lang = 'en' }: Props) {
       <div className={`grid gap-6 ${activeTab === 'split' ? 'md:grid-cols-2' : 'grid-cols-1'} min-h-[600px]`}>
         {/* Editor Pane */}
         {(activeTab === 'editor' || activeTab === 'split') && (
-          <div className="flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] overflow-hidden shadow-sm">
+          <div className="flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
             <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-950/50">
               <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
                 <Code size={12} />
@@ -120,7 +119,7 @@ function MarkdownEditor({ lang = 'en' }: Props) {
 
         {/* Preview Pane */}
         {(activeTab === 'preview' || activeTab === 'split') && (
-          <div className="flex flex-col bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] overflow-hidden shadow-inner">
+          <div className="flex flex-col bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-inner">
             <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center bg-white dark:bg-zinc-900/50">
               <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
                 <Eye size={12} />
@@ -134,8 +133,6 @@ function MarkdownEditor({ lang = 'en' }: Props) {
           </div>
         )}
       </div>
-
-      <PrivacyShieldCard t={t} descKey="ui.markdown_privacy_desc" decorIcon={Type} />
     </div>
   );
 }

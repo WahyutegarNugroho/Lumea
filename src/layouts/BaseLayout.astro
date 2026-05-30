@@ -100,7 +100,7 @@ const canonicalURL = new URL(getLocalizedPath(cleanPath, lang), baseUrl);
 				<!-- Logo Section -->
 				<div class="flex-1 flex items-center">
 					<a href={getLocalizedPath('/', lang)} class="flex items-center gap-2 group">
-						<div class="w-8 h-8 bg-zinc-900 dark:bg-white rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
+						<div class="w-8 h-8 bg-zinc-900 dark:bg-white rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">
 							<span class="text-white dark:text-zinc-900 font-bold text-xl leading-none">L</span>
 						</div>
 						<span class="text-xl font-bold font-outfit tracking-tight">Lumea</span>
@@ -120,8 +120,8 @@ const canonicalURL = new URL(getLocalizedPath(cleanPath, lang), baseUrl);
 					<ThemeToggle client:only="react" />
 					<LanguagePicker />
 					<button id="search-trigger" class="flex items-center gap-2 px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-500 dark:text-zinc-400 rounded-lg text-xs font-medium transition-colors border border-zinc-200 dark:border-zinc-700">
-						<kbd class="font-sans">Ctrl+K</kbd>
 						<span>{t('nav.tools')}</span>
+						<kbd class="font-sans">Ctrl+K</kbd>
 					</button>
 					<div class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full border border-emerald-100 dark:border-emerald-800 text-xs font-medium">
 						<ShieldCheck size={14} />
@@ -148,10 +148,7 @@ const canonicalURL = new URL(getLocalizedPath(cleanPath, lang), baseUrl);
 						<p class="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed mb-6">
 							{t('footer.privacy.desc')}
 						</p>
-						<div class="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
-							<ShieldCheck size={16} />
-							<span class="text-xs font-medium uppercase tracking-wider">{t('ui.privacy_first_arch')}</span>
-						</div>
+						
 					</div>
 					
 					<div>

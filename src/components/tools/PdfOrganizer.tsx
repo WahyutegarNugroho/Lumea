@@ -85,7 +85,7 @@ function SortablePage({ id, page, onDelete, index, t }: { id: string; page: Page
         </div>
         <button 
           onClick={() => onDelete(id)}
-          className="p-2 text-rose-500 hover:bg--50 dark:bg--900/30 rounded-xl transition-all"
+          className="p-2 text-rose-500 hover:bg-zinc-50 dark:bg-zinc-900/30 rounded-xl transition-all"
           aria-label={t('ui.remove_file')}
         >
           <Trash2 size={16} />
@@ -204,7 +204,7 @@ function PdfOrganizer({ lang = 'en' }: Props) {
   return (
     <div className="space-y-8">
       {/* Header Actions */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white dark:bg-zinc-900/80 backdrop-blur-md p-6 rounded-[2.5rem] border border-zinc-200 dark:border-zinc-800 shadow-sm sticky top-4 z-40">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white dark:bg-zinc-900/80 backdrop-blur-md p-6 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm sticky top-4 z-40">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-zinc-900 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-zinc-200">
             <FileText size={24} />
@@ -290,8 +290,8 @@ function PdfOrganizer({ lang = 'en' }: Props) {
 
           {/* Info Panels */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-zinc-100 dark:border-zinc-800">
-            <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] p-8 flex gap-6 items-start">
-              <div className="w-14 h-14 bg-zinc-900 text-white rounded-[1.25rem] flex items-center justify-center shrink-0 shadow-lg shadow-zinc-200">
+            <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 flex gap-6 items-start">
+              <div className="w-14 h-14 bg-zinc-900 text-white rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-zinc-200">
                 <LayoutGrid size={28} />
               </div>
               <div className="space-y-2">
@@ -302,8 +302,8 @@ function PdfOrganizer({ lang = 'en' }: Props) {
               </div>
             </div>
 
-            <div className="bg--50 dark:bg--900/30 border border--100 dark:border--800/50 rounded-[2.5rem] p-8 flex gap-6 items-start">
-              <div className="w-14 h-14 bg--100 dark:bg--900/40 text--600 dark:text--400 rounded-[1.25rem] flex items-center justify-center shrink-0">
+            <div className="bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-100 dark:border-zinc-800/50 rounded-3xl p-8 flex gap-6 items-start">
+              <div className="w-14 h-14 bg-zinc-100 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 rounded-xl flex items-center justify-center shrink-0">
                 <ShieldCheck size={28} />
               </div>
               <div className="space-y-2">

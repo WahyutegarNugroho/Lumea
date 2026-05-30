@@ -1,5 +1,4 @@
 import { withErrorBoundary } from '../ui/withErrorBoundary';
-import { PrivacyShieldCard } from '../ui/PrivacyShieldCard';
 import { useState, useEffect, useCallback } from 'react';
 import QRCode from 'qrcode';
 import { QrCode, Download, Palette, ShieldCheck } from 'lucide-react';
@@ -102,13 +101,12 @@ function QrGenerator({ lang = 'en' }: Props) {
             </button>
           </div>
 
-          <PrivacyShieldCard t={t} descKey="ui.qr_pro_tip_desc" decorIcon={QrCode} />
         </div>
 
         <div className="flex flex-col items-center justify-center">
           <div className="relative group">
-            <div className="absolute -inset-4 bg-zinc-100 dark:bg-zinc-800 rounded-[2rem] -z-10 group-hover:bg-zinc-200/50 transition-colors"></div>
-            <div className="bg-white dark:bg-zinc-900 p-6 rounded-[1.5rem] shadow-2xl shadow-zinc-200/50">
+            <div className="absolute -inset-4 bg-zinc-100 dark:bg-zinc-800 rounded-2xl -z-10 group-hover:bg-zinc-200/50 transition-colors"></div>
+            <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-2xl shadow-zinc-200/50">
               {qrUrl ? (
                 <img src={qrUrl} alt="QR Code" className="w-64 h-64 md:w-80 md:h-80" />
               ) : (
@@ -123,7 +121,7 @@ function QrGenerator({ lang = 'en' }: Props) {
                 <Palette size={14} />
                 {t('ui.customizable')}
               </div>
-              <div className="px-4 py-2 bg--50 dark:bg--900/30 text--600 dark:text--400 rounded-full text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+              <div className="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-xs font-bold uppercase tracking-widest flex items-center gap-2">
                 <ShieldCheck size={14} />
                 {t('ui.high_res')}
               </div>

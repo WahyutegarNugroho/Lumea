@@ -134,7 +134,7 @@ function PdfSplit({ lang = 'en' }: Props) {
   return (
     <div className="flex flex-col lg:flex-row gap-8 min-h-[600px]">
       {/* Left Area: Page Previews */}
-      <div className="flex-1 bg-zinc-100 dark:bg-zinc-800 rounded-[2rem] p-6 overflow-y-auto max-h-[800px] border border-zinc-200 dark:border-zinc-800 shadow-inner relative">
+      <div className="flex-1 bg-zinc-100 dark:bg-zinc-800 rounded-2xl p-6 overflow-y-auto max-h-[800px] border border-zinc-200 dark:border-zinc-800 shadow-inner relative">
         {isPreviewLoading && previews.length === 0 && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-100/50 dark:bg-zinc-800/50 backdrop-blur-sm z-20">
             <div className="w-10 h-10 border-4 border-zinc-300 dark:border-zinc-700 border-t-zinc-900 rounded-full animate-spin mb-4"></div>

@@ -45,7 +45,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onFilesSelected, accept = "i
     <div 
       onDragOver={(e) => e.preventDefault()}
       onDrop={onDrop}
-      className="group relative w-full min-h-[400px] border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-[3rem] flex flex-col items-center justify-center p-12 transition-all hover:border-zinc-900 dark:hover:border-zinc-100 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 cursor-pointer overflow-hidden bg-white dark:bg-zinc-950 shadow-xl shadow-zinc-100/50 dark:shadow-none"
+      className="group relative w-full min-h-[280px] border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-3xl flex flex-col items-center justify-center p-12 transition-all hover:border-zinc-900 dark:hover:border-zinc-100 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 cursor-pointer overflow-hidden bg-white dark:bg-zinc-950 shadow-xl shadow-zinc-100/50 dark:shadow-none"
     >
       <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:20px_20px] opacity-30 pointer-events-none"></div>
       
@@ -75,7 +75,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onFilesSelected, accept = "i
         ))}
       </div>
 
-      <div className="absolute bottom-6 flex items-center gap-2 text-zinc-300 dark:text-zinc-700 dark:text-zinc-300 z-10">
+      <div className="absolute bottom-6 flex items-center gap-2 text-zinc-300 dark:text-zinc-300 z-10">
         <FileText size={14} />
         <span className="text-[10px] font-bold uppercase tracking-widest">{t('ui.safe_secure_engine')}</span>
       </div>

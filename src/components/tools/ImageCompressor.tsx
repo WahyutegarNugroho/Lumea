@@ -61,7 +61,7 @@ function ImageCompressor({ lang = 'en' }: Props) {
     
     const updatedFiles = [...files];
     
-    const processingToast = toast.loading(t('ui.merging_pdfs') || "Processing images...");
+    const processingToast = toast.loading(t('ui.compressing') || "Compressing images...");
     
     for (let i = 0; i < updatedFiles.length; i++) {
       if (updatedFiles[i].status === 'completed') continue;
@@ -94,9 +94,12 @@ function ImageCompressor({ lang = 'en' }: Props) {
     setIsProcessingAll(false);
     
     if (successCount > 0) {
-      toast.success(successCount === 1 ? "Image compressed" : `${successCount} images compressed`, { id: processingToast });
+      const msg = successCount === 1
+        ? (t('ui.image_compressed') || "Image compressed")
+        : `${successCount} ${t('ui.images_compressed') || "images compressed"}`;
+      toast.success(msg, { id: processingToast });
     } else {
-      toast.error("Compression failed", { id: processingToast });
+      toast.error(t('ui.error_compress_failed') || "Compression failed", { id: processingToast });
     }
   };
 
@@ -144,7 +147,7 @@ function ImageCompressor({ lang = 'en' }: Props) {
                     {item.status === 'processing' && <Loader2 size={16} className="animate-spin text-zinc-500 dark:text-zinc-400" />}
                     {item.status === 'completed' && (
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text--600 dark:text--400 bg--50 dark:bg--900/30 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">
                           -{Math.round((1 - item.compressedSize / item.originalSize) * 100)}%
                         </span>
                         <button 

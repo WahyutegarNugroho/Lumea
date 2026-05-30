@@ -25,7 +25,7 @@ const t = useTranslations(lang);
 			<div class="inline-flex items-center gap-2 px-3 py-1 bg-zinc-900 text-white rounded-full text-xs font-bold uppercase tracking-widest mb-8 animate-fade-in">
 				<span class="relative flex h-2 w-2">
 					<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-					<span class="relative inline-flex rounded-full h-2 w-2 bg--50 dark:bg--900/300"></span>
+					<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
 				</span>
 				{t('badge.browser_only')}
 			</div>
@@ -39,25 +39,25 @@ const t = useTranslations(lang);
 			</p>
 			
 			<div class="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto">
-				<a href="#pdf" class="group px-6 py-4 bg-zinc-900 dark:bg-zinc-100 dark:bg-zinc-800 text-white dark:text-zinc-900 dark:text-zinc-50 rounded-2xl font-bold transition-all hover:bg-zinc-800 dark:hover:bg-white dark:bg-zinc-900 hover:scale-105 hover:shadow-xl hover:shadow-rose-500/10 flex items-center gap-3 border border-zinc-800 dark:border-zinc-200 dark:border-zinc-800">
+				<a href="#pdf" class="group px-6 py-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-2xl font-bold transition-all hover:bg-zinc-800 dark:hover:bg-white hover:-translate-y-1 hover:shadow-xl hover:shadow-rose-500/10 flex items-center gap-3 border border-zinc-800 dark:border-zinc-200">
 					<div class="w-8 h-8 bg-white dark:bg-zinc-900/10 dark:bg-zinc-900/10 rounded-lg flex items-center justify-center text-rose-400 dark:text-rose-500 group-hover:scale-110 transition-transform">
 						<FileText size={18} />
 					</div>
 					{t('hero.cta.pdf')}
 				</a>
-				<a href="#image" class="group px-6 py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/10 flex items-center gap-3">
+				<a href="#image" class="group px-6 py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 flex items-center gap-3">
 					<div class="w-8 h-8 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
 						<ImageIcon size={18} />
 					</div>
 					{t('hero.cta.image')}
 				</a>
-				<a href="#text" class="group px-6 py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 hover:scale-105 hover:shadow-xl hover:shadow-emerald-500/10 flex items-center gap-3">
+				<a href="#text" class="group px-6 py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/10 flex items-center gap-3">
 					<div class="w-8 h-8 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
 						<Type size={18} />
 					</div>
 					{t('hero.cta.text')}
 				</a>
-				<a href="#dev" class="group px-6 py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/10 flex items-center gap-3">
+				<a href="#dev" class="group px-6 py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-500/10 flex items-center gap-3">
 					<div class="w-8 h-8 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
 						<Code size={18} />
 					</div>
@@ -342,12 +342,4 @@ import { getRecentTools } from '../lib/recentTools';
 	window.addEventListener('lumea:favorites-updated', updateFavoriteTools);
 </script>
 
-<style>
-	@keyframes fade-in {
-		from { opacity: 0; transform: translateY(10px); }
-		to { opacity: 1; transform: translateY(0); }
-	}
-	.animate-fade-in {
-		animation: fade-in 0.8s ease-out forwards;
-	}
-</style>
+

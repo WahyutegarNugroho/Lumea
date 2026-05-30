@@ -58,8 +58,8 @@ function PdfToJpg({ lang = 'en' }: Props) {
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* File Card */}
-        <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] p-10 text-center flex flex-col items-center justify-center space-y-6 shadow-inner">
-          <div className="w-24 h-24 bg--100 dark:bg--900/40 text--600 dark:text--400 rounded-[2rem] flex items-center justify-center shadow-xl shadow-rose-100/50">
+        <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-10 text-center flex flex-col items-center justify-center space-y-6 shadow-inner">
+          <div className="w-24 h-24 bg-zinc-100 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 rounded-2xl flex items-center justify-center shadow-xl shadow-rose-100/50">
             <FileText size={48} />
           </div>
           
@@ -117,7 +117,7 @@ function PdfToJpg({ lang = 'en' }: Props) {
             </div>
 
             <div className="pt-6 border-t border-zinc-100 dark:border-zinc-800 flex gap-5">
-              <div className="w-12 h-12 bg--100 dark:bg--900/40 text--600 dark:text--400 rounded-2xl flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 bg-zinc-100 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 rounded-2xl flex items-center justify-center shrink-0">
                 <ShieldCheck size={24} />
               </div>
               <div className="space-y-2">

@@ -9,7 +9,7 @@ interface PrivacyShieldCardProps {
 
 export function PrivacyShieldCard({ t, descKey, decorIcon: DecorIcon }: PrivacyShieldCardProps) {
   return (
-    <div className="bg-zinc-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden">
+    <div className="bg-zinc-900 rounded-3xl p-8 text-white relative overflow-hidden">
       <div className="relative z-10 space-y-4">
         <div className="flex items-center gap-2 text-zinc-500">
           <ShieldCheck size={16} className="text-emerald-400" />

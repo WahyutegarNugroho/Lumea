@@ -127,7 +127,7 @@ function ColorPicker({ lang = 'en' }: Props) {
                 />
               ))}
               {Array.from({ length: Math.max(0, 10 - history.length) }).map((_, i) => (
-                <div key={i} className="w-full aspect-square rounded-xl bg-white dark:bg-zinc-900/5 border border-white/5 dash" />
+                <div key={i} className="w-full aspect-square rounded-xl bg-white dark:bg-zinc-900/5 border border-white/5 border-dashed" />
               ))}
            </div>
 

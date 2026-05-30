@@ -14,10 +14,10 @@ function ExcelToPdf({ lang = 'en' }: Props) {
     <div className="space-y-8 animate-in fade-in duration-700">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Main Card: The Redirector */}
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] p-10 text-center flex flex-col items-center justify-center space-y-8 shadow-xl shadow-zinc-100 relative overflow-hidden group">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-10 text-center flex flex-col items-center justify-center space-y-8 shadow-xl shadow-zinc-100 relative overflow-hidden group">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-zinc-900 to-emerald-500"></div>
           
-          <div className="w-28 h-28 bg-zinc-900 text-white rounded-[2.5rem] flex items-center justify-center shadow-2xl shadow-zinc-200 group-hover:scale-105 transition-transform duration-500">
+          <div className="w-28 h-28 bg-zinc-900 text-white rounded-3xl flex items-center justify-center shadow-2xl shadow-zinc-200 group-hover:scale-110 transition-transform duration-500">
             <Database size={56} className="text-emerald-400" />
           </div>
           

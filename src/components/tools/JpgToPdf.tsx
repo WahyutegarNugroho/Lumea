@@ -87,7 +87,7 @@ function JpgToPdf({ lang = 'en' }: Props) {
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none"></div>
                   <button 
                     onClick={() => removeImage(index)}
-                    className="absolute top-2 right-2 w-7 h-7 bg-white dark:bg-zinc-900/90 text-zinc-500 dark:text-zinc-400 rounded-full flex items-center justify-center hover:bg--50 dark:bg--900/300 hover:text-white transition-all shadow-sm"
+                    className="absolute top-2 right-2 w-7 h-7 bg-white dark:bg-zinc-900/90 text-zinc-500 dark:text-zinc-400 rounded-full flex items-center justify-center hover:bg-zinc-50 dark:bg-zinc-900/30 hover:text-white transition-all shadow-sm"
                     aria-label={t('ui.remove_file')}
                   >
                     <X size={14} />

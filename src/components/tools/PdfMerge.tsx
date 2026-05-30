@@ -73,7 +73,7 @@ function PdfMerge({ lang = 'en' }: Props) {
                   <div className="text-zinc-300 group-hover:text-zinc-500 dark:text-zinc-400 cursor-grab">
                     
                   </div>
-                  <div className="w-10 h-10 bg--50 dark:bg--900/30 text--600 dark:text--400 rounded-xl flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-xl flex items-center justify-center shrink-0">
                     <FileText size={20} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -82,7 +82,7 @@ function PdfMerge({ lang = 'en' }: Props) {
                   </div>
                   <button 
                     onClick={() => removeFile(index)}
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:bg--50 dark:bg--900/30 hover:text--600 dark:text--400 transition-colors"
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:text-rose-600 transition-colors"
                     aria-label={t('ui.remove_file')}
                   >
                     <X size={16} />
