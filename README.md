@@ -1,6 +1,14 @@
 # Lumea App — Platform Utilitas Web 100% Client-Side
 
-Astro v6 | React 19 | Tailwind CSS v4 | 100% Client-Side | PWA | Multi-Bahasa | Vercel
+![Astro](https://img.shields.io/badge/Astro-6-FF5D01?logo=astro&logoColor=white&style=flat-square)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white&style=flat-square)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white&style=flat-square)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white&style=flat-square)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white&style=flat-square)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-12-0055FF?logo=framer&logoColor=white&style=flat-square)
+![PWA](https://img.shields.io/badge/PWA-✓-5A0FC8?logo=pwa&logoColor=white&style=flat-square)
+![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white&style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-F0DB4F?style=flat-square)
 
 ---
 
