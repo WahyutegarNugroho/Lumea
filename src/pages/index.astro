@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ToolCard from '../components/ui/ToolCard.astro';
+import { InstallPwaButton } from '../components/ui/InstallPwaButton';
 import { ALL_TOOLS } from '../lib/tools';
 import lucide from 'lucide-react';
 const { FileText, Image: ImageIcon, Type, Code, Clock, Heart } = lucide;
@@ -63,6 +64,10 @@ const t = useTranslations(lang);
 					</div>
 					{t('hero.cta.dev')}
 				</a>
+			</div>
+
+			<div class="mt-8">
+				<InstallPwaButton client:only="react" />
 			</div>
 		</div>
 	</section>

@@ -75,10 +75,10 @@ export function InstallPwaButton() {
   return (
     <button
       onClick={handleInstallClick}
-      className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-lg text-xs font-bold transition-colors border border-blue-100 dark:border-blue-800"
+      className="inline-flex items-center gap-3 px-8 py-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-2xl font-bold transition-all hover:bg-zinc-800 dark:hover:bg-white hover:-translate-y-1 hover:shadow-xl hover:shadow-zinc-500/10 border border-zinc-800 dark:border-zinc-200"
       title="Install Lumea App"
     >
-      <Download size={14} />
+      <Download size={20} />
       <span>Install App</span>
     </button>
   );
