@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Download } from 'lucide-react';
+import toast from 'react-hot-toast';
 
-// Extend Window interface for the beforeinstallprompt event
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
   readonly userChoice: Promise<{
@@ -20,42 +20,54 @@ declare global {
 export function InstallPwaButton() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
-  
+  const promptReceivedRef = useRef(false);
+
   useEffect(() => {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    if (isStandalone) return;
+
     const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
-      // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
-      // Stash the event so it can be triggered later.
+      promptReceivedRef.current = true;
       setDeferredPrompt(e);
-      // Update UI notify the user they can install the PWA
       setIsInstallable(true);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    // Optionally check if already installed
-    window.addEventListener('appinstalled', () => {
+    const handleAppInstalled = () => {
       setIsInstallable(false);
       setDeferredPrompt(null);
-    });
+    };
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    // Fallback: show button for PWA-capable browsers that don't fire
+    // beforeinstallprompt (Firefox, Safari, etc.)
+    const timeout = setTimeout(() => {
+      if (!promptReceivedRef.current && 'serviceWorker' in navigator) {
+        setIsInstallable(true);
+      }
+    }, 5000);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+      clearTimeout(timeout);
     };
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-    
-    // Show the install prompt
-    deferredPrompt.prompt();
-    
-    // Wait for the user to respond to the prompt
-    await deferredPrompt.userChoice;
-    
-    // We no longer need the prompt. Clear it up.
-    setDeferredPrompt(null);
-    setIsInstallable(false);
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      setDeferredPrompt(null);
+      setIsInstallable(false);
+    } else {
+      toast(
+        'Open browser menu → "Install Lumea App" or "Add to Home Screen"',
+        { icon: 'ℹ️', duration: 5000 }
+      );
+    }
   };
 
   if (!isInstallable) return null;
