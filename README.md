@@ -85,14 +85,13 @@ Lumea App adalah platform web progresif (PWA) yang menghadirkan lebih dari 34 al
 
 ### Fitur Platform
 - **🔒 Zero-Server Architecture** — 100% client-side, tidak ada data dikirim ke server
-- **🌐 Multi-Bahasa (i18n)** — Indonesia, Inggris, Spanyol dengan 617 key terjemahan per bahasa
+- **🌐 Multi-Bahasa (i18n)** — Indonesia, Inggris, Spanyol dengan 618 key terjemahan per bahasa
 - **🌙 Dark Mode** — Tema gelap/terang adaptif dengan Tailwind v4, tersimpan di localStorage
 - **📱 PWA (Progressive Web App)** — Install ke layar utama, service worker dengan cache strategi
 - **⭐ Favorites** — Sematkan alat favorit ke beranda, tersimpan di localStorage
 - **🕐 Recent Tools** — Riwayat 6 alat terakhir yang digunakan
 - **⌨️ Command Palette** — Pencarian cepat semua alat dengan shortcut Ctrl+K
 - **📖 Panduan Lengkap** — 102 artikel panduan (34 tool × 3 bahasa) via Astro Content Collections
-- **⚡ View Transitions** — Navigasi antar halaman mulus tanpa reload
 - **📊 Schema.org SEO** — JSON-LD structured data untuk setiap halaman alat
 - **🔍 SEO Sitemap** — Sitemap multi-bahasa dengan hreflang tags
 

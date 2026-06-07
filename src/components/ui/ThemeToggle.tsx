@@ -1,18 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
-
-  useEffect(() => {
-    // Read the current theme from localStorage or document class
+  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
     const storedTheme = localStorage.getItem('lumea-theme');
     if (storedTheme === 'dark' || storedTheme === 'light') {
-      setTheme(storedTheme as 'light' | 'dark');
-    } else {
-      setTheme('system');
+      return storedTheme;
     }
-  }, []);
+    return 'system';
+  });
 
   const toggleTheme = () => {
     const isDark = document.documentElement.classList.contains('dark');

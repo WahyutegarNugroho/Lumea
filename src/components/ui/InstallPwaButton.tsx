@@ -17,10 +17,7 @@ declare global {
   }
 }
 
-interface InstallPwaButtonProps {
-}
-
-export function InstallPwaButton({}: InstallPwaButtonProps) {
+export function InstallPwaButton() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
   

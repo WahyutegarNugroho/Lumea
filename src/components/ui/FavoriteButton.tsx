@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -6,17 +6,15 @@ interface Props {
   toolId: string;
   }
 
-export function FavoriteButton({ toolId, }: Props) {
-  const [isFavorite, setIsFavorite] = useState(false);
-
-  useEffect(() => {
+export function FavoriteButton({ toolId }: Props) {
+  const [isFavorite, setIsFavorite] = useState(() => {
     try {
       const favorites = JSON.parse(localStorage.getItem('lumea_favorites') || '[]');
-      setIsFavorite(favorites.includes(toolId));
+      return favorites.includes(toolId);
     } catch {
-      setIsFavorite(false);
+      return false;
     }
-  }, [toolId]);
+  });
 
   const toggleFavorite = () => {
     try {

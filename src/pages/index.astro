@@ -237,6 +237,7 @@ const t = useTranslations(lang);
 
 <script>
 import { ALL_TOOLS } from '../lib/tools';
+import type { ToolDefinition } from '../lib/tools';
 import { getRecentTools } from '../lib/recentTools';
 
 	function updateRecentTools() {
@@ -249,10 +250,10 @@ import { getRecentTools } from '../lib/recentTools';
 			section.classList.remove('hidden');
 			const recentTools = recentIds
 				.map((id: string) => ALL_TOOLS.find(tool => tool.id === id))
-				.filter((tool: any) => tool != null)
+				.filter((tool: ToolDefinition | undefined): tool is ToolDefinition => tool != null)
 				.slice(0, 3);
 
-			grid.innerHTML = recentTools.map((tool: any) => {
+			grid.innerHTML = recentTools.map((tool: ToolDefinition) => {
 				const currentLang = grid.dataset.lang || 'en';
 				const href = currentLang === 'en' ? tool.href : `/${currentLang}${tool.href}`;
 				const externalBadge = tool.isExternal 
@@ -289,9 +290,9 @@ import { getRecentTools } from '../lib/recentTools';
 					const tData = JSON.parse(grid.dataset.translations || '{}');
 					const favoriteTools = favoriteIds
 						.map((id: string) => ALL_TOOLS.find(tool => tool.id === id))
-						.filter((tool: any) => tool != null);
+						.filter((tool: ToolDefinition | undefined): tool is ToolDefinition => tool != null);
 
-					grid.innerHTML = favoriteTools.map((tool: any) => {
+					grid.innerHTML = favoriteTools.map((tool: ToolDefinition) => {
 						const currentLang = grid.dataset.lang || 'en';
 						const href = currentLang === 'en' ? tool.href : `/${currentLang}${tool.href}`;
 						const externalBadge = tool.isExternal 
