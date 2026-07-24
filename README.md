@@ -206,7 +206,7 @@ Lumea App adalah platform web progresif (PWA) yang menghadirkan lebih dari 34 al
 
 **Prasyarat**
 - Node.js >= 22.12.0
-- npm (atau pnpm/yarn)
+- pnpm >= 10.0.0
 
 **Langkah-langkah**
 ```bash
@@ -215,35 +215,35 @@ git clone https://github.com/WahyutegarNugroho/Lumea.git
 cd Lumea
 
 # 2. Install dependencies
-npm install
+pnpm install
 
 # 3. Jalankan development server
-npm run dev
+pnpm dev
 # Buka http://localhost:4321
 
 # 4. (Opsional) Type-check
-npx astro check
+pnpm astro check
 
 # 5. (Opsional) Jalankan test
-npm test
+pnpm test
 
 # 6. Build untuk production
-npm run build
+pnpm build
 
 # 7. Preview build
-npm run preview
+pnpm preview
 ```
 
 **Scripts yang tersedia**
 | Perintah | Fungsi |
 |----------|--------|
-| `npm run dev` | Jalankan dev server (localhost:4321) |
-| `npm run build` | Build ke `dist/` |
-| `npm run preview` | Preview build lokal |
-| `npm test` | Jalankan Vitest (unit test) |
-| `npm run lint` | ESLint seluruh project |
-| `npm run format` | Prettier format semua file |
-| `npx astro check` | Type-check Astro |
+| `pnpm dev` | Jalankan dev server (localhost:4321) |
+| `pnpm build` | Build ke `dist/` |
+| `pnpm preview` | Preview build lokal |
+| `pnpm test` | Jalankan Vitest (unit test) |
+| `pnpm lint` | ESLint seluruh project |
+| `pnpm format` | Prettier format semua file |
+| `pnpm astro check` | Type-check Astro |
 
 ---
 

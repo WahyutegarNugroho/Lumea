@@ -14,6 +14,14 @@
     "lint": "eslint .",
     "format": "prettier --write ."
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "core-js",
+      "esbuild",
+      "sharp",
+      "tesseract.js"
+    ]
+  },
   "dependencies": {
     "@astrojs/react": "^5.0.4",
     "@astrojs/sitemap": "^3.7.2",
