@@ -64,7 +64,7 @@ function ColorPicker({ lang = 'en' }: Props) {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-sm flex flex-col items-center justify-center space-y-8">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 shadow-sm flex flex-col items-center justify-center space-y-8">
           <div 
             className="w-48 h-48 rounded-full shadow-2xl border-8 border-white group relative cursor-pointer"
             style={{ backgroundColor: color }}
@@ -110,7 +110,7 @@ function ColorPicker({ lang = 'en' }: Props) {
           </div>
         </div>
 
-        <div className="bg-zinc-900 rounded-3xl p-8 text-white space-y-8">
+        <div className="bg-zinc-900 rounded-2xl p-8 text-white space-y-8">
            <div className="space-y-2">
               <h3 className="text-xl font-bold font-outfit">{t('ui.color_history')}</h3>
               <p className="text-zinc-500 dark:text-zinc-400 text-sm">{t('ui.recent_picked_colors')}</p>

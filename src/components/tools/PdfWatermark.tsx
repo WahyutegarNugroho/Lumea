@@ -169,7 +169,7 @@ function PdfWatermark({ lang = 'en' }: Props) {
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Preview Area */}
-        <div className="bg-zinc-100 dark:bg-zinc-800 rounded-3xl p-8 flex items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-inner min-h-[500px]">
+        <div className="bg-zinc-100 dark:bg-zinc-800 rounded-2xl p-8 flex items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-inner min-h-[500px]">
           {previewUrl ? (
             <div className="relative shadow-2xl rounded-lg overflow-hidden bg-white dark:bg-zinc-900 max-w-full" style={{ width: 'fit-content' }}>
               <img 
@@ -211,7 +211,7 @@ function PdfWatermark({ lang = 'en' }: Props) {
 
         {/* Controls Area */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-sm space-y-8">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 shadow-sm space-y-8">
             <div className="space-y-4">
               <label className="tool-label flex items-center gap-2">
                 <Type size={14} />

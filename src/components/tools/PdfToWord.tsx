@@ -14,10 +14,10 @@ function PdfToWord({ lang = 'en' }: Props) {
     <div className="space-y-8 animate-in fade-in duration-700">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Main Card: The Redirector */}
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-10 text-center flex flex-col items-center justify-center space-y-8 shadow-xl shadow-zinc-100 relative overflow-hidden group">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-10 text-center flex flex-col items-center justify-center space-y-8 shadow-xl shadow-zinc-100 relative overflow-hidden group">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-zinc-900 to-blue-500"></div>
           
-          <div className="w-28 h-28 bg-zinc-900 text-white rounded-3xl flex items-center justify-center shadow-2xl shadow-zinc-200 group-hover:scale-110 transition-transform duration-500">
+          <div className="w-28 h-28 bg-zinc-900 text-white rounded-2xl flex items-center justify-center shadow-2xl shadow-zinc-200 group-hover:scale-110 transition-transform duration-500">
             <Wrench size={56} className="text-blue-400" />
           </div>
           
@@ -47,7 +47,7 @@ function PdfToWord({ lang = 'en' }: Props) {
 
         {/* Info & Benefits Area */}
         <div className="space-y-6 flex flex-col justify-center">
-          <div className="bg-zinc-50/50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 space-y-8">
+          <div className="bg-zinc-50/50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 space-y-8">
             <div className="flex gap-5">
               <div className="w-12 h-12 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
                 <Zap size={24} className="text-amber-500" />
@@ -73,7 +73,7 @@ function PdfToWord({ lang = 'en' }: Props) {
             </div>
           </div>
 
-          <div className="bg-zinc-900 rounded-3xl p-8 text-white relative overflow-hidden group cursor-pointer" onClick={() => window.open(externalLink, '_blank')}>
+          <div className="bg-zinc-900 rounded-2xl p-8 text-white relative overflow-hidden group cursor-pointer" onClick={() => window.open(externalLink, '_blank')}>
              <div className="relative z-10 flex items-center justify-between">
                 <div className="space-y-1">
                   <h5 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400">{t('ui.ready_to_convert')}</h5>

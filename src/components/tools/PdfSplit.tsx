@@ -171,7 +171,7 @@ function PdfSplit({ lang = 'en' }: Props) {
 
       {/* Right Area: Controls Sidebar */}
       <div className="w-full lg:w-80 space-y-6">
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm space-y-6">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm space-y-6">
           <div className="flex p-1 bg-zinc-100 dark:bg-zinc-800 rounded-2xl">
             <button 
               onClick={() => setMode('range')}

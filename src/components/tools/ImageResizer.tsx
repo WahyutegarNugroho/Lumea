@@ -85,7 +85,7 @@ function ImageResizer({ lang = 'en' }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-4">
           <h3 className="font-bold text-zinc-900 dark:text-zinc-50 font-outfit uppercase tracking-wider text-sm">{t('ui.image_preview')}</h3>
-          <div className="aspect-video bg-zinc-100 dark:bg-zinc-800 rounded-3xl overflow-hidden border border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
+          <div className="aspect-video bg-zinc-100 dark:bg-zinc-800 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
             <img 
               src={imgSrc} 
               alt={t('ui.preview')} 
@@ -100,7 +100,7 @@ function ImageResizer({ lang = 'en' }: Props) {
 
         <div className="space-y-6">
           <h3 className="font-bold text-zinc-900 dark:text-zinc-50 font-outfit uppercase tracking-wider text-sm">{t('ui.resize_dimensions')}</h3>
-          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 space-y-6">
+          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 space-y-6">
             <div className="grid grid-cols-2 gap-6 relative">
               <div className="space-y-2">
                 <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">{t('ui.width_px')}</label>

@@ -165,7 +165,7 @@ function ImageCropper({ lang = 'en' }: Props) {
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr,350px] gap-8">
         {/* Editor Area */}
-        <div className="bg-zinc-950 rounded-3xl p-4 flex items-center justify-center relative overflow-hidden border border-zinc-800 shadow-2xl min-h-[600px]">
+        <div className="bg-zinc-950 rounded-2xl p-4 flex items-center justify-center relative overflow-hidden border border-zinc-800 shadow-2xl min-h-[600px]">
           {image && (
             <div 
               ref={containerRef}
@@ -234,7 +234,7 @@ function ImageCropper({ lang = 'en' }: Props) {
 
         {/* Controls Area */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-sm space-y-8">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 shadow-sm space-y-8">
             <div className="space-y-4">
               <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 font-outfit flex items-center gap-2">
                 <CropIcon className="text-zinc-500 dark:text-zinc-400" size={20} />

@@ -58,7 +58,7 @@ function CodeFormatter({ lang = 'en' }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Editor Area */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="bg-zinc-900 rounded-3xl p-6 shadow-2xl relative overflow-hidden group min-h-[600px] flex flex-col border border-white/5">
+          <div className="bg-zinc-900 rounded-2xl p-6 shadow-2xl relative overflow-hidden group min-h-[600px] flex flex-col border border-white/5">
             <div className="flex items-center justify-between mb-6 relative z-10">
               <div className="flex gap-2">
                 <div className="w-3 h-3 rounded-full bg-zinc-50 dark:bg-zinc-900/80 shadow-[0_0_8px_rgba(244,63,94,0.4)]"></div>
@@ -119,7 +119,7 @@ function CodeFormatter({ lang = 'en' }: Props) {
           </div>
 
 
-          <div className="bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-100 dark:border-zinc-800/50 rounded-3xl p-6 flex gap-4 items-start">
+          <div className="bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-100 dark:border-zinc-800/50 rounded-2xl p-6 flex gap-4 items-start">
             <div className="p-2 bg-zinc-100 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 rounded-xl">
               <ShieldCheck size={20} />
             </div>

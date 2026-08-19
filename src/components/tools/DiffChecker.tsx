@@ -123,7 +123,7 @@ function DiffChecker({ lang = 'en' }: Props) {
               </div>
             </div>
             <textarea
-              className="tool-input min-h-[600px] font-mono text-sm p-8 leading-relaxed bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 focus:bg-white dark:bg-zinc-900 transition-all shadow-inner rounded-3xl"
+              className="tool-input min-h-[600px] font-mono text-sm p-8 leading-relaxed bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 focus:bg-white dark:bg-zinc-900 transition-all shadow-inner rounded-2xl"
               placeholder={t('ui.paste_original')}
               value={text1}
               onChange={(e) => setText1(e.target.value)}
@@ -236,7 +236,7 @@ function DiffChecker({ lang = 'en' }: Props) {
           <button 
             onClick={compareTexts}
             disabled={isProcessing}
-            className={`group relative px-12 py-6 bg-zinc-900 text-white rounded-3xl font-black text-lg overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-2xl shadow-zinc-200 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`group relative px-12 py-6 bg-zinc-900 text-white rounded-2xl font-black text-lg overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-2xl shadow-zinc-200 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative z-10 flex items-center gap-3">
@@ -252,7 +252,7 @@ function DiffChecker({ lang = 'en' }: Props) {
       )}
 
       {/* Guide Area */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-3xl p-10 shadow-sm flex items-start gap-8">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl p-10 shadow-sm flex items-start gap-8">
         <div className="w-16 h-16 bg-zinc-50 dark:bg-zinc-950 rounded-2xl flex items-center justify-center shrink-0">
           <Info className="text-zinc-500 dark:text-zinc-400" />
         </div>

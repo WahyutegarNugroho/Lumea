@@ -109,7 +109,7 @@ function ImageCompressor({ lang = 'en' }: Props) {
         <Dropzone onFilesSelected={handleFiles} accept="image/*" multiple={true} lang={lang} />
       ) : (
         <div className="space-y-6">
-          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6">
+          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2 uppercase tracking-wider text-sm">
                 <FileImage size={18} />

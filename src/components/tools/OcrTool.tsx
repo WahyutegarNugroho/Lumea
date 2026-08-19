@@ -126,7 +126,7 @@ function OcrTool({ lang = 'en' }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Input/Preview Area */}
         <div className="space-y-6">
-          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-4 shadow-inner overflow-hidden flex items-center justify-center min-h-[400px] relative group">
+          <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 shadow-inner overflow-hidden flex items-center justify-center min-h-[400px] relative group">
             <img src={imagePreview!} alt="Preview" className="max-w-full max-h-[600px] rounded-2xl shadow-2xl transition-transform group-hover:scale-110 duration-500" />
             <div className="absolute top-6 right-6 flex gap-2">
                <button 
@@ -227,7 +227,7 @@ function OcrTool({ lang = 'en' }: Props) {
                   />
                 ) : (
                   <div className="h-full min-h-[500px] flex flex-col items-center justify-center text-center space-y-6 animate-pulse">
-                    <div className="w-24 h-24 bg-zinc-900 rounded-3xl flex items-center justify-center border border-zinc-800 shadow-2xl">
+                    <div className="w-24 h-24 bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-800 shadow-2xl">
                         <Zap size={48} className="text-zinc-700 dark:text-zinc-300" />
                     </div>
                     <div className="space-y-2">

@@ -161,7 +161,7 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
             </button>
           </div>
 
-          <div className="bg-emerald-50/50 border border-emerald-100/50 rounded-3xl p-6 flex gap-5 items-start">
+          <div className="bg-emerald-50/50 border border-emerald-100/50 rounded-2xl p-6 flex gap-5 items-start">
             <div className="w-12 h-12 bg-zinc-100 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
               <ShieldCheck size={24} />
             </div>
@@ -197,7 +197,7 @@ function BarcodeGenerator({ lang = 'en' }: Props) {
                 
                 {error && (
                   <div className="absolute inset-0 z-20 flex flex-col items-center justify-center space-y-4 p-12 text-center animate-in fade-in duration-500">
-                     <div className="w-20 h-20 bg-zinc-50 dark:bg-zinc-900/20 text-rose-500 rounded-3xl flex items-center justify-center border border-rose-500/20 shadow-2xl">
+                     <div className="w-20 h-20 bg-zinc-50 dark:bg-zinc-900/20 text-rose-500 rounded-2xl flex items-center justify-center border border-rose-500/20 shadow-2xl">
                         <AlertCircle size={40} />
                      </div>
                      <div className="space-y-1">

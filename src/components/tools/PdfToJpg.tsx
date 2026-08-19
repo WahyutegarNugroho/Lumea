@@ -58,7 +58,7 @@ function PdfToJpg({ lang = 'en' }: Props) {
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* File Card */}
-        <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-10 text-center flex flex-col items-center justify-center space-y-6 shadow-inner">
+        <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-10 text-center flex flex-col items-center justify-center space-y-6 shadow-inner">
           <div className="w-24 h-24 bg-zinc-100 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 rounded-2xl flex items-center justify-center shadow-xl shadow-rose-100/50">
             <FileText size={48} />
           </div>
@@ -103,7 +103,7 @@ function PdfToJpg({ lang = 'en' }: Props) {
 
         {/* Feature Info */}
         <div className="space-y-6 flex flex-col justify-center">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-sm space-y-6">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 shadow-sm space-y-6">
             <div className="flex gap-5">
               <div className="w-12 h-12 bg-zinc-900 text-white rounded-2xl flex items-center justify-center shrink-0">
                 <FileImage size={24} />
@@ -129,7 +129,7 @@ function PdfToJpg({ lang = 'en' }: Props) {
             </div>
           </div>
 
-          <div className="bg-zinc-900 rounded-3xl p-8 text-white relative overflow-hidden">
+          <div className="bg-zinc-900 rounded-2xl p-8 text-white relative overflow-hidden">
              <div className="relative z-10 space-y-3">
                 <h5 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400">{t('ui.pro_tip')}</h5>
                 <p className="text-sm text-zinc-300 leading-relaxed">

@@ -61,7 +61,7 @@ function SortablePage({ id, page, onDelete, index, t }: { id: string; page: Page
     <div 
       ref={setNodeRef} 
       style={style} 
-      className={`relative group bg-white dark:bg-zinc-900 border-2 rounded-3xl p-2 transition-colors ${isDragging ? 'border-zinc-900 shadow-2xl' : 'border-zinc-100 dark:border-zinc-800 shadow-sm hover:border-zinc-300 dark:border-zinc-700'}`}
+      className={`relative group bg-white dark:bg-zinc-900 border-2 rounded-2xl p-2 transition-colors ${isDragging ? 'border-zinc-900 shadow-2xl' : 'border-zinc-100 dark:border-zinc-800 shadow-sm hover:border-zinc-300 dark:border-zinc-700'}`}
     >
       <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-800">
         <img src={page.preview} alt={`Page`} className="w-full h-full object-contain pointer-events-none" />
@@ -204,7 +204,7 @@ function PdfOrganizer({ lang = 'en' }: Props) {
   return (
     <div className="space-y-8">
       {/* Header Actions */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white dark:bg-zinc-900/80 backdrop-blur-md p-6 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm sticky top-4 z-40">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white dark:bg-zinc-900/80 backdrop-blur-md p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm sticky top-4 z-40">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-zinc-900 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-zinc-200">
             <FileText size={24} />
@@ -276,7 +276,7 @@ function PdfOrganizer({ lang = 'en' }: Props) {
               }),
             }}>
               {activeId ? (
-                <div className="bg-white dark:bg-zinc-900 border-2 border-zinc-900 rounded-3xl p-2 shadow-2xl scale-105 opacity-90 cursor-grabbing">
+                <div className="bg-white dark:bg-zinc-900 border-2 border-zinc-900 rounded-2xl p-2 shadow-2xl scale-105 opacity-90 cursor-grabbing">
                    <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-800">
                     <img src={activePage?.preview} alt="Dragging" className="w-full h-full object-contain" />
                   </div>
@@ -290,7 +290,7 @@ function PdfOrganizer({ lang = 'en' }: Props) {
 
           {/* Info Panels */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-zinc-100 dark:border-zinc-800">
-            <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 flex gap-6 items-start">
+            <div className="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 flex gap-6 items-start">
               <div className="w-14 h-14 bg-zinc-900 text-white rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-zinc-200">
                 <LayoutGrid size={28} />
               </div>
@@ -302,7 +302,7 @@ function PdfOrganizer({ lang = 'en' }: Props) {
               </div>
             </div>
 
-            <div className="bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-100 dark:border-zinc-800/50 rounded-3xl p-8 flex gap-6 items-start">
+            <div className="bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-100 dark:border-zinc-800/50 rounded-2xl p-8 flex gap-6 items-start">
               <div className="w-14 h-14 bg-zinc-100 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 rounded-xl flex items-center justify-center shrink-0">
                 <ShieldCheck size={28} />
               </div>

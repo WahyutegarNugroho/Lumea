@@ -78,7 +78,7 @@ function PdfCompressor({ lang = 'en' }: Props) {
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr,350px] gap-8">
         {/* Preview / Status Area */}
-        <div className="bg-zinc-50 dark:bg-zinc-950 rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-inner min-h-[400px]">
+        <div className="bg-zinc-50 dark:bg-zinc-950 rounded-2xl p-8 flex flex-col items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-inner min-h-[400px]">
           <div className="bg-white dark:bg-zinc-900 p-8 rounded-2xl shadow-xl border border-zinc-100 dark:border-zinc-800 flex flex-col items-center gap-6 max-w-sm w-full transition-all hover:scale-[1.02]">
             <div className="w-20 h-20 bg-emerald-50 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center text-emerald-500">
               <FileText size={40} />
@@ -110,7 +110,7 @@ function PdfCompressor({ lang = 'en' }: Props) {
 
         {/* Controls Area */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-sm space-y-8">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 shadow-sm space-y-8">
             <div className="space-y-4">
               <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 font-outfit flex items-center gap-2">
                 <ArrowDownCircle className="text-zinc-500 dark:text-zinc-400" size={20} />
