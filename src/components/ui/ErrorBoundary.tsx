@@ -38,7 +38,7 @@ export class ErrorBoundary extends Component<Props, State> {
       const { title, desc: defaultDesc, btn: buttonText } = error;
 
       return (
-        <div className="w-full rounded-3xl bg-rose-50 dark:bg-rose-900/30 border-2 border-rose-100 dark:border-rose-800/50 p-8 flex flex-col items-center justify-center text-center space-y-4 shadow-sm min-h-[300px]">
+        <div className="w-full rounded-xl bg-rose-50 dark:bg-rose-900/30 border-2 border-rose-100 dark:border-rose-800/50 p-8 flex flex-col items-center justify-center text-center space-y-4 shadow-sm min-h-[300px]">
           <div className="w-16 h-16 bg-white shrink-0 flex items-center justify-center rounded-2xl text-rose-500 shadow-sm border border-rose-100 dark:border-rose-800/50">
             <AlertCircle size={32} />
           </div>

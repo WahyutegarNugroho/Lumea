@@ -45,7 +45,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onFilesSelected, accept = "i
     <div 
       onDragOver={(e) => e.preventDefault()}
       onDrop={onDrop}
-      className="group relative w-full min-h-[280px] border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-3xl flex flex-col items-center justify-center p-12 transition-all hover:border-zinc-900 dark:hover:border-zinc-100 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 cursor-pointer overflow-hidden bg-white dark:bg-zinc-950 shadow-xl shadow-zinc-100/50 dark:shadow-none"
+      className="group relative w-full min-h-[280px] border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl flex flex-col items-center justify-center p-12 transition-all hover:border-zinc-900 dark:hover:border-zinc-100 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 cursor-pointer overflow-hidden bg-white dark:bg-zinc-950 shadow-md shadow-zinc-100/50 dark:shadow-none"
     >
       <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:20px_20px] opacity-30 pointer-events-none"></div>
       
@@ -58,7 +58,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onFilesSelected, accept = "i
         className="absolute inset-0 opacity-0 cursor-pointer z-20"
       />
       
-      <div className="w-20 h-20 bg-zinc-50 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 rounded-3xl flex items-center justify-center mb-8 shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-zinc-900 group-hover:rotate-6 border border-zinc-100 dark:border-zinc-800 relative z-10">
+      <div className="w-16 h-16 bg-zinc-50 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 rounded-xl flex items-center justify-center mb-8 shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-zinc-900 group-hover:rotate-6 border border-zinc-100 dark:border-zinc-800 relative z-10">
         <Upload size={36} strokeWidth={2.5} />
       </div>
 
@@ -69,7 +69,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onFilesSelected, accept = "i
 
       <div className="mt-10 flex flex-wrap justify-center gap-3 relative z-10">
         {getBadges().map(badge => (
-          <span key={badge} className="px-5 py-2 bg-zinc-900/5 dark:bg-zinc-100/5 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-[10px] font-black uppercase tracking-widest group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-zinc-900 group-hover:border-zinc-900 dark:group-hover:border-white transition-all duration-300">
+          <span key={badge} className="px-5 py-2 bg-zinc-900/5 dark:bg-zinc-100/5 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest group-hover:bg-zinc-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-zinc-900 group-hover:border-zinc-900 dark:group-hover:border-white transition-all duration-300">
             {badge}
           </span>
         ))}

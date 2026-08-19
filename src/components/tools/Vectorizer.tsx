@@ -68,16 +68,16 @@ function Vectorizer({ lang = 'en' }: Props) {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 flex items-center justify-center min-h-[400px] relative overflow-hidden">
+        <div className="lg:col-span-2 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 flex items-center justify-center min-h-[400px] relative overflow-hidden">
           {!resultSvg ? (
-            <img src={URL.createObjectURL(file)} className="max-h-[500px] w-auto shadow-lg rounded-lg" alt="Original" />
+            <img src={URL.createObjectURL(file)} className="max-h-[500px] w-auto shadow-md rounded-lg" alt="Original" />
           ) : (
             <div className="w-full h-full flex items-center justify-center" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(resultSvg) }} />
           )}
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm">
             <h3 className="font-bold text-zinc-900 dark:text-zinc-50 mb-4 flex items-center gap-2">
               <Palette size={18} />
               {t('ui.settings')}
@@ -107,7 +107,7 @@ function Vectorizer({ lang = 'en' }: Props) {
             <button 
               onClick={vectorize}
               disabled={isProcessing}
-              className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-200"
+              className="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all shadow-md shadow-zinc-200"
             >
               {isProcessing ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <Zap size={20} />}
               {t('tool.vectorizer.title')}
@@ -116,7 +116,7 @@ function Vectorizer({ lang = 'en' }: Props) {
             {resultSvg && (
               <button 
                 onClick={downloadSvg}
-                className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-100"
+                className="w-full py-4 bg-emerald-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-emerald-700 transition-all shadow-md shadow-emerald-100"
               >
                 <Download size={20} />
                 {t('ui.download')} SVG
@@ -125,7 +125,7 @@ function Vectorizer({ lang = 'en' }: Props) {
 
             <button 
               onClick={() => { setFile(null); setResultSvg(null); }}
-              className="w-full py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 transition-all"
+              className="w-full py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-xl font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 transition-all"
             >
               {t('ui.clear')}
             </button>

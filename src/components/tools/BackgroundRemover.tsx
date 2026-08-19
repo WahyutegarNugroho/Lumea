@@ -132,24 +132,24 @@ function BackgroundRemover({ lang = 'en' }: Props) {
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Preview Area */}
-        <div className="bg-zinc-100 dark:bg-zinc-800 rounded-3xl p-8 flex items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-inner min-h-[500px]">
+        <div className="bg-zinc-100 dark:bg-zinc-800 rounded-xl p-8 flex items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-inner min-h-[500px]">
           {!resultUrl ? (
             <div className="relative group">
-              <img src={URL.createObjectURL(file)} className="max-h-[500px] w-auto rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]" alt="Original" />
-              <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none"></div>
+              <img src={URL.createObjectURL(file)} className="max-h-[500px] w-auto rounded-xl shadow-md transition-transform duration-500 group-hover:scale-[1.02]" alt="Original" />
+              <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl pointer-events-none"></div>
             </div>
           ) : (
             <div className="relative group">
                {/* Premium transparency grid */}
-              <div className="absolute inset-0 rounded-2xl overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30 bg-zinc-300"></div>
-              <img src={resultUrl} className="relative z-10 max-h-[500px] w-auto rounded-2xl transition-transform duration-500 group-hover:scale-[1.02]" alt="Result" />
+              <div className="absolute inset-0 rounded-xl overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30 bg-zinc-300"></div>
+              <img src={resultUrl} className="relative z-10 max-h-[500px] w-auto rounded-xl transition-transform duration-500 group-hover:scale-[1.02]" alt="Result" />
             </div>
           )}
         </div>
 
         {/* Controls Area */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-sm space-y-8">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 shadow-sm space-y-8">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 font-outfit flex items-center gap-2">
@@ -227,14 +227,14 @@ function BackgroundRemover({ lang = 'en' }: Props) {
                   <div className="grid grid-cols-2 gap-3">
                     <button 
                       onClick={() => setModelType(0)}
-                      className={`py-4 rounded-2xl text-xs font-bold border-2 transition-all flex flex-col items-center gap-1 ${modelType === 0 ? 'border-zinc-900 bg-zinc-900 text-white shadow-xl shadow-zinc-200' : 'border-zinc-100 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-zinc-200 dark:hover:border-zinc-700 dark:border-zinc-800'}`}
+                      className={`py-4 rounded-xl text-xs font-bold border-2 transition-all flex flex-col items-center gap-1 ${modelType === 0 ? 'border-zinc-900 bg-zinc-900 text-white shadow-md shadow-zinc-200' : 'border-zinc-100 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-zinc-200 dark:hover:border-zinc-700 dark:border-zinc-800'}`}
                     >
                       <Zap size={14} />
                       {t('ui.fast_standard')}
                     </button>
                     <button 
                       onClick={() => setModelType(1)}
-                      className={`py-4 rounded-2xl text-xs font-bold border-2 transition-all flex flex-col items-center gap-1 ${modelType === 1 ? 'border-zinc-900 bg-zinc-900 text-white shadow-xl shadow-zinc-200' : 'border-zinc-100 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-zinc-200 dark:hover:border-zinc-700 dark:border-zinc-800'}`}
+                      className={`py-4 rounded-xl text-xs font-bold border-2 transition-all flex flex-col items-center gap-1 ${modelType === 1 ? 'border-zinc-900 bg-zinc-900 text-white shadow-md shadow-zinc-200' : 'border-zinc-100 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-zinc-200 dark:hover:border-zinc-700 dark:border-zinc-800'}`}
                     >
                       <ShieldCheck size={14} />
                       {t('ui.pro_accuracy')}
@@ -249,7 +249,7 @@ function BackgroundRemover({ lang = 'en' }: Props) {
                 <button 
                   onClick={removeBackground}
                   disabled={isProcessing}
-                  className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-200 disabled:opacity-50"
+                  className="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all shadow-md shadow-zinc-200 disabled:opacity-50"
                 >
                   {isProcessing ? <Loader2 size={20} className="animate-spin" /> : <Eraser size={20} />}
                   {isProcessing ? t('ui.processing_ai') : t('tool.background-remover.title')}
@@ -261,14 +261,14 @@ function BackgroundRemover({ lang = 'en' }: Props) {
                       if (!resultUrl) return;
                       download(resultUrl, `no-bg-${file.name.split('.')[0]}.png`);
                     }}
-                    className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-200"
+                    className="w-full py-4 bg-zinc-900 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all shadow-md shadow-zinc-200"
                   >
                     <Download size={20} />
                     {t('ui.download')} PNG
                   </button>
                   <button 
                     onClick={() => { setFile(null); setResultUrl(null); setProgress(0); }}
-                    className="w-full py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-2xl font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 transition-all text-sm"
+                    className="w-full py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-xl font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-950 transition-all text-sm"
                   >
                     {t('ui.clear')}
                   </button>
