@@ -1,6 +1,6 @@
 ---
 title: "Panduan OCR Gambar ke Teks"
-description: "Ekstrak teks dari gambar, tangkapan layar, dan dokumen pindaian menggunakan OCR bertenaga AI."
+description: "Ekstrak teks dari gambar, tangkapan layar, dan dokumen pindaian menggunakan OCR langsung di browser."
 category: "image"
 toolId: "ocr"
 ---
@@ -8,13 +8,13 @@ Digitalkan dokumen fisik, tangkapan layar, dan foto Anda secara instan dengan pe
 
 ### Cara Kerjanya
 
-Pengenalan Karakter Optik (OCR) menganalisis gambar untuk mendeteksi dan mengekstrak karakter teks. Lumea menggunakan Tesseract.js, mesin OCR kuat yang berjalan sepenuhnya di browser Anda.
+Pengenalan Karakter Optik (OCR) menganalisis gambar untuk mendeteksi dan mengekstrak karakter teks. Lumea menggunakan Tesseract.js, mesin OCR yang berjalan sepenuhnya di browser Anda.
 
 ### Langkah demi Langkah
 
 1. **Unggah gambar**: Masukkan gambar Anda (JPG, PNG, WebP) ke area unggah. Untuk hasil terbaik, pastikan teks jelas dan pencahayaan baik.
-2. **Pilih bahasa**: Pilih bahasa utama dari teks. Ini membantu AI mengenali karakter dengan lebih akurat.
-3. **Pindai**: Klik "Extract Text". Mesin OCR memproses gambar.
+2. **Pilih bahasa**: Pilih bahasa utama dari teks. Pemilihan kamus bahasa yang tepat membantu meningkatkan akurasi pengenalan karakter.
+3. **Pindai**: Klik "Ekstrak Teks". Mesin OCR memproses gambar secara lokal.
 4. **Salin**: Teks yang dapat diedit muncul di kotak hasil, siap digunakan.
 
 ### Tips untuk Hasil Terbaik

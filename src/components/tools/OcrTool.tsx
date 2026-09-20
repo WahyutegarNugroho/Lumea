@@ -2,7 +2,7 @@ import { withErrorBoundary } from '../ui/withErrorBoundary';
 import toast from 'react-hot-toast';
 import { useState, useRef } from 'react';
 import { Dropzone } from '../ui/Dropzone';
-import { Copy, ScanText, ShieldCheck, Languages, Zap, Check, Trash2, Wand2 } from 'lucide-react';
+import { Copy, ScanText, ShieldCheck, Languages, Check, Trash2 } from 'lucide-react';
 import { useTranslations } from '../../lib/i18n';
 import { useCopyToClipboard } from '../../lib/hooks/useCopyToClipboard';
 
@@ -169,7 +169,7 @@ function OcrTool({ lang = 'en' }: Props) {
                   onClick={processOCR}
                   className="flex-1 py-5 bg-zinc-900 text-white rounded-2xl font-black flex items-center justify-center gap-3 hover:bg-zinc-800 transition-all shadow-2xl shadow-zinc-200 hover:scale-[1.02] active:scale-95"
                 >
-                  <Wand2 size={22} className="text-amber-400" />
+                  <ScanText size={22} className="text-zinc-300" />
                   {t('ui.extract_text')}
                 </button>
               </div>
@@ -228,7 +228,7 @@ function OcrTool({ lang = 'en' }: Props) {
                 ) : (
                   <div className="h-full min-h-[500px] flex flex-col items-center justify-center text-center space-y-6 animate-pulse">
                     <div className="w-24 h-24 bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-800 shadow-2xl">
-                        <Zap size={48} className="text-zinc-700 dark:text-zinc-300" />
+                        <ScanText size={48} className="text-zinc-700 dark:text-zinc-300" />
                     </div>
                     <div className="space-y-2">
                        <p className="text-zinc-500 dark:text-zinc-400 text-sm font-bold uppercase tracking-widest">{t('ui.ready_for_scan')}</p>

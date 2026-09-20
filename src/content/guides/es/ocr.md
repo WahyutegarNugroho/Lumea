@@ -1,6 +1,6 @@
 ---
-title: "Guía de OCR de Imagen a Texto"
-description: "Extraiga texto de imágenes, capturas de pantalla y documentos escaneados usando OCR potenciado por IA."
+title: "Guía de Reconocimiento de Texto (OCR)"
+description: "Extraiga texto de imágenes, capturas de pantalla y documentos escaneados usando OCR en el navegador."
 category: "image"
 toolId: "ocr"
 ---
@@ -8,13 +8,13 @@ Digitalice sus documentos físicos, capturas de pantalla y fotos al instante con
 
 ### Cómo Funciona
 
-El Reconocimiento Óptico de Caracteres (OCR) analiza imágenes para detectar y extraer caracteres de texto. Lumea utiliza Tesseract.js, un potente motor OCR que se ejecuta completamente en su navegador.
+El Reconocimiento Óptico de Caracteres (OCR) analiza imágenes para detectar y extraer caracteres de texto. Lumea utiliza Tesseract.js, un motor OCR que se ejecuta completamente en su navegador.
 
 ### Paso a Paso
 
 1. **Sube tu imagen**: Arrastre su imagen (JPG, PNG, WebP) al área de carga. Para obtener mejores resultados, asegúrese de que el texto sea claro y esté bien iluminado.
-2. **Seleccione idioma**: Elija el idioma principal del texto. Esto ayuda a la IA a reconocer los caracteres con mayor precisión.
-3. **Escanear**: Haga clic en "Extraer Texto". El motor OCR procesa la imagen.
+2. **Seleccione idioma**: Elija el idioma principal del texto. Seleccionar el diccionario adecuado mejora la precisión del reconocimiento de caracteres.
+3. **Escanear**: Haga clic en "Extraer Texto". El motor OCR procesa la imagen localmente.
 4. **Copiar**: Su texto editable aparece en el cuadro de resultados, listo para usar.
 
 ### Consejos para Mejores Resultados

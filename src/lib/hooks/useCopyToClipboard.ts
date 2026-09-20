@@ -19,7 +19,7 @@ export function useCopyToClipboard(resetMs: number = 2000): UseCopyToClipboardRe
     try {
       await navigator.clipboard.writeText(text);
     } catch {
-      // Silently fail — caller can handle separately
+      // Silently fail, caller can handle separately
     }
     setCopied(true);
     if (timerRef.current) clearTimeout(timerRef.current);
