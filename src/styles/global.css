@@ -7,6 +7,12 @@
 }
 
 @layer base {
+	button, [role="button"] {
+		cursor: pointer;
+	}
+	button:disabled, [role="button"][aria-disabled="true"], button[disabled] {
+		cursor: not-allowed;
+	}
 	select {
 		appearance: none;
 		background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2371717a' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
@@ -32,19 +38,19 @@
 
 @layer components {
 	.tool-input {
-		@apply w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/10 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all;
+		@apply w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/10 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all;
 	}
 	
 	.tool-label {
-		@apply block text-sm font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-2 ml-1;
+		@apply block text-sm font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wider mb-2 ml-1;
 	}
 
 	.tool-button-primary {
-		@apply px-6 py-3 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-bold transition-all hover:bg-zinc-800 dark:hover:bg-white hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+		@apply px-6 py-3 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-bold cursor-pointer transition-all hover:bg-zinc-800 dark:hover:bg-white hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed;
 	}
 
 	.tool-button-secondary {
-		@apply px-6 py-3 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-800 rounded-xl font-bold transition-all hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-700 active:scale-[0.98];
+		@apply px-6 py-3 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-800 rounded-xl font-bold cursor-pointer transition-all hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-700 active:scale-[0.99];
 	}
 
 	/* Blog prose styling */
